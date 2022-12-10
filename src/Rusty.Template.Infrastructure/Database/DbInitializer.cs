@@ -27,19 +27,11 @@ public static class DbInitializer
         }
     }
 
-    public static void MigrateDatabase(this IServiceProvider services)
+    public static async Task MigrateDatabaseAsync(this IServiceProvider services)
     {
         using var scope = services.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        context.Database.Migrate();
-    }
-
-    public static async Task<IServiceProvider> MigrateDatabaseAsync(this IServiceProvider services)
-    {
-        await using var scope = services.CreateAsyncScope();
-        var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         await context.Database.MigrateAsync();
-        return services;
     }
 
     private static string LoremIpsum(int minWords, int maxWords,

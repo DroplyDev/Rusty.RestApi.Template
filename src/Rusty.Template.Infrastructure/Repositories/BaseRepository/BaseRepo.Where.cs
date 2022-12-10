@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Query;
 using Rusty.Template.Contracts.SubTypes;
 using Rusty.Template.Domain;
+using Rusty.Template.Infrastructure.Repositories.Extensions;
 
 namespace Rusty.Template.Infrastructure.Repositories.BaseRepository;
 

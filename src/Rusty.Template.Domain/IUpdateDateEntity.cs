@@ -2,4 +2,5 @@
 
 public interface IUpdateDateEntity
 {
+    public DateTime UpdateDate { get; set; }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Rusty.Template.Contracts.Dtos.WeatherForecast;
 
-public record WeatherForecastDto
+public sealed record WeatherForecastDto
 {
     public int Id { get; set; }
 

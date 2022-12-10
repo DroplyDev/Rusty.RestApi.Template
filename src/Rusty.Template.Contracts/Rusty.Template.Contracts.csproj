@@ -10,4 +10,8 @@
         <ProjectReference Include="..\Rusty.Template.Domain\Rusty.Template.Domain.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+        <PackageReference Include="FluentValidation" Version="11.4.0"/>
+    </ItemGroup>
+
 </Project>

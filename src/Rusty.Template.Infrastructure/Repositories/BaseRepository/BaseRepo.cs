@@ -3,8 +3,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Rusty.Template.Application.Repositories;
 using Rusty.Template.Contracts.Exceptions.Entity;
+using Rusty.Template.Contracts.SubTypes;
 using Rusty.Template.Domain;
 using Rusty.Template.Infrastructure.Database;
+using Rusty.Template.Infrastructure.Repositories.Extensions;
 
 namespace Rusty.Template.Infrastructure.Repositories.BaseRepository;
 
@@ -12,11 +14,24 @@ public abstract partial class BaseRepo<TEntity> : IBaseRepo<TEntity> where TEnti
 {
     protected readonly AppDbContext Context;
     protected readonly DbSet<TEntity> DbSet;
+    protected readonly Expression<Func<TEntity, object>> DefaultOrderBy;
+    protected readonly OrderDirection DefaultOrderDirection;
 
-    protected BaseRepo(AppDbContext context)
+    protected BaseRepo(AppDbContext context, Expression<Func<TEntity, object>> defaultOrderBy)
     {
         Context = context;
         DbSet = context.Set<TEntity>();
+        DefaultOrderBy = defaultOrderBy;
+        DefaultOrderDirection = OrderDirection.Desc;
+    }
+
+    protected BaseRepo(AppDbContext context, Expression<Func<TEntity, object>> defaultOrderBy,
+        OrderDirection defaultOrderDirection)
+    {
+        Context = context;
+        DbSet = context.Set<TEntity>();
+        DefaultOrderBy = defaultOrderBy;
+        DefaultOrderDirection = defaultOrderDirection;
     }
 
     public async Task<TEntity?> GetByIdAsync(int id)
@@ -61,11 +76,6 @@ public abstract partial class BaseRepo<TEntity> : IBaseRepo<TEntity> where TEnti
         DbSet.Update(entity);
     }
 
-    public virtual void UpdateStateNoSave(TEntity entity)
-    {
-        DbSet.Entry(entity).State = EntityState.Modified;
-    }
-
     public virtual async Task UpdateStateAsync(TEntity entity)
     {
         UpdateStateNoSave(entity);
@@ -103,17 +113,17 @@ public abstract partial class BaseRepo<TEntity> : IBaseRepo<TEntity> where TEnti
         DbSet.RemoveRange(entities);
     }
 
-    public async Task<bool> ExistsAsync(int id)
+    public virtual async Task<bool> ExistsAsync(int id)
     {
         return await GetByIdAsync(id) is not null;
     }
 
-    public async Task<bool> ExistsAsync(TEntity entity)
+    public virtual async Task<bool> ExistsAsync(TEntity entity)
     {
         return await DbSet.FindAsync(entity) is not null;
     }
 
-    public async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> expression)
+    public virtual async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> expression)
     {
         return await DbSet.AnyAsync(expression);
     }
@@ -123,9 +133,19 @@ public abstract partial class BaseRepo<TEntity> : IBaseRepo<TEntity> where TEnti
         return !await DbSet.AnyAsync();
     }
 
+    public async Task<bool> IsEmptyAsync(Expression<Func<TEntity, bool>> expression)
+    {
+        return !await DbSet.AnyAsync(expression);
+    }
+
     public async Task SaveChangesAsync()
     {
         await Context.SaveChangesAsync();
+    }
+
+    public virtual void UpdateStateNoSave(TEntity entity)
+    {
+        DbSet.Entry(entity).State = EntityState.Modified;
     }
 
     private IQueryable<TEntity> IncludeIfNotNull(
@@ -134,5 +154,12 @@ public abstract partial class BaseRepo<TEntity> : IBaseRepo<TEntity> where TEnti
         if (includes is null)
             return DbSet;
         return includes(DbSet);
+    }
+
+    protected IQueryable<TEntity> OrderByOrPredefined(IQueryable<TEntity> query, OrderByData? data)
+    {
+        return data is null
+            ? query.OrderByWithDirection(DefaultOrderBy, DefaultOrderDirection)
+            : query.OrderByWithDirection(data.OrderBy, data.OrderDirection);
     }
 }

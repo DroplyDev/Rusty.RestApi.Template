@@ -19,8 +19,7 @@ public sealed class ExceptionHandlingMiddleware
         _next = next;
     }
 
-
-    public async Task InvokeAsync(HttpContext context, RequestDelegate next)
+    public async Task InvokeAsync(HttpContext context)
     {
         try
         {
@@ -73,14 +72,14 @@ public sealed class ExceptionHandlingMiddleware
         }
     }
 
-    private Task HandleExceptionAsync(HttpContext context, ApiException exception)
+    private static Task HandleExceptionAsync(HttpContext context, ApiException exception)
     {
         context.Response.StatusCode = exception.StatusCode;
         context.Response.ContentType = "application/json";
         return context.Response.WriteAsync(exception.ToString());
     }
 
-    private Task HandleExceptionAsync(HttpContext context, Exception exception)
+    private static Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
         context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
         context.Response.ContentType = "application/json";

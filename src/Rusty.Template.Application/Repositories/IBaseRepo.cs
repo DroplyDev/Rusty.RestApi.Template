@@ -5,7 +5,7 @@ using Rusty.Template.Domain;
 
 namespace Rusty.Template.Application.Repositories;
 
-public interface IBaseRepo<TEntity> where TEntity : BaseEntity
+public partial interface IBaseRepo<TEntity> where TEntity : BaseEntity
 {
     Task<TEntity?> GetByIdAsync(int id);
     Task<TEntity> CreateAsync(TEntity entity);
@@ -24,7 +24,7 @@ public interface IBaseRepo<TEntity> where TEntity : BaseEntity
     Task<bool> ExistsAsync(TEntity entity);
     Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> expression);
     Task<bool> IsEmptyAsync();
-
+    Task<bool> IsEmptyAsync(Expression<Func<TEntity, bool>> expression);
     Task SaveChangesAsync();
 
     //First
@@ -47,14 +47,10 @@ public interface IBaseRepo<TEntity> where TEntity : BaseEntity
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null);
 
     //Pagination
-    IQueryable<TEntity> Paginate(int skipItems, int takeItems, Expression<Func<TEntity, bool>>? expression,
-        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null);
-
-    IQueryable<TEntity> Paginate(int skipItems, int takeItems,
+    ( IQueryable<TEntity> Collection, int TotalCount) Paginate(int skipItems, int takeItems, string orderBy,
+        OrderDirection orderDirection,
         Expression<Func<TEntity, bool>>? expression,
-        string orderBy, OrderDirection orderDirection,
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null);
-
     //Where
     IQueryable<TEntity> Where(Expression<Func<TEntity, bool>> expression,
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null);

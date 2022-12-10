@@ -1,7 +1,13 @@
-﻿namespace Rusty.Template.Contracts.SubTypes;
+﻿using FluentValidation;
 
-public record OrderByData
+namespace Rusty.Template.Contracts.SubTypes;
+
+public sealed record OrderByData(string OrderBy = null!, OrderDirection OrderDirection = OrderDirection.Desc);
+
+public class OrderByDataValidator : AbstractValidator<OrderByData>
 {
-    public string OrderBy { get; set; } = null!;
-    public OrderDirection OrderDirection { get; set; }
+    public OrderByDataValidator()
+    {
+        RuleFor(d => d.OrderBy).NotNull().NotEmpty();
+    }
 }

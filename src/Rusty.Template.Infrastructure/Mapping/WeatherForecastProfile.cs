@@ -1,6 +1,6 @@
 ﻿using Mapster;
 
-namespace Rusty.Template.Infrastructure.Profiles;
+namespace Rusty.Template.Infrastructure.Mapping;
 
 public sealed class WeatherForecastProfile : IRegister
 {

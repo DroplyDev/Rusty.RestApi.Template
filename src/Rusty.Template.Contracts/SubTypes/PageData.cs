@@ -1,12 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using FluentValidation;
 
 namespace Rusty.Template.Contracts.SubTypes;
 
-public record PageData
-{
-    [Range(0, int.MaxValue, ErrorMessage = "Offset should be non negative")]
-    public int Offset { get; set; } = 0;
+public sealed record PageData(int Offset = 0, int Limit = 0);
 
-    [Range(0, int.MaxValue, ErrorMessage = "Limit should be non negative")]
-    public int Limit { get; set; }
+public sealed class PageDataValidator : AbstractValidator<PageData>
+{
+    public PageDataValidator()
+    {
+        RuleFor(d => d.Offset).GreaterThanOrEqualTo(0);
+        RuleFor(d => d.Limit).GreaterThanOrEqualTo(0);
+    }
 }

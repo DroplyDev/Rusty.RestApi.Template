@@ -1,3 +1,4 @@
+using FluentValidation;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +7,7 @@ using Rusty.Template.Contracts.Dtos.WeatherForecast;
 using Rusty.Template.Contracts.Exceptions.Entity;
 using Rusty.Template.Contracts.Requests;
 using Rusty.Template.Domain;
+using Rusty.Template.Infrastructure.Attributes;
 
 namespace Rusty.Template.Presentation.Controllers;
 
@@ -19,32 +21,28 @@ public class WeatherForecastsController : BaseApiController
         _weatherForecastRepo = weatherForecastRepo;
     }
 
-    // GET: api/WeatherForecast
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<WeatherForecastDto>>> GetWeatherForecasts(PagedInfoRequest request)
+    [HttpPost("paged")]
+    public async Task<IActionResult> GetWeatherForecasts(OrderByPagedRequest request)
     {
-        return await _weatherForecastRepo.GetAll().ProjectToType<WeatherForecastDto>().ToListAsync();
+        return Ok(await _weatherForecastRepo.PaginateAsync<WeatherForecastDto>(request));
     }
 
-    // GET: api/WeatherForecast/5
-    [HttpGet("{id}")]
-    public async Task<ActionResult<WeatherForecastDto>> GetWeatherForecast(int id)
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetWeatherForecast(int id)
     {
         var weatherForecast = await _weatherForecastRepo.GetByIdAsync(id);
 
         if (weatherForecast is null)
             throw new EntityNotFoundByIdException<WeatherForecast>(id);
 
-        return weatherForecast.Adapt<WeatherForecastDto>();
+        return Ok(weatherForecast.Adapt<WeatherForecastDto>());
     }
 
-    // PUT: api/WeatherForecast/5
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-    [HttpPut("{id}")]
-    public async Task<IActionResult> PutWeatherForecast(WeatherForecastUpdateDto weatherForecast)
+    [HttpPut("{id:int}")]
+    [HttpPutIdCompare]
+    public async Task<IActionResult> PutWeatherForecast(int id, WeatherForecastUpdateDto weatherForecast,
+        [FromServices] IValidator<WeatherForecastUpdateDto> validator)
     {
-        // if (await _weatherForecastRepo.ExistsAsync(id)) throw new EntityAlre
-
         try
         {
             await _weatherForecastRepo.UpdateAsync(weatherForecast.Adapt<WeatherForecast>());
@@ -57,19 +55,16 @@ public class WeatherForecastsController : BaseApiController
 
         return NoContent();
     }
-
-    // POST: api/WeatherForecast
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+    
     [HttpPost]
-    public async Task<ActionResult<WeatherForecastDto>> PostWeatherForecast(WeatherForecastCreateDto weatherForecast)
+    public async Task<IActionResult> PostWeatherForecast(WeatherForecastCreateDto weatherForecast)
     {
         var createdEntity = await _weatherForecastRepo.CreateAsync(weatherForecast.Adapt<WeatherForecast>());
         return CreatedAtAction(nameof(GetWeatherForecast), new { id = createdEntity.Id },
             createdEntity.Adapt<WeatherForecastDto>());
     }
 
-    // DELETE: api/WeatherForecast/5
-    [HttpDelete("{id}")]
+    [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteWeatherForecast(int id)
     {
         await _weatherForecastRepo.DeleteAsync(id);
