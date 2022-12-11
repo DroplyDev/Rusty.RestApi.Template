@@ -1,4 +1,3 @@
-using FluentValidation;
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -40,8 +39,7 @@ public class WeatherForecastsController : BaseApiController
 
     [HttpPut("{id:int}")]
     [HttpPutIdCompare]
-    public async Task<IActionResult> PutWeatherForecast(int id, WeatherForecastUpdateDto weatherForecast,
-        [FromServices] IValidator<WeatherForecastUpdateDto> validator)
+    public async Task<IActionResult> PutWeatherForecast(int id, WeatherForecastUpdateDto weatherForecast)
     {
         try
         {
