@@ -148,7 +148,7 @@ public abstract partial class BaseRepo<TEntity> : IBaseRepo<TEntity> where TEnti
         DbSet.Entry(entity).State = EntityState.Modified;
     }
 
-    private IQueryable<TEntity> IncludeIfNotNull(
+    public IQueryable<TEntity> IncludeIfNotNull(
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null)
     {
         if (includes is null)
@@ -156,7 +156,7 @@ public abstract partial class BaseRepo<TEntity> : IBaseRepo<TEntity> where TEnti
         return includes(DbSet);
     }
 
-    protected IQueryable<TEntity> OrderByOrPredefined(IQueryable<TEntity> query, OrderByData? data)
+    public IQueryable<TEntity> OrderByOrPredefined(IQueryable<TEntity> query, OrderByData? data)
     {
         return data is null
             ? query.OrderByWithDirection(DefaultOrderBy, DefaultOrderDirection)

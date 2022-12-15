@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Rusty.Template.Infrastructure.Database;
 using Rusty.Template.Infrastructure.Middlewares;
 using Rusty.Template.Presentation;
@@ -20,24 +21,45 @@ app.UseSerilogRequestLogging(configure =>
         "HTTP {RequestMethod} {RequestPath} ({UserId} {UserName} responded {StatusCode} in {Elapsed:0.0000}ms)";
 });
 //Prepare db
-// if (app.Environment.IsStaging())
-await app.Services.MigrateDatabaseAsync();
+if (app.Environment.IsStaging())
+    await app.Services.MigrateDatabaseAsync();
 await app.Services.InitializeDatabaseDataAsync();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment()) app.UseDeveloperExceptionPage();
 
-app.UseSwagger();
-app.UseSwaggerUI(c =>
-{
-    var swaggerDoc = app.Configuration.GetSection("SwaggerDoc");
-    c.SwaggerEndpoint(swaggerDoc["Endpoint"], swaggerDoc["Title"]);
-});
 app.UseHttpsRedirection();
+app.UseSwagger();
+app.UseSwaggerUI(options =>
+{
+    var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+    foreach (var description in provider.ApiVersionDescriptions)
+        options.SwaggerEndpoint($"../swagger/{description.GroupName}/swagger.json",
+            description.GroupName.ToUpperInvariant());
+});
+// app.UseSwaggerUI(options =>
+// {
+//     var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+//     foreach (var description in provider.ApiVersionDescriptions)
+//     {
+//         options.SwaggerEndpoint($"../swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
+//     }
+// });
+// app.UseSwaggerUI(c =>
+// {
+//     var provider= app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+//     foreach (var description in provider.ApiVersionDescriptions)
+//     {
+//         c.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
+//     }
+//     //
+//     // var swaggerDoc = app.Configuration.GetSection("SwaggerDoc");
+//     // c.SwaggerEndpoint(swaggerDoc["Endpoint"], swaggerDoc["Title"]);
+// });
 app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
-app.MapControllers();
-
+// app.MapControllers();
+app.UseEndpoints(endpoints => { endpoints.MapControllers(); }); 
 await app.RunAsync();

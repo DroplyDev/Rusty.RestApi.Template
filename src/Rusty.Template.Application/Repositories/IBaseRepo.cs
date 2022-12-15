@@ -51,6 +51,7 @@ public partial interface IBaseRepo<TEntity> where TEntity : BaseEntity
         OrderDirection orderDirection,
         Expression<Func<TEntity, bool>>? expression,
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null);
+
     //Where
     IQueryable<TEntity> Where(Expression<Func<TEntity, bool>> expression,
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null);

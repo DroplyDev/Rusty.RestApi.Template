@@ -9,6 +9,5 @@ public class WeatherForecastRepo : BaseRepo<WeatherForecast>, IWeatherForecastRe
 {
     public WeatherForecastRepo(AppDbContext context) : base(context, item => item.Date)
     {
-        
     }
 }

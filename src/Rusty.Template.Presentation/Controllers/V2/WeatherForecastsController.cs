@@ -8,24 +8,42 @@ using Rusty.Template.Contracts.Requests;
 using Rusty.Template.Domain;
 using Rusty.Template.Infrastructure.Attributes;
 
-namespace Rusty.Template.Presentation.Controllers;
+namespace Rusty.Template.Presentation.Controllers.V2;
 
-[Route("[controller]")]
+/// <summary>
+///     Weather Forecast controller
+/// </summary>
+[ApiVersion("2.0")]
 public class WeatherForecastsController : BaseApiController
 {
     private readonly IWeatherForecastRepo _weatherForecastRepo;
 
+    /// <summary>
+    ///     Constructor
+    /// </summary>
+    /// <param name="weatherForecastRepo"></param>
     public WeatherForecastsController(IWeatherForecastRepo weatherForecastRepo)
     {
         _weatherForecastRepo = weatherForecastRepo;
     }
 
+    /// <summary>
+    ///     Gets paged order list of weather forecasts
+    /// </summary>
+    /// <param name="request"></param>
+    /// <returns></returns>
     [HttpPost("paged")]
     public async Task<IActionResult> GetWeatherForecasts(OrderByPagedRequest request)
     {
         return Ok(await _weatherForecastRepo.PaginateAsync<WeatherForecastDto>(request));
     }
 
+    /// <summary>
+    ///     Gets weather forecast by id
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
+    /// <exception cref="EntityNotFoundByIdException{WeatherForecast}"></exception>
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetWeatherForecast(int id)
     {
@@ -37,6 +55,12 @@ public class WeatherForecastsController : BaseApiController
         return Ok(weatherForecast.Adapt<WeatherForecastDto>());
     }
 
+    /// <summary>
+    ///     Updates weather forecast
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="weatherForecast"></param>
+    /// <returns></returns>
     [HttpPut("{id:int}")]
     [HttpPutIdCompare]
     public async Task<IActionResult> PutWeatherForecast(int id, WeatherForecastUpdateDto weatherForecast)
@@ -53,7 +77,12 @@ public class WeatherForecastsController : BaseApiController
 
         return NoContent();
     }
-    
+
+    /// <summary>
+    ///     Creates weather forecast
+    /// </summary>
+    /// <param name="weatherForecast"></param>
+    /// <returns></returns>
     [HttpPost]
     public async Task<IActionResult> PostWeatherForecast(WeatherForecastCreateDto weatherForecast)
     {
@@ -62,6 +91,11 @@ public class WeatherForecastsController : BaseApiController
             createdEntity.Adapt<WeatherForecastDto>());
     }
 
+    /// <summary>
+    ///     Deletes weather forecast
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns></returns>
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteWeatherForecast(int id)
     {
