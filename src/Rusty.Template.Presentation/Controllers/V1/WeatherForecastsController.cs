@@ -1,10 +1,10 @@
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Rusty.Template.Application.Repositories;
 using Rusty.Template.Contracts.Dtos.WeatherForecast;
 using Rusty.Template.Contracts.Exceptions.Entity;
 using Rusty.Template.Contracts.Requests;
+using Rusty.Template.Contracts.Responses;
 using Rusty.Template.Domain;
 using Rusty.Template.Infrastructure.Attributes;
 
@@ -14,7 +14,7 @@ namespace Rusty.Template.Presentation.Controllers.V1;
 ///     The weather forecasts controller class
 /// </summary>
 /// <seealso cref="BaseApiController" />
-[ApiVersion("1.0", Deprecated = true)]
+[ApiVersion("1.0")]
 public class WeatherForecastsController : BaseApiController
 {
     /// <summary>
@@ -37,6 +37,7 @@ public class WeatherForecastsController : BaseApiController
     /// <param name="request">The request</param>
     /// <returns>A task containing the action result</returns>
     [HttpPost("paged")]
+    [ProducesResponseType(typeof(PagedResponse<WeatherForecastDto>), 200)]
     public async Task<IActionResult> GetWeatherForecasts(OrderByPagedRequest request)
     {
         return Ok(await _weatherForecastRepo.PaginateAsync<WeatherForecastDto>(request));
@@ -49,13 +50,10 @@ public class WeatherForecastsController : BaseApiController
     /// <exception cref="EntityNotFoundByIdException{WeatherForecast}"></exception>
     /// <returns>A task containing the action result</returns>
     [HttpGet("{id:int}")]
+    [ProducesResponseType(typeof(WeatherForecastDto), 200)]
     public async Task<IActionResult> GetWeatherForecast(int id)
     {
-        var weatherForecast = await _weatherForecastRepo.GetByIdAsync(id);
-
-        if (weatherForecast is null)
-            throw new EntityNotFoundByIdException<WeatherForecast>(id);
-
+        var weatherForecast = await _weatherForecastRepo.GetByIdWithExceptionAsync(id);
         return Ok(weatherForecast.Adapt<WeatherForecastDto>());
     }
 
@@ -67,18 +65,10 @@ public class WeatherForecastsController : BaseApiController
     /// <returns>A task containing the action result</returns>
     [HttpPut("{id:int}")]
     [HttpPutIdCompare]
+    [ProducesResponseType(204)]
     public async Task<IActionResult> PutWeatherForecast(int id, WeatherForecastUpdateDto weatherForecast)
     {
-        try
-        {
-            await _weatherForecastRepo.UpdateAsync(weatherForecast.Adapt<WeatherForecast>());
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            return NotFound();
-            throw;
-        }
-
+        await _weatherForecastRepo.UpdateAsync(weatherForecast.Adapt<WeatherForecast>());
         return NoContent();
     }
 
@@ -88,6 +78,7 @@ public class WeatherForecastsController : BaseApiController
     /// <param name="weatherForecast">The weather forecast</param>
     /// <returns>A task containing the action result</returns>
     [HttpPost]
+    [ProducesResponseType(typeof(WeatherForecastDto), 201)]
     public async Task<IActionResult> PostWeatherForecast(WeatherForecastCreateDto weatherForecast)
     {
         var createdEntity = await _weatherForecastRepo.CreateAsync(weatherForecast.Adapt<WeatherForecast>());
@@ -101,6 +92,7 @@ public class WeatherForecastsController : BaseApiController
     /// <param name="id">The id</param>
     /// <returns>A task containing the action result</returns>
     [HttpDelete("{id:int}")]
+    [ProducesResponseType(204)]
     public async Task<IActionResult> DeleteWeatherForecast(int id)
     {
         await _weatherForecastRepo.DeleteAsync(id);

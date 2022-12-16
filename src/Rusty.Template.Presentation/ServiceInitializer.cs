@@ -65,6 +65,11 @@ public static class ServiceInitializer
         services.AddApiVersioningSupport(configuration);
     }
 
+    /// <summary>
+    ///     Adds the api versioning support using the specified services
+    /// </summary>
+    /// <param name="services">The services</param>
+    /// <param name="configuration">The configuration</param>
     private static void AddApiVersioningSupport(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddApiVersioning(options =>

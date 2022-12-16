@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Rusty.Template.Application.Repositories;
@@ -6,8 +6,15 @@ using Rusty.Template.Domain;
 
 namespace Rusty.Template.Infrastructure.Database;
 
+/// <summary>
+///     The db initializer class
+/// </summary>
 public static class DbInitializer
 {
+    /// <summary>
+    ///     Initializes the database data using the specified services
+    /// </summary>
+    /// <param name="services">The services</param>
     public static async Task InitializeDatabaseDataAsync(this IServiceProvider services)
     {
         await using var scope = services.CreateAsyncScope();
@@ -27,6 +34,10 @@ public static class DbInitializer
         }
     }
 
+    /// <summary>
+    ///     Migrates the database using the specified services
+    /// </summary>
+    /// <param name="services">The services</param>
     public static async Task MigrateDatabaseAsync(this IServiceProvider services)
     {
         using var scope = services.CreateScope();
@@ -34,6 +45,15 @@ public static class DbInitializer
         await context.Database.MigrateAsync();
     }
 
+    /// <summary>
+    ///     Lorems the ipsum using the specified min words
+    /// </summary>
+    /// <param name="minWords">The min words</param>
+    /// <param name="maxWords">The max words</param>
+    /// <param name="minSentences">The min sentences</param>
+    /// <param name="maxSentences">The max sentences</param>
+    /// <param name="numParagraphs">The num paragraphs</param>
+    /// <returns>The string</returns>
     private static string LoremIpsum(int minWords, int maxWords,
         int minSentences, int maxSentences,
         int numParagraphs)

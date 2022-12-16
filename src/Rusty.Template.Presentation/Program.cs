@@ -36,25 +36,6 @@ app.UseSwaggerUI(options =>
         options.SwaggerEndpoint($"../swagger/{description.GroupName}/swagger.json",
             description.GroupName.ToUpperInvariant());
 });
-// app.UseSwaggerUI(options =>
-// {
-//     var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
-//     foreach (var description in provider.ApiVersionDescriptions)
-//     {
-//         options.SwaggerEndpoint($"../swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
-//     }
-// });
-// app.UseSwaggerUI(c =>
-// {
-//     var provider= app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
-//     foreach (var description in provider.ApiVersionDescriptions)
-//     {
-//         c.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
-//     }
-//     //
-//     // var swaggerDoc = app.Configuration.GetSection("SwaggerDoc");
-//     // c.SwaggerEndpoint(swaggerDoc["Endpoint"], swaggerDoc["Title"]);
-// });
 app.UseRouting();
 
 app.UseAuthentication();

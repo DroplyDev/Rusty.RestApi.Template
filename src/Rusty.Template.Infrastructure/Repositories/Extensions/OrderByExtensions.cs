@@ -1,10 +1,21 @@
-﻿using System.Linq.Expressions;
+using System.Linq.Expressions;
 using Rusty.Template.Contracts.SubTypes;
 
 namespace Rusty.Template.Infrastructure.Repositories.Extensions;
 
+/// <summary>
+///     The order by extensions class
+/// </summary>
 public static class OrderByExtensions
 {
+    /// <summary>
+    ///     Orders the by with direction using the specified query
+    /// </summary>
+    /// <typeparam name="TEntity">The entity</typeparam>
+    /// <param name="query">The query</param>
+    /// <param name="propertyName">The property name</param>
+    /// <param name="orderDirection">The order direction</param>
+    /// <returns>The new query</returns>
     public static IOrderedQueryable<TEntity> OrderByWithDirection<TEntity>(
         this IQueryable<TEntity> query, string propertyName, OrderDirection orderDirection)
     {
@@ -38,6 +49,14 @@ public static class OrderByExtensions
         return newQuery;
     }
 
+    /// <summary>
+    ///     Orders the by with direction using the specified query
+    /// </summary>
+    /// <typeparam name="TEntity">The entity</typeparam>
+    /// <param name="query">The query</param>
+    /// <param name="keySelector">The key selector</param>
+    /// <param name="orderDirection">The order direction</param>
+    /// <returns>An ordered queryable of t entity</returns>
     public static IOrderedQueryable<TEntity> OrderByWithDirection<TEntity>(
         this IQueryable<TEntity> query, Expression<Func<TEntity, object>> keySelector, OrderDirection orderDirection)
     {
