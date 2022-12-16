@@ -37,7 +37,7 @@ public abstract partial class BaseRepo<TEntity> : IBaseRepo<TEntity> where TEnti
     protected readonly OrderDirection DefaultOrderDirection;
 
     /// <summary>
-    ///     Initializes a new instance of the <see cref="BaseRepo" /> class
+    ///     Initializes a new instance of the <see /> class
     /// </summary>
     /// <param name="context">The context</param>
     /// <param name="defaultOrderBy">The default order by</param>
@@ -50,7 +50,7 @@ public abstract partial class BaseRepo<TEntity> : IBaseRepo<TEntity> where TEnti
     }
 
     /// <summary>
-    ///     Initializes a new instance of the <see cref="BaseRepo" /> class
+    /// Initializes a new instance of the <see /> class
     /// </summary>
     /// <param name="context">The context</param>
     /// <param name="defaultOrderBy">The default order by</param>

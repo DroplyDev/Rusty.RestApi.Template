@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Rusty.Template.Contracts.Exceptions;
@@ -8,17 +8,36 @@ using Serilog;
 
 namespace Rusty.Template.Infrastructure.Middlewares;
 
+/// <summary>
+///     The exception handling middleware class
+/// </summary>
 public sealed class ExceptionHandlingMiddleware
 {
+    /// <summary>
+    ///     The logger
+    /// </summary>
     private readonly ILogger _logger;
+
+    /// <summary>
+    ///     The next
+    /// </summary>
     private readonly RequestDelegate _next;
 
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="ExceptionHandlingMiddleware" /> class
+    /// </summary>
+    /// <param name="logger">The logger</param>
+    /// <param name="next">The next</param>
     public ExceptionHandlingMiddleware(ILogger logger, RequestDelegate next)
     {
         _logger = logger;
         _next = next;
     }
 
+    /// <summary>
+    ///     Invokes the context
+    /// </summary>
+    /// <param name="context">The context</param>
     public async Task InvokeAsync(HttpContext context)
     {
         try
@@ -72,6 +91,11 @@ public sealed class ExceptionHandlingMiddleware
         }
     }
 
+    /// <summary>
+    ///     Handles the exception using the specified context
+    /// </summary>
+    /// <param name="context">The context</param>
+    /// <param name="exception">The exception</param>
     private static Task HandleExceptionAsync(HttpContext context, ApiException exception)
     {
         context.Response.StatusCode = exception.StatusCode;
@@ -79,6 +103,11 @@ public sealed class ExceptionHandlingMiddleware
         return context.Response.WriteAsync(exception.ToString());
     }
 
+    /// <summary>
+    ///     Handles the exception using the specified context
+    /// </summary>
+    /// <param name="context">The context</param>
+    /// <param name="exception">The exception</param>
     private static Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
         context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;

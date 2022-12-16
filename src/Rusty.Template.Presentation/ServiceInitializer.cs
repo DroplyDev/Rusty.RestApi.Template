@@ -124,7 +124,7 @@ public static class ServiceInitializer
             var currentAssembly = Assembly.GetExecutingAssembly();
             var xmlDocs = currentAssembly.GetReferencedAssemblies()
                 .Union(new[] { currentAssembly.GetName() })
-                .Select(a => Path.Combine(Path.GetDirectoryName(currentAssembly.Location), $"{a.Name}.xml"))
+                .Select(a => Path.Combine(Path.GetDirectoryName(currentAssembly.Location)!, $"{a.Name}.xml"))
                 .Where(f => File.Exists(f)).ToArray();
 
             Array.ForEach(xmlDocs, d => { options.IncludeXmlComments(d); });  
