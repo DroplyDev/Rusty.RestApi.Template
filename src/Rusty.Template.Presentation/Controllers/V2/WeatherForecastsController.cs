@@ -12,7 +12,7 @@ namespace Rusty.Template.Presentation.Controllers.V2;
 /// <summary>
 ///     Weather Forecast controller
 /// </summary>
-[ApiVersion("2.0")]
+[ApiVersion("2.0", Deprecated = false)]
 public class WeatherForecastsController : BaseApiController
 {
     /// <summary>

@@ -74,7 +74,6 @@ public static class DbInitializer
 
         for (var p = 0; p < numParagraphs; p++)
         {
-            result.Append("<p>");
             for (var s = 0; s < numSentences; s++)
             {
                 for (var w = 0; w < numWords; w++)
@@ -85,10 +84,7 @@ public static class DbInitializer
 
                 result.Append(". ");
             }
-
-            result.Append("</p>");
         }
-
         return result.ToString();
     }
 }

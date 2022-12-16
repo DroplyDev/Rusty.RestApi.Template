@@ -3,6 +3,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Mapster;
 using MapsterMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
@@ -45,35 +46,17 @@ public static class ServiceInitializer
     }
 
     /// <summary>
-    ///     Adds the application services using the specified services
-    /// </summary>
-    /// <param name="services">The services</param>
-    /// <param name="configuration">The configuration</param>
-    /// <exception cref="WrongProductVersionFormatException"></exception>
-    public static void AddApplicationServices(this IServiceCollection services,
-        IConfiguration configuration)
-    {
-        services.AddLogging();
-        services.AddDatabases(configuration);
-        services.AddFluentValidation();
-        services.AddControllers();
-        services.AddEndpointsApiExplorer();
-        services.AddSwagger(configuration);
-        services.AddRepositories();
-        services.AddServices();
-        services.AddMapster();
-        services.AddApiVersioningSupport(configuration);
-    }
-
-    /// <summary>
     ///     Adds the api versioning support using the specified services
     /// </summary>
     /// <param name="services">The services</param>
     /// <param name="configuration">The configuration</param>
-    private static void AddApiVersioningSupport(this IServiceCollection services, IConfiguration configuration)
+    public static void AddApiVersioningSupport(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddApiVersioning(options =>
         {
+            options.DefaultApiVersion = new ApiVersion(DateTime.Now);
+            options.AssumeDefaultVersionWhenUnspecified = true;
+            options.RegisterMiddleware = true;
             options.ReportApiVersions = true;
             options.ApiVersionReader = new UrlSegmentApiVersionReader();
         });
@@ -88,7 +71,7 @@ public static class ServiceInitializer
     ///     Adds the fluent validation using the specified services
     /// </summary>
     /// <param name="services">The services</param>
-    private static void AddFluentValidation(this IServiceCollection services)
+    public static void AddFluentValidation(this IServiceCollection services)
     {
         services.AddFluentValidationAutoValidation();
         services.AddValidatorsFromAssemblyContaining<WeatherForecastCreateDtoValidator>();
@@ -99,7 +82,7 @@ public static class ServiceInitializer
     /// </summary>
     /// <param name="services">The services</param>
     /// <param name="configuration">The configuration</param>
-    private static void AddSwagger(this IServiceCollection services, IConfiguration configuration)
+    public static void AddSwagger(this IServiceCollection services, IConfiguration configuration)
     {
         // services.AddTransient<IConfigureOptions<SwaggerGenOptions>, SwaggerGenConfigurationOptions>();
         services.AddSwaggerGen(options =>
@@ -138,11 +121,13 @@ public static class ServiceInitializer
                     new List<string>()
                 }
             });
-            var currentXmlPath = Path.Combine(AppContext.BaseDirectory,
-                $"{Assembly.GetExecutingAssembly().GetName().Name}.xml");
-            options.IncludeXmlComments(currentXmlPath);
-            var contractsXmlComments = Path.Combine(AppContext.BaseDirectory, "Rusty.Template.Contracts.xml");
-            options.IncludeXmlComments(contractsXmlComments);
+            var currentAssembly = Assembly.GetExecutingAssembly();
+            var xmlDocs = currentAssembly.GetReferencedAssemblies()
+                .Union(new[] { currentAssembly.GetName() })
+                .Select(a => Path.Combine(Path.GetDirectoryName(currentAssembly.Location), $"{a.Name}.xml"))
+                .Where(f => File.Exists(f)).ToArray();
+
+            Array.ForEach(xmlDocs, d => { options.IncludeXmlComments(d); });  
         });
     }
 
@@ -152,7 +137,7 @@ public static class ServiceInitializer
     /// <param name="services">The services</param>
     /// <param name="configuration">The configuration</param>
     /// <exception cref="ApiException">Connection string was not found</exception>
-    private static void AddDatabases(this IServiceCollection services, IConfiguration configuration)
+    public static void AddDatabases(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<AppDbContext>(options =>
         {
@@ -168,7 +153,7 @@ public static class ServiceInitializer
     ///     Adds the repositories using the specified services
     /// </summary>
     /// <param name="services">The services</param>
-    private static void AddRepositories(this IServiceCollection services)
+    public static void AddRepositories(this IServiceCollection services)
     {
         services.AddScoped<IWeatherForecastRepo, WeatherForecastRepo>();
     }
@@ -177,7 +162,7 @@ public static class ServiceInitializer
     ///     Adds the services using the specified services
     /// </summary>
     /// <param name="services">The services</param>
-    private static void AddServices(this IServiceCollection services)
+    public static void AddServices(this IServiceCollection services)
     {
     }
 
@@ -185,7 +170,7 @@ public static class ServiceInitializer
     ///     Adds the mapster using the specified services
     /// </summary>
     /// <param name="services">The services</param>
-    private static void AddMapster(this IServiceCollection services)
+    public static void AddMapster(this IServiceCollection services)
     {
         var config = TypeAdapterConfig.GlobalSettings;
         config.Scan(typeof(WeatherForecastProfile).Assembly);

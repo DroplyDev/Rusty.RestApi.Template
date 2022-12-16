@@ -9,9 +9,18 @@ builder.Configuration.AddConfigurations();
 
 // Add logging
 builder.Host.AddSerilog();
-
-// Add services to the container.
-builder.Services.AddApplicationServices(builder.Configuration);
+var configuration = builder.Configuration;
+var services = builder.Services;
+services.AddDatabases(configuration);
+services.AddSwagger(configuration);
+services.AddApiVersioningSupport(configuration);
+services.AddLogging();
+services.AddFluentValidation();
+services.AddControllers();
+services.AddEndpointsApiExplorer();
+services.AddRepositories();
+services.AddServices();
+services.AddMapster();
 // Build app
 var app = builder.Build();
 // set Serilog request logging
@@ -41,6 +50,5 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
-// app.MapControllers();
-app.UseEndpoints(endpoints => { endpoints.MapControllers(); }); 
+app.MapControllers();
 await app.RunAsync();
