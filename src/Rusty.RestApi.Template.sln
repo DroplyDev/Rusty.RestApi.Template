@@ -10,7 +10,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rusty.Template.Contracts", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rusty.Template.Application", "Rusty.Template.Application\Rusty.Template.Application.csproj", "{08A112FD-7BD4-47C7-99D6-35B7167A72F2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rusty.Template.IntegrationTests", "Rusty.Template.IntegrationTests\Rusty.Template.IntegrationTests.csproj", "{BAEE4C43-6E36-4139-87F8-3263DAFC9895}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rusty.Template.Tests.Integration", "Rusty.Template.Tests.Integration\Rusty.Template.Tests.Integration.csproj", "{BAEE4C43-6E36-4139-87F8-3263DAFC9895}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

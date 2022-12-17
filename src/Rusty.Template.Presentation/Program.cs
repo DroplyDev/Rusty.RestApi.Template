@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Rusty.Template.Infrastructure.Database;
 using Rusty.Template.Infrastructure.Middlewares;
 using Rusty.Template.Presentation;
 using Serilog;
@@ -30,9 +29,9 @@ app.UseSerilogRequestLogging(configure =>
         "HTTP {RequestMethod} {RequestPath} ({UserId} {UserName} responded {StatusCode} in {Elapsed:0.0000}ms)";
 });
 //Prepare db
-if (app.Environment.IsStaging())
-    await app.Services.MigrateDatabaseAsync();
-await app.Services.InitializeDatabaseDataAsync();
+// if (app.Environment.IsStaging())
+//     await app.Services.MigrateDatabaseAsync();
+// await app.Services.InitializeDatabaseDataAsync();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment()) app.UseDeveloperExceptionPage();
 
@@ -52,3 +51,10 @@ app.UseAuthorization();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.MapControllers();
 await app.RunAsync();
+
+/// <summary>
+///     Makes program class visible for testing solutions
+/// </summary>
+public partial class Program
+{
+}
