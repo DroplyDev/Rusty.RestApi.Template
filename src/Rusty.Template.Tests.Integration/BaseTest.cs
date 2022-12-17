@@ -1,12 +1,11 @@
 ﻿namespace Rusty.Template.Tests.Integration;
 
-public abstract class BaseTest
+public abstract class BaseTest : IClassFixture<WebApiFactory>
 {
     protected readonly NSwagClient Client;
 
-    protected BaseTest()
+    protected BaseTest(WebApiFactory apiFactory)
     {
-        var appFactory = new WebApiFactory();
-        Client = new NSwagClient(appFactory.CreateClient());
+        Client = new NSwagClient(apiFactory.CreateClient());
     }
 }

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Rusty.Template.Infrastructure.Database;
 using Rusty.Template.Infrastructure.Middlewares;
 using Rusty.Template.Presentation;
 using Serilog;
@@ -30,8 +31,8 @@ app.UseSerilogRequestLogging(configure =>
 });
 //Prepare db
 // if (app.Environment.IsStaging())
-//     await app.Services.MigrateDatabaseAsync();
-// await app.Services.InitializeDatabaseDataAsync();
+await app.Services.MigrateDatabaseAsync();
+await app.Services.InitializeDatabaseDataAsync();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment()) app.UseDeveloperExceptionPage();
 

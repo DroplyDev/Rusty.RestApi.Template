@@ -139,12 +139,12 @@ public static class ServiceInitializer
     /// <exception cref="ApiException">Connection string was not found</exception>
     public static void AddDatabases(this IServiceCollection services, IConfiguration configuration)
     {
+        var efConStr = configuration.GetConnectionString("DefaultConnection");
+        services.AddSingleton(new ConnectionStringFactory(efConStr));
         services.AddDbContext<AppDbContext>(options =>
         {
-            var efConStr = configuration.GetConnectionString("DefaultConnection");
-            if (efConStr is null)
-                throw new ApiException("Connection string was not found");
-            options.UseSqlServer(efConStr)
+            var factory = services.BuildServiceProvider().GetRequiredService<ConnectionStringFactory>();
+            options.UseSqlServer(factory.ConnectionString)
                 .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         });
     }

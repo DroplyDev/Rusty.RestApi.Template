@@ -17,4 +17,8 @@ public sealed class GetAllWeatherForecastTests : BaseTest
         response.Data.Should().NotBeEmpty();
         response.Data.Count.Should().Be(100);
     }
+
+    public GetAllWeatherForecastTests(WebApiFactory apiFactory) : base(apiFactory)
+    {
+    }
 }
