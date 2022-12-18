@@ -148,7 +148,6 @@ public static class ServiceInitializer
                 .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         });
     }
-
     /// <summary>
     ///     Adds the repositories using the specified services
     /// </summary>

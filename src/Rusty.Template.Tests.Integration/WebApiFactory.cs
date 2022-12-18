@@ -21,11 +21,11 @@ public class WebApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        var constr = _dbContainer.ConnectionString + "TrustServerCertificate=True";
+        var connectionString = _dbContainer.ConnectionString + "TrustServerCertificate=True";
         builder.ConfigureTestServices(services =>
         {
             services.RemoveAll(typeof(ConnectionStringFactory));
-            services.AddSingleton(new ConnectionStringFactory(constr));
+            services.AddSingleton(new ConnectionStringFactory(connectionString));
         });
     }
 
