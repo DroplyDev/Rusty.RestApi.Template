@@ -1,14 +1,13 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore.Query;
 using Rusty.Template.Contracts.SubTypes;
-using Rusty.Template.Domain;
 
 namespace Rusty.Template.Application.Repositories;
 
 /// <summary>
 ///     The base repo interface
 /// </summary>
-public partial interface IBaseRepo<TEntity> where TEntity : BaseEntity
+public partial interface IBaseRepo<TEntity> where TEntity : class
 {
     /// <summary>
     ///     Gets the by id using the specified id

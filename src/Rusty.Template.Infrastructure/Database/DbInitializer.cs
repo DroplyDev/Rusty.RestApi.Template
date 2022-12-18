@@ -73,18 +73,17 @@ public static class DbInitializer
         var result = new StringBuilder();
 
         for (var p = 0; p < numParagraphs; p++)
+        for (var s = 0; s < numSentences; s++)
         {
-            for (var s = 0; s < numSentences; s++)
+            for (var w = 0; w < numWords; w++)
             {
-                for (var w = 0; w < numWords; w++)
-                {
-                    if (w > 0) result.Append(" ");
-                    result.Append(words[rand.Next(words.Length)]);
-                }
-
-                result.Append(". ");
+                if (w > 0) result.Append(" ");
+                result.Append(words[rand.Next(words.Length)]);
             }
+
+            result.Append(". ");
         }
+
         return result.ToString();
     }
 }

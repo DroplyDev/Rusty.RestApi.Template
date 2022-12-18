@@ -1,3 +1,5 @@
+using Serilog.Events;
+
 namespace Rusty.Template.Contracts.Exceptions;
 
 /// <summary>
@@ -7,32 +9,28 @@ namespace Rusty.Template.Contracts.Exceptions;
 public class ApiException : Exception
 {
     /// <summary>
-    ///     Initializes a new instance of the <see cref="ApiException" /> class
+    ///     Gets or sets the value of the log level
     /// </summary>
-    /// <param name="message">The message</param>
-    public ApiException(string message)
-    {
-        Message = message;
-    }
-
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="ApiException" /> class
-    /// </summary>
-    /// <param name="statusCode">The status code</param>
-    protected ApiException(int statusCode)
-    {
-        StatusCode = statusCode;
-    }
+    private readonly LogEventLevel _logLevel = LogEventLevel.Fatal;
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="ApiException" /> class
     /// </summary>
     /// <param name="message">The message</param>
     /// <param name="statusCode">The status code</param>
-    public ApiException(string message, int statusCode)
+    /// <param name="logLevel"></param>
+    public ApiException(string message, int statusCode, LogEventLevel logLevel)
     {
         Message = message;
         StatusCode = statusCode;
+        _logLevel = logLevel;
+    }
+
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="ApiException" /> class
+    /// </summary>
+    public ApiException()
+    {
     }
 
     /// <summary>
@@ -44,4 +42,13 @@ public class ApiException : Exception
     ///     Gets the value of the message
     /// </summary>
     public override string Message { get; } = "Unhandled exception occured";
+
+    /// <summary>
+    ///     Gets the level
+    /// </summary>
+    /// <returns>The log level</returns>
+    public LogEventLevel GetLevel()
+    {
+        return _logLevel;
+    }
 }

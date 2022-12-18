@@ -1,14 +1,13 @@
 using Microsoft.EntityFrameworkCore.Query;
 using Rusty.Template.Contracts.Requests;
 using Rusty.Template.Contracts.Responses;
-using Rusty.Template.Domain;
 
 namespace Rusty.Template.Application.Repositories;
 
 /// <summary>
 ///     The base repo interface
 /// </summary>
-public partial interface IBaseRepo<TEntity> where TEntity : BaseEntity
+public partial interface IBaseRepo<TEntity> where TEntity : class
 {
     /// <summary>
     ///     Paginates the request
@@ -27,5 +26,5 @@ public partial interface IBaseRepo<TEntity> where TEntity : BaseEntity
     /// <param name="includes">The includes</param>
     /// <returns>A task containing a paged response of t result</returns>
     Task<PagedResponse<TResult>> PaginateAsync<TResult>(OrderedPagedRequest request,
-        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null);
+        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null) where TResult : class;
 }

@@ -1,4 +1,4 @@
-using Rusty.Template.Domain;
+using Serilog.Events;
 
 namespace Rusty.Template.Contracts.Exceptions.Entity;
 
@@ -6,7 +6,7 @@ namespace Rusty.Template.Contracts.Exceptions.Entity;
 ///     The entity not found by name exception class
 /// </summary>
 /// <seealso cref="BaseEntityException{TEntity}" />
-public class EntityNotFoundByNameException<TEntity> : BaseEntityException<TEntity> where TEntity : BaseEntity
+public class EntityNotFoundByNameException<TEntity> : BaseEntityException<TEntity> where TEntity : class
 {
     /// <summary>
     ///     Initializes a new instance of the
@@ -16,8 +16,8 @@ public class EntityNotFoundByNameException<TEntity> : BaseEntityException<TEntit
     ///     class
     /// </summary>
     /// <param name="name">The name</param>
-    public EntityNotFoundByNameException(string name) : base($"{typeof(TEntity).Name} with name {name} was not found",
-        404)
+    public EntityNotFoundByNameException(string name) : base($@"{typeof(TEntity).Name} with name {name} was not found",
+        404, LogEventLevel.Warning)
     {
         Name = name;
     }

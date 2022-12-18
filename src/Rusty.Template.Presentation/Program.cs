@@ -52,10 +52,3 @@ app.UseAuthorization();
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.MapControllers();
 await app.RunAsync();
-
-/// <summary>
-///     Makes program class visible for testing solutions
-/// </summary>
-public partial class Program
-{
-}

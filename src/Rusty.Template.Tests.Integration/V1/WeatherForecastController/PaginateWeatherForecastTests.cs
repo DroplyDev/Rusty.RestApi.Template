@@ -2,6 +2,10 @@
 
 public sealed class PaginateWeatherForecastTests : BaseTest
 {
+    public PaginateWeatherForecastTests(WebApiFactory apiFactory) : base(apiFactory)
+    {
+    }
+
     [Fact]
     public async Task Paginate_ReturnsOK_WhenOk()
     {
@@ -9,8 +13,8 @@ public sealed class PaginateWeatherForecastTests : BaseTest
         {
             OrderByData = new OrderByData
             {
-                OrderBy = "Temperature",
-                OrderDirection = (OrderDirection)3
+                OrderBy = "TemperatureC",
+                OrderDirection = OrderDirection._0
             },
             PageData = new PageData
             {
@@ -18,11 +22,6 @@ public sealed class PaginateWeatherForecastTests : BaseTest
                 Limit = 100
             }
         });
-        response.Data.Should().NotBeEmpty();
         response.Data.Count.Should().Be(100);
-    }
-
-    public PaginateWeatherForecastTests(WebApiFactory apiFactory) : base(apiFactory)
-    {
     }
 }

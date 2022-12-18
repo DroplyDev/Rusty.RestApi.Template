@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore.Query;
 using Rusty.Template.Application.Repositories;
 using Rusty.Template.Contracts.Exceptions.Entity;
 using Rusty.Template.Contracts.SubTypes;
-using Rusty.Template.Domain;
 using Rusty.Template.Infrastructure.Database;
 using Rusty.Template.Infrastructure.Repositories.Extensions;
 
@@ -14,7 +13,7 @@ namespace Rusty.Template.Infrastructure.Repositories.BaseRepository;
 ///     The base repo class
 /// </summary>
 /// <seealso cref="IBaseRepo{TEntity}" />
-public abstract partial class BaseRepo<TEntity> : IBaseRepo<TEntity> where TEntity : BaseEntity
+public abstract partial class BaseRepo<TEntity> : IBaseRepo<TEntity> where TEntity : class
 {
     /// <summary>
     ///     The context
@@ -50,7 +49,7 @@ public abstract partial class BaseRepo<TEntity> : IBaseRepo<TEntity> where TEnti
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see /> class
+    ///     Initializes a new instance of the <see /> class
     /// </summary>
     /// <param name="context">The context</param>
     /// <param name="defaultOrderBy">The default order by</param>
@@ -164,7 +163,6 @@ public abstract partial class BaseRepo<TEntity> : IBaseRepo<TEntity> where TEnti
     public virtual void Attach(TEntity entity)
     {
         DbSet.Attach(entity);
-
     }
 
     /// <summary>

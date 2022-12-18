@@ -1,14 +1,13 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
-using Rusty.Template.Domain;
 
 namespace Rusty.Template.Infrastructure.Repositories.BaseRepository;
 
 /// <summary>
 ///     The base repo class
 /// </summary>
-public partial class BaseRepo<TEntity> where TEntity : BaseEntity
+public partial class BaseRepo<TEntity> where TEntity : class
 {
     /// <summary>
     ///     Firsts the or default using the specified expression

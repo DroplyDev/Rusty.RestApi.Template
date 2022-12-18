@@ -1,10 +1,8 @@
 using System.Net;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Rusty.Template.Contracts.Exceptions;
-using Rusty.Template.Contracts.Exceptions.Entity;
-using Rusty.Template.Domain;
 using Serilog;
+using Serilog.Events;
 
 namespace Rusty.Template.Infrastructure.Middlewares;
 
@@ -44,44 +42,9 @@ public sealed class ExceptionHandlingMiddleware
         {
             await _next(context);
         }
-        catch (EntityWithIdAlreadyExistsException<BaseEntity> ex)
-        {
-            _logger.Information(ex, ex.Message);
-            await HandleExceptionAsync(context, ex);
-        }
-        catch (EntityNotFoundByIdException<BaseEntity> ex)
-        {
-            _logger.Information(ex, ex.Message);
-            await HandleExceptionAsync(context, ex);
-        }
-        catch (EntityValidationException<BaseEntity> ex)
-        {
-            _logger.Information(ex, ex.Message);
-            await HandleExceptionAsync(context, ex);
-        }
-        catch (InsufficientPrivilegeException ex)
-        {
-            _logger.Information(ex, ex.Message);
-            await HandleExceptionAsync(context, ex);
-        }
-        catch (NegativeValueException ex)
-        {
-            _logger.Information(ex, ex.Message);
-            await HandleExceptionAsync(context, ex);
-        }
-        catch (OrderParamNameNotValidException ex)
-        {
-            _logger.Information(ex, ex.Message);
-            await HandleExceptionAsync(context, ex);
-        }
-        catch (DbUpdateConcurrencyException ex)
-        {
-            _logger.Information(ex, ex.Message);
-            await HandleExceptionAsync(context, ex);
-        }
         catch (ApiException ex)
         {
-            _logger.Error(ex, ex.Message);
+            _logger.Write(ex.GetLevel(), ex, ex.Message);
             await HandleExceptionAsync(context, ex);
         }
         catch (Exception ex)
@@ -112,7 +75,8 @@ public sealed class ExceptionHandlingMiddleware
     {
         context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
         context.Response.ContentType = "application/json";
-        return context.Response.WriteAsJsonAsync(new ApiException(exception.Message, context.Response.StatusCode)
-            .ToString());
+        return context.Response.WriteAsJsonAsync(
+            new ApiException(exception.Message, context.Response.StatusCode, LogEventLevel.Fatal)
+                .ToString());
     }
 }

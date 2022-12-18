@@ -55,7 +55,6 @@ public static class PaginationExtensions
     ///     Paginates the with total count as list using the specified query
     /// </summary>
     /// <typeparam name="TEntity">The entity</typeparam>
-    /// <typeparam name="TResult">The result</typeparam>
     /// <param name="query">The query</param>
     /// <param name="pageData">The page data</param>
     /// <returns>A task containing a paged response of t result</returns>
@@ -72,7 +71,6 @@ public static class PaginationExtensions
             data,
             data.Count
         );
-
     }
 
     /// <summary>

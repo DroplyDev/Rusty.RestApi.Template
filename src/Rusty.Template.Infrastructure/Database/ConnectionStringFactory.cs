@@ -1,11 +1,23 @@
-﻿namespace Rusty.Template.Infrastructure.Database;
+using Rusty.Template.Domain.Exceptions;
 
+namespace Rusty.Template.Infrastructure.Database;
+
+/// <summary>
+///     The connection string factory class
+/// </summary>
 public class ConnectionStringFactory
 {
-    public string ConnectionString { get; }
-
-    public ConnectionStringFactory(string connectionString)
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="ConnectionStringFactory" /> class
+    /// </summary>
+    /// <param name="connectionString">The connection string</param>
+    public ConnectionStringFactory(string? connectionString)
     {
-        ConnectionString = connectionString;
+        ConnectionString = connectionString ?? throw new ConnectionStringIsNullException();
     }
+
+    /// <summary>
+    ///     Gets the value of the connection string
+    /// </summary>
+    public string ConnectionString { get; }
 }

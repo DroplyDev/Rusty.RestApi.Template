@@ -1,5 +1,5 @@
 ﻿namespace Rusty.Template.Domain;
 
-public partial class WeatherForecast : BaseEntity
+public partial class WeatherForecast
 {
 }

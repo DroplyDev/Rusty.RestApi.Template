@@ -95,7 +95,8 @@ public static class ServiceInitializer
                     new OpenApiInfo
                     {
                         Title = swaggerSection["Title"],
-                        Description = swaggerSection["Description"] + (description.IsDeprecated ? " [DEPRECATED]" : string.Empty),
+                        Description = swaggerSection["Description"] +
+                                      (description.IsDeprecated ? " [DEPRECATED]" : string.Empty),
                         Version = description.ApiVersion.ToString()
                     });
 
@@ -127,7 +128,7 @@ public static class ServiceInitializer
                 .Select(a => Path.Combine(Path.GetDirectoryName(currentAssembly.Location)!, $"{a.Name}.xml"))
                 .Where(f => File.Exists(f)).ToArray();
 
-            Array.ForEach(xmlDocs, d => { options.IncludeXmlComments(d); });  
+            Array.ForEach(xmlDocs, d => { options.IncludeXmlComments(d); });
         });
     }
 
@@ -148,6 +149,7 @@ public static class ServiceInitializer
                 .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         });
     }
+
     /// <summary>
     ///     Adds the repositories using the specified services
     /// </summary>

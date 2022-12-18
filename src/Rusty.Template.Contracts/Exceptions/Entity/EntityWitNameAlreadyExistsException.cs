@@ -1,4 +1,4 @@
-using Rusty.Template.Domain;
+using Serilog.Events;
 
 namespace Rusty.Template.Contracts.Exceptions.Entity;
 
@@ -6,7 +6,7 @@ namespace Rusty.Template.Contracts.Exceptions.Entity;
 ///     The entity wit name already exists exception class
 /// </summary>
 /// <seealso cref="BaseEntityException{TEntity}" />
-public class EntityWitNameAlreadyExistsException<TEntity> : BaseEntityException<TEntity> where TEntity : BaseEntity
+public class EntityWitNameAlreadyExistsException<TEntity> : BaseEntityException<TEntity> where TEntity : class
 {
     /// <summary>
     ///     Initializes a new instance of the
@@ -17,7 +17,7 @@ public class EntityWitNameAlreadyExistsException<TEntity> : BaseEntityException<
     /// </summary>
     /// <param name="name">The name</param>
     public EntityWitNameAlreadyExistsException(string name) : base(
-        $"{typeof(TEntity).Name} with name: {name} already exists", 409)
+        $@"{typeof(TEntity).Name} with name: {name} already exists", 409, LogEventLevel.Warning)
     {
         Name = name;
     }

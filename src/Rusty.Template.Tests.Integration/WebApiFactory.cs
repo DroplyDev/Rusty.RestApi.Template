@@ -10,8 +10,9 @@ namespace Rusty.Template.Tests.Integration;
 
 public class WebApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
 {
-    private readonly MsSqlTestcontainer _dbContainer;
     private readonly ConfigurationBuilder _configurationBuilder = new();
+    private readonly MsSqlTestcontainer _dbContainer;
+
     public WebApiFactory()
     {
         _configurationBuilder.AddJsonFile("appsettings.Staging.json", false, true);
@@ -22,6 +23,16 @@ public class WebApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
             {
                 Password = dockerSection["Password"]
             }).Build();
+    }
+
+    public async Task InitializeAsync()
+    {
+        await _dbContainer.StartAsync();
+    }
+
+    public new async Task DisposeAsync()
+    {
+        await _dbContainer.StopAsync();
     }
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -36,15 +47,5 @@ public class WebApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
         //         services.RemoveAll(typeof(ConnectionStringFactory));
         //         services.AddSingleton(new ConnectionStringFactory(connectionString));
         //     });
-    }
-
-    public async Task InitializeAsync()
-    {
-        await _dbContainer.StartAsync();
-    }
-
-    public new async Task DisposeAsync()
-    {
-        await _dbContainer.StopAsync();
     }
 }

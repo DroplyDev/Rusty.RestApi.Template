@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore.Query;
 using Rusty.Template.Contracts.SubTypes;
-using Rusty.Template.Domain;
 using Rusty.Template.Infrastructure.Repositories.Extensions;
 
 namespace Rusty.Template.Infrastructure.Repositories.BaseRepository;
@@ -8,7 +7,7 @@ namespace Rusty.Template.Infrastructure.Repositories.BaseRepository;
 /// <summary>
 ///     The base repo class
 /// </summary>
-public partial class BaseRepo<TEntity> where TEntity : BaseEntity
+public partial class BaseRepo<TEntity> where TEntity : class
 {
     /// <summary>
     ///     Gets the all using the specified includes

@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore.Query;
 using Rusty.Template.Contracts.Requests;
 using Rusty.Template.Contracts.Responses;
 using Rusty.Template.Contracts.SubTypes;
-using Rusty.Template.Domain;
 using Rusty.Template.Infrastructure.Repositories.Extensions;
 
 namespace Rusty.Template.Infrastructure.Repositories.BaseRepository;
@@ -12,7 +11,7 @@ namespace Rusty.Template.Infrastructure.Repositories.BaseRepository;
 /// <summary>
 ///     The base repo class
 /// </summary>
-public partial class BaseRepo<TEntity> where TEntity : BaseEntity
+public partial class BaseRepo<TEntity> where TEntity : class
 {
     /// <summary>
     ///     Paginates the skip items
@@ -61,7 +60,7 @@ public partial class BaseRepo<TEntity> where TEntity : BaseEntity
     /// <param name="includes">The includes</param>
     /// <returns>A task containing a paged response of t result</returns>
     public async Task<PagedResponse<TResult>> PaginateAsync<TResult>(OrderedPagedRequest request,
-        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null)
+        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null) where TResult : class
     {
         var query = IncludeIfNotNull(includes);
         var result = query.ProjectToType<TResult>();

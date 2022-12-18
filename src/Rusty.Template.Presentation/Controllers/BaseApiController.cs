@@ -11,5 +11,4 @@ namespace Rusty.Template.Presentation.Controllers;
 [Produces("application/json")]
 public abstract class BaseApiController : ControllerBase
 {
-
 }

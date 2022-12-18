@@ -1,5 +1,5 @@
 using System.Linq.Expressions;
-using Microsoft.AspNetCore.Http;
+using Rusty.Template.Contracts.Exceptions.Entity;
 using Rusty.Template.Contracts.SubTypes;
 
 namespace Rusty.Template.Infrastructure.Repositories.Extensions;
@@ -18,23 +18,19 @@ public static class OrderByExtensions
     /// <param name="orderDirection">The order direction</param>
     /// <returns>The new query</returns>
     public static IOrderedQueryable<TEntity> OrderByWithDirection<TEntity>(
-        this IQueryable<TEntity> query, string propertyName, OrderDirection orderDirection)
+        this IQueryable<TEntity> query, string propertyName, OrderDirection orderDirection) where TEntity : class
     {
         var entityType = typeof(TEntity);
         //Create x=>x.PropName
         var propertyInfo = entityType.GetProperty(propertyName);
-        var arg = Expression.Parameter(entityType, "x");
-        MemberExpression property;
-        try
-        {
-            property = Expression.Property(arg, propertyName);
-        }
-        catch (Exception e)
-        {
-            throw new BadHttpRequestException("order by clause with such name does not exist");
-        }
-        var selector = Expression.Lambda(property, arg);
+        if (propertyInfo is null)
+            throw new EntityOrderParamNameNotValidException<TEntity>(
+                $@"You can not sort by {propertyName}. It does not exist in response dto");
 
+        var arg = Expression.Parameter(entityType, "x");
+        var property = Expression.Property(arg, propertyName);
+
+        var selector = Expression.Lambda(property, arg);
         //Get System.Linq.Queryable.OrderByDescending() method.
         var enumerableType = typeof(Queryable);
         var method = enumerableType.GetMethods()
