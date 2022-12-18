@@ -9,12 +9,8 @@
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <AppSettingsFile>appsettings.json</AppSettingsFile>
         <AppSettingsDevelopmentFile>appsettings.Development.json</AppSettingsDevelopmentFile>
-        <AppSettingsStagingFile>appsettings.Staging.json</AppSettingsStagingFile>
         <AppSettingsProductionFile>appsettings.Production.json</AppSettingsProductionFile>
     </PropertyGroup>
-    <ItemGroup>
-        <InternalsVisibleTo Include="Rusty.Template.Tests.Integration"/>
-    </ItemGroup>
     <ItemGroup>
         <PackageReference Include="FluentValidation.AspNetCore" Version="11.2.2"/>
         <PackageReference Include="Mapster" Version="7.3.0"/>
@@ -47,5 +43,8 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Rusty.Template.Infrastructure\Rusty.Template.Infrastructure.csproj"/>
+    </ItemGroup>
+    <ItemGroup>
+        <None Include="appsettings.Staging.json"/>
     </ItemGroup>
 </Project>
