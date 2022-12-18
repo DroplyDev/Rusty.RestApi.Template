@@ -38,7 +38,7 @@ public class WeatherForecastsController : BaseApiController
     /// <returns>A task containing the action result</returns>
     [HttpPost("paged")]
     [ProducesResponseType(typeof(PagedResponse<WeatherForecastDto>), 200)]
-    public async Task<IActionResult> GetWeatherForecasts(OrderByPagedRequest request)
+    public async Task<IActionResult> GetWeatherForecasts(OrderedPagedRequest request)
     {
         return Ok(await _weatherForecastRepo.PaginateAsync<WeatherForecastDto>(request));
     }

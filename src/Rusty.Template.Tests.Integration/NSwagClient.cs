@@ -50,7 +50,7 @@ namespace Rusty.Template.Tests.Integration
         /// <param name="body">The request</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<WeatherForecastDtoPagedResponse> PagedAsync(OrderByPagedRequest body)
+        public virtual System.Threading.Tasks.Task<WeatherForecastDtoPagedResponse> PagedAsync(OrderedPagedRequest body)
         {
             return PagedAsync(body, System.Threading.CancellationToken.None);
         }
@@ -62,10 +62,10 @@ namespace Rusty.Template.Tests.Integration
         /// <param name="body">The request</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<WeatherForecastDtoPagedResponse> PagedAsync(OrderByPagedRequest body, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<WeatherForecastDtoPagedResponse> PagedAsync(OrderedPagedRequest body, System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/v2/WeatherForecasts/paged");
+            urlBuilder_.Append("api/v1/WeatherForecasts/paged");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -154,7 +154,7 @@ namespace Rusty.Template.Tests.Integration
                 throw new System.ArgumentNullException("id");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/v2/WeatherForecasts/{id}");
+            urlBuilder_.Append("api/v1/WeatherForecasts/{id}");
             urlBuilder_.Replace("{id}", System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
             var client_ = _httpClient;
@@ -242,7 +242,7 @@ namespace Rusty.Template.Tests.Integration
                 throw new System.ArgumentNullException("id");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/v2/WeatherForecasts/{id}");
+            urlBuilder_.Append("api/v1/WeatherForecasts/{id}");
             urlBuilder_.Replace("{id}", System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
             var client_ = _httpClient;
@@ -281,16 +281,6 @@ namespace Rusty.Template.Tests.Integration
                         if (status_ == 204)
                         {
                             return;
-                        }
-                        else
-                        if (status_ == 400)
-                        {
-                            var objectResponse_ = await ReadObjectResponseAsync<ProblemDetails>(response_, headers_, cancellationToken).ConfigureAwait(false);
-                            if (objectResponse_.Object == null)
-                            {
-                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-                            }
-                            throw new ApiException<ProblemDetails>("Bad Request", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         {
@@ -336,7 +326,7 @@ namespace Rusty.Template.Tests.Integration
                 throw new System.ArgumentNullException("id");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/v2/WeatherForecasts/{id}");
+            urlBuilder_.Append("api/v1/WeatherForecasts/{id}");
             urlBuilder_.Replace("{id}", System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
             var client_ = _httpClient;
@@ -413,7 +403,7 @@ namespace Rusty.Template.Tests.Integration
         public virtual async System.Threading.Tasks.Task<WeatherForecastDto> WeatherForecastsPOSTAsync(WeatherForecastCreateDto body, System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/v2/WeatherForecasts");
+            urlBuilder_.Append("api/v1/WeatherForecasts");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -593,7 +583,21 @@ namespace Rusty.Template.Tests.Integration
         [System.Text.Json.Serialization.JsonPropertyName("orderDirection")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public OrderDirection? OrderDirection { get; set; }
+        public OrderDirection OrderDirection { get; set; }
+
+    }
+
+    /// <summary>
+    /// The order direction enum
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    [System.Flags]
+    public enum OrderDirection
+    {
+
+        _0 = 1,
+
+        _1 = 2,
 
     }
 
@@ -601,7 +605,7 @@ namespace Rusty.Template.Tests.Integration
     /// The order by paged request
     /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class OrderByPagedRequest
+    public partial class OrderedPagedRequest
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("pageData")]
@@ -617,19 +621,6 @@ namespace Rusty.Template.Tests.Integration
     }
 
     /// <summary>
-    /// The order direction enum
-    /// </summary>
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public enum OrderDirection
-    {
-
-        _0 = 0,
-
-        _1 = 1,
-
-    }
-
-    /// <summary>
     /// The page data
     /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
@@ -639,52 +630,12 @@ namespace Rusty.Template.Tests.Integration
         [System.Text.Json.Serialization.JsonPropertyName("offset")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public int? Offset { get; set; }
+        public int Offset { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("limit")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public int? Limit { get; set; }
-
-    }
-
-    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class ProblemDetails
-    {
-
-        [System.Text.Json.Serialization.JsonPropertyName("type")]
-
-        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public string Type { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("title")]
-
-        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public string Title { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("status")]
-
-        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public int? Status { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("detail")]
-
-        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public string Detail { get; set; }
-
-        [System.Text.Json.Serialization.JsonPropertyName("instance")]
-
-        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public string Instance { get; set; }
-
-        private System.Collections.Generic.IDictionary<string, object> _additionalProperties;
-
-        [System.Text.Json.Serialization.JsonExtensionData]
-        public System.Collections.Generic.IDictionary<string, object> AdditionalProperties
-        {
-            get { return _additionalProperties ?? (_additionalProperties = new System.Collections.Generic.Dictionary<string, object>()); }
-            set { _additionalProperties = value; }
-        }
+        public int Limit { get; set; }
 
     }
 
@@ -701,7 +652,7 @@ namespace Rusty.Template.Tests.Integration
         [System.Text.Json.Serialization.JsonPropertyName("date")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public System.DateTimeOffset? Date { get; set; }
+        public System.DateTimeOffset Date { get; set; }
 
         /// <summary>
         /// Gets or sets the value of the temperature c
@@ -710,7 +661,7 @@ namespace Rusty.Template.Tests.Integration
         [System.Text.Json.Serialization.JsonPropertyName("temperatureC")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public int? TemperatureC { get; set; }
+        public int TemperatureC { get; set; }
 
         /// <summary>
         /// Gets or sets the value of the summary
@@ -736,7 +687,7 @@ namespace Rusty.Template.Tests.Integration
         [System.Text.Json.Serialization.JsonPropertyName("id")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public int? Id { get; set; }
+        public int Id { get; set; }
 
         /// <summary>
         /// Gets or sets the value of the date
@@ -745,7 +696,7 @@ namespace Rusty.Template.Tests.Integration
         [System.Text.Json.Serialization.JsonPropertyName("date")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public System.DateTimeOffset? Date { get; set; }
+        public System.DateTimeOffset Date { get; set; }
 
         /// <summary>
         /// Gets or sets the value of the temperature c
@@ -754,7 +705,7 @@ namespace Rusty.Template.Tests.Integration
         [System.Text.Json.Serialization.JsonPropertyName("temperatureC")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public int? TemperatureC { get; set; }
+        public int TemperatureC { get; set; }
 
         /// <summary>
         /// Gets or sets the value of the temperature f
@@ -763,7 +714,7 @@ namespace Rusty.Template.Tests.Integration
         [System.Text.Json.Serialization.JsonPropertyName("temperatureF")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public int? TemperatureF { get; set; }
+        public int TemperatureF { get; set; }
 
         /// <summary>
         /// Gets or sets the value of the summary
@@ -791,7 +742,7 @@ namespace Rusty.Template.Tests.Integration
         [System.Text.Json.Serialization.JsonPropertyName("totalCount")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public int? TotalCount { get; set; }
+        public int TotalCount { get; set; }
 
     }
 
@@ -808,7 +759,7 @@ namespace Rusty.Template.Tests.Integration
         [System.Text.Json.Serialization.JsonPropertyName("id")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public int? Id { get; set; }
+        public int Id { get; set; }
 
         /// <summary>
         /// Gets or sets the value of the summary

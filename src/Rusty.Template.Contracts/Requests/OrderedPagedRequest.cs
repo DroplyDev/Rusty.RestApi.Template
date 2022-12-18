@@ -8,7 +8,7 @@ namespace Rusty.Template.Contracts.Requests;
 /// <summary>
 ///     The order by paged request
 /// </summary>
-public sealed record OrderByPagedRequest
+public sealed record OrderedPagedRequest
 {
     /// <summary>
     ///     Gets or sets the value of the page data
@@ -18,14 +18,14 @@ public sealed record OrderByPagedRequest
     /// <summary>
     ///     Gets or sets the value of the order by data
     /// </summary>
-    public OrderByData? OrderByData { get; set; }
+    public OrderByData OrderByData { get; set; } = null!;
 }
 
 /// <summary>
 ///     The order by paged request validator class
 /// </summary>
 /// <seealso cref="AbstractValidator{OrderByPagedRequest}" />
-public sealed class OrderByPagedRequestValidator : AbstractValidator<OrderByPagedRequest>
+public sealed class OrderByPagedRequestValidator : AbstractValidator<OrderedPagedRequest>
 {
     /// <summary>
     ///     Initializes a new instance of the <see cref="OrderByPagedRequestValidator" /> class

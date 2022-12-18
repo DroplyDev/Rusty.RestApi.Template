@@ -3,11 +3,7 @@ using DotNet.Testcontainers.Configurations;
 using DotNet.Testcontainers.Containers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Rusty.Template.Infrastructure.Database;
 using Rusty.Template.Presentation;
 
 namespace Rusty.Template.Tests.Integration;
@@ -35,11 +31,11 @@ public class WebApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
         {
             configurationBuilder.AddConfiguration(_configurationBuilder.Build());
         });
-        builder.ConfigureTestServices(services =>
-        {
-            services.RemoveAll(typeof(ConnectionStringFactory));
-            services.AddSingleton(new ConnectionStringFactory(connectionString));
-        });
+        //     builder.ConfigureTestServices(services =>
+        //     {
+        //         services.RemoveAll(typeof(ConnectionStringFactory));
+        //         services.AddSingleton(new ConnectionStringFactory(connectionString));
+        //     });
     }
 
     public async Task InitializeAsync()

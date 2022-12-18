@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Mapster;
 using Microsoft.EntityFrameworkCore.Query;
 using Rusty.Template.Contracts.Requests;
 using Rusty.Template.Contracts.Responses;
@@ -43,7 +44,7 @@ public partial class BaseRepo<TEntity> where TEntity : BaseEntity
     /// <param name="request">The request</param>
     /// <param name="includes">The includes</param>
     /// <returns>A task containing a paged response of t entity</returns>
-    public async Task<PagedResponse<TEntity>> PaginateAsync(OrderByPagedRequest request,
+    public async Task<PagedResponse<TEntity>> PaginateAsync(OrderedPagedRequest request,
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null)
     {
         var query = IncludeIfNotNull(includes);
@@ -59,11 +60,12 @@ public partial class BaseRepo<TEntity> where TEntity : BaseEntity
     /// <param name="request">The request</param>
     /// <param name="includes">The includes</param>
     /// <returns>A task containing a paged response of t result</returns>
-    public async Task<PagedResponse<TResult>> PaginateAsync<TResult>(OrderByPagedRequest request,
+    public async Task<PagedResponse<TResult>> PaginateAsync<TResult>(OrderedPagedRequest request,
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null)
     {
         var query = IncludeIfNotNull(includes);
-        query = OrderByOrPredefined(query, request.OrderByData);
-        return await query.PaginateWithTotalCountAsListAsync<TEntity, TResult>(request.PageData);
+        var result = query.ProjectToType<TResult>();
+        result = result.OrderByWithDirection(request.OrderByData.OrderBy, request.OrderByData.OrderDirection);
+        return await result.PaginateWithTotalCountAsListAsync(request.PageData);
     }
 }

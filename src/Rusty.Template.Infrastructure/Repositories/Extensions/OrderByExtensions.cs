@@ -1,4 +1,5 @@
 using System.Linq.Expressions;
+using Microsoft.AspNetCore.Http;
 using Rusty.Template.Contracts.SubTypes;
 
 namespace Rusty.Template.Infrastructure.Repositories.Extensions;
@@ -23,7 +24,15 @@ public static class OrderByExtensions
         //Create x=>x.PropName
         var propertyInfo = entityType.GetProperty(propertyName);
         var arg = Expression.Parameter(entityType, "x");
-        var property = Expression.Property(arg, propertyName);
+        MemberExpression property;
+        try
+        {
+            property = Expression.Property(arg, propertyName);
+        }
+        catch (Exception e)
+        {
+            throw new BadHttpRequestException("order by clause with such name does not exist");
+        }
         var selector = Expression.Lambda(property, arg);
 
         //Get System.Linq.Queryable.OrderByDescending() method.
