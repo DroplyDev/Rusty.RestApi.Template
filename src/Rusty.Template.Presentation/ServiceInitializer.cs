@@ -1,12 +1,16 @@
 using System.Reflection;
+using System.Text;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Mapster;
 using MapsterMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Rusty.Template.Application.Repositories;
 using Rusty.Template.Contracts.Dtos.WeatherForecast;
@@ -14,6 +18,7 @@ using Rusty.Template.Contracts.Exceptions;
 using Rusty.Template.Infrastructure.Database;
 using Rusty.Template.Infrastructure.Mapping;
 using Rusty.Template.Infrastructure.Repositories;
+using Rusty.Template.Presentation.Options;
 using Serilog;
 
 namespace Rusty.Template.Presentation;
@@ -78,13 +83,74 @@ public static class ServiceInitializer
     }
 
     /// <summary>
+    ///     Adds the configurations using the specified configuration
+    /// </summary>
+    /// <param name="services"></param>
+    /// <param name="configuration">The configuration</param>
+    public static void AddAuth(this IServiceCollection services, IConfiguration configuration)
+    {
+        var authOptions = configuration.GetRequiredSection("AuthOptions").Get<AuthOptions>();
+        services.AddCors(options =>
+        {
+            options.AddPolicy("All", builder =>
+            {
+                builder.WithOrigins("*")
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
+        });
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = false,
+                    ValidIssuer = authOptions.Issuer,
+                    ValidateAudience = false,
+                    ValidAudience = authOptions.Audience,
+                    ValidateLifetime = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(authOptions.Key)),
+                    ValidateIssuerSigningKey = true
+                };
+                options.Events = new JwtBearerEvents
+                {
+                    OnChallenge = async context =>
+                    {
+                        context.HandleResponse();
+                        context.Response.StatusCode = 401;
+                        context.Response.ContentType = "application/json";
+                        if (context.AuthenticateFailure?.GetType() == typeof(SecurityTokenExpiredException))
+                        {
+                            await context.Response.WriteAsync("Token expired");
+                            return;
+                        }
+
+                        await context.Response.WriteAsync("Not authorized");
+                    },
+                    OnAuthenticationFailed = context =>
+                    {
+                        if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+                            context.Response.Headers.Add("Token-Expired", "true");
+
+                        return Task.CompletedTask;
+                    }
+                };
+            });
+        services.AddAuthorization(options =>
+        {
+            options.DefaultPolicy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
+                .RequireAuthenticatedUser()
+                .Build();
+        });
+    }
+    /// <summary>
     ///     Adds the swagger using the specified services
     /// </summary>
     /// <param name="services">The services</param>
     /// <param name="configuration">The configuration</param>
     public static void AddSwagger(this IServiceCollection services, IConfiguration configuration)
     {
-        // services.AddTransient<IConfigureOptions<SwaggerGenOptions>, SwaggerGenConfigurationOptions>();
         services.AddSwaggerGen(options =>
         {
             var provider = services.BuildServiceProvider().GetRequiredService<IApiVersionDescriptionProvider>();
@@ -99,27 +165,28 @@ public static class ServiceInitializer
                                       (description.IsDeprecated ? " [DEPRECATED]" : string.Empty),
                         Version = description.ApiVersion.ToString()
                     });
-
-            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            var jwtSecurityScheme = new OpenApiSecurityScheme
             {
+                BearerFormat = "JWT",
+                Name = "JWT Authentication",
                 In = ParameterLocation.Header,
-                Description = "Please insert JWT with Bearer into field to get access to secured methods",
-                Name = "Authorization",
-                Type = SecuritySchemeType.ApiKey,
-                Scheme = "Bearer"
-            });
+                Type = SecuritySchemeType.Http,
+                Scheme = JwtBearerDefaults.AuthenticationScheme,
+                Description = "Put ONLY your JWT Bearer token on textbox below!",
+
+                Reference = new OpenApiReference
+                {
+                    Id = JwtBearerDefaults.AuthenticationScheme,
+                    Type = ReferenceType.SecurityScheme
+                }
+            };
+
+            options.AddSecurityDefinition(jwtSecurityScheme.Reference.Id, jwtSecurityScheme);
             options.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
                 {
-                    new OpenApiSecurityScheme
-                    {
-                        Reference = new OpenApiReference
-                        {
-                            Type = ReferenceType.SecurityScheme,
-                            Id = "Bearer"
-                        }
-                    },
-                    new List<string>()
+                    jwtSecurityScheme,
+                    Array.Empty<string>()
                 }
             });
             var currentAssembly = Assembly.GetExecutingAssembly();

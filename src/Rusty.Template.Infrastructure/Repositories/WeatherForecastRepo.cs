@@ -1,4 +1,3 @@
-using System.Globalization;
 using Rusty.Template.Application.Repositories;
 using Rusty.Template.Contracts.Exceptions.Entity;
 using Rusty.Template.Domain;
@@ -18,7 +17,7 @@ public class WeatherForecastRepo : BaseRepo<WeatherForecast>, IWeatherForecastRe
     ///     Initializes a new instance of the <see cref="WeatherForecastRepo" /> class
     /// </summary>
     /// <param name="context">The context</param>
-    public WeatherForecastRepo(AppDbContext context) : base(context, item => item.Date)
+    public WeatherForecastRepo(AppDbContext context) : base(context, item => item)
     {
 
   
@@ -31,9 +30,9 @@ public class WeatherForecastRepo : BaseRepo<WeatherForecast>, IWeatherForecastRe
     /// <exception cref="EntityWitNameAlreadyExistsException{WeatherForecast}"></exception>
     public override async Task CreateNoSaveAsync(WeatherForecast entity)
     {
-        if (await ExistsAsync(item => item.Date == entity.Date))
-            throw new EntityWitNameAlreadyExistsException<WeatherForecast>(
-                entity.Date.ToString(CultureInfo.CurrentCulture));
+        // if (await ExistsAsync(item => item.Date == entity.Date))
+        //     throw new EntityWitNameAlreadyExistsException<WeatherForecast>(
+        //         entity.Date.ToString(CultureInfo.CurrentCulture));
         await base.CreateNoSaveAsync(entity);
     }
 }

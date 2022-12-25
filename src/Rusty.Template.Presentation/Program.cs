@@ -14,6 +14,7 @@ var services = builder.Services;
 services.AddDatabases(configuration);
 services.AddSwagger(configuration);
 services.AddApiVersioningSupport(configuration);
+services.AddAuth(configuration);
 services.AddLogging();
 services.AddFluentValidation();
 services.AddControllers();
@@ -46,9 +47,11 @@ app.UseSwaggerUI(options =>
             description.GroupName.ToUpperInvariant());
 });
 app.UseRouting();
+app.UseCors("All");
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.MapControllers();
 await app.RunAsync();

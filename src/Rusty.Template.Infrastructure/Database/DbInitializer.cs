@@ -2,7 +2,6 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Rusty.Template.Application.Repositories;
-using Rusty.Template.Domain;
 
 namespace Rusty.Template.Infrastructure.Database;
 
@@ -21,16 +20,16 @@ public static class DbInitializer
         var weatherForecastRepo = scope.ServiceProvider.GetRequiredService<IWeatherForecastRepo>();
         if (await weatherForecastRepo.IsEmptyAsync())
         {
-            var weatherForecasts = new List<WeatherForecast>();
-            var rnd = new Random();
-            for (var i = 0; i < 10000; i++)
-                weatherForecasts.Add(new WeatherForecast
-                {
-                    Date = DateTime.Now.AddDays(i * -1),
-                    TemperatureC = rnd.Next(-20, 50),
-                    Summary = LoremIpsum(10, 20, 1, 3, 1)
-                });
-            await weatherForecastRepo.CreateRangeAsync(weatherForecasts);
+            // var weatherForecasts = new List<WeatherForecast>();
+            // var rnd = new Random();
+            // for (var i = 0; i < 10000; i++)
+            //     weatherForecasts.Add(new WeatherForecast
+            //     {
+            //         Date = DateTime.Now.AddDays(i * -1),
+            //         TemperatureC = rnd.Next(-20, 50),
+            //         Summary = LoremIpsum(10, 20, 1, 3, 1)
+            //     });
+            // await weatherForecastRepo.CreateRangeAsync(weatherForecasts);
         }
     }
 

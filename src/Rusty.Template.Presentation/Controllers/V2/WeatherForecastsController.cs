@@ -81,7 +81,10 @@ public class WeatherForecastsController : BaseApiController
     public async Task<IActionResult> PostWeatherForecast(WeatherForecastCreateDto weatherForecast)
     {
         var createdEntity = await _weatherForecastRepo.CreateAsync(weatherForecast.Adapt<WeatherForecast>());
-        return CreatedAtAction(nameof(GetWeatherForecast), new { id = createdEntity.Id },
+        return CreatedAtAction(nameof(GetWeatherForecast), new
+            {
+                // id = createdEntity.Id
+            },
             createdEntity.Adapt<WeatherForecastDto>());
     }
 

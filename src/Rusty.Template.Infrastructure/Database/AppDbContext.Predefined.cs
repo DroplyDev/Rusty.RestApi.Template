@@ -70,11 +70,12 @@ public partial class AppDbContext
                 case EntityState.Added:
                     if (entryPropertyNames.Contains("IsDeleted"))
                         entry.CurrentValues["IsDeleted"] = false;
-                    else if (entryPropertyNames.Contains("CreateDate"))
+                    if (entryPropertyNames.Contains("CreateDate"))
                         entry.CurrentValues["CreateDate"] = DateTime.Now;
                     break;
                 case EntityState.Modified:
-                    if (entryPropertyNames.Contains("UpdateDate")) entry.CurrentValues["UpdateDate"] = DateTime.Now;
+                    if (entryPropertyNames.Contains("UpdateDate"))
+                        entry.CurrentValues["UpdateDate"] = DateTime.Now;
                     break;
                 case EntityState.Deleted:
                     if (entryPropertyNames.Contains("IsDeleted"))

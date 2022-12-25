@@ -35,10 +35,12 @@ public class WeatherForecastsController : BaseApiController
     ///     Gets the weather forecasts using the specified request
     /// </summary>
     /// <param name="request">The request</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>A task containing the action result</returns>
     [HttpPost("paged")]
     [ProducesResponseType(typeof(PagedResponse<WeatherForecastDto>), 200)]
-    public async Task<IActionResult> GetWeatherForecasts(OrderedPagedRequest request)
+    public async Task<IActionResult> GetWeatherForecasts(OrderedPagedRequest request,
+        CancellationToken cancellationToken)
     {
         return Ok(await _weatherForecastRepo.PaginateAsync<WeatherForecastDto>(request));
     }
@@ -82,7 +84,10 @@ public class WeatherForecastsController : BaseApiController
     public async Task<IActionResult> PostWeatherForecast(WeatherForecastCreateDto weatherForecast)
     {
         var createdEntity = await _weatherForecastRepo.CreateAsync(weatherForecast.Adapt<WeatherForecast>());
-        return CreatedAtAction(nameof(GetWeatherForecast), new { id = createdEntity.Id },
+        return CreatedAtAction(nameof(GetWeatherForecast), new
+            {
+                // id = createdEntity.Id
+            },
             createdEntity.Adapt<WeatherForecastDto>());
     }
 
