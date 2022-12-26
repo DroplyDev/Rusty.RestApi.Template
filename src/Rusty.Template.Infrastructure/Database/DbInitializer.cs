@@ -1,7 +1,6 @@
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Rusty.Template.Application.Repositories;
 
 namespace Rusty.Template.Infrastructure.Database;
 
@@ -17,20 +16,20 @@ public static class DbInitializer
     public static async Task InitializeDatabaseDataAsync(this IServiceProvider services)
     {
         await using var scope = services.CreateAsyncScope();
-        var weatherForecastRepo = scope.ServiceProvider.GetRequiredService<IWeatherForecastRepo>();
-        if (await weatherForecastRepo.IsEmptyAsync())
-        {
-            // var weatherForecasts = new List<WeatherForecast>();
-            // var rnd = new Random();
-            // for (var i = 0; i < 10000; i++)
-            //     weatherForecasts.Add(new WeatherForecast
-            //     {
-            //         Date = DateTime.Now.AddDays(i * -1),
-            //         TemperatureC = rnd.Next(-20, 50),
-            //         Summary = LoremIpsum(10, 20, 1, 3, 1)
-            //     });
-            // await weatherForecastRepo.CreateRangeAsync(weatherForecasts);
-        }
+        // var weatherForecastRepo = scope.ServiceProvider.GetRequiredService<IWeatherForecastRepo>();
+        // if (await weatherForecastRepo.IsEmptyAsync())
+        // {
+        //     var weatherForecasts = new List<WeatherForecast>();
+        //     var rnd = new Random();
+        //     for (var i = 0; i < 10000; i++)
+        //         weatherForecasts.Add(new WeatherForecast
+        //         {
+        //             Date = DateTime.Now.AddDays(i * -1),
+        //             TemperatureC = rnd.Next(-20, 50),
+        //             Summary = LoremIpsum(10, 20, 1, 3, 1)
+        //         });
+        //     await weatherForecastRepo.CreateRangeAsync(weatherForecasts);
+        // }
     }
 
     /// <summary>
@@ -44,6 +43,16 @@ public static class DbInitializer
         await context.Database.MigrateAsync();
     }
 
+    /// <summary>
+    ///     Creates the database from context if not exists using the specified services
+    /// </summary>
+    /// <param name="services">The services</param>
+    public static async Task CreateDatabaseFromContextIfNotExistsAsync(this IServiceProvider services)
+    {
+        using var scope = services.CreateScope();
+        var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        await context.Database.EnsureCreatedAsync();
+    }
     /// <summary>
     ///     Lorems the ipsum using the specified min words
     /// </summary>

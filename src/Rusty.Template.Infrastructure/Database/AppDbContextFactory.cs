@@ -18,7 +18,7 @@ public class AppDbContextFactory : IDesignTimeDbContextFactory<AppDbContext>
     {
         var optionsBuilder = new DbContextOptionsBuilder<AppDbContext>();
         optionsBuilder.UseSqlServer(
-            "Server=(localdb)\\MSSQLLocalDB;Database=EcommerceDb;Trusted_Connection=True;MultipleActiveResultSets=true");
+            "Server=RUSTY;Initial Catalog=ApiTest;Trusted_Connection=true;MultipleActiveResultSets=true;TrustServerCertificate=True");
 
         return new AppDbContext(optionsBuilder.Options);
     }

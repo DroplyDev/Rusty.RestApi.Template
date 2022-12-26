@@ -39,6 +39,7 @@
         <Content Update="appsettings.Development.json" CopyToOutputDirectory="Always" CopyToPublishDirectory="Never"/>
     </ItemGroup>
     <ItemGroup>
+        <Folder Include="Controllers\V2"/>
         <Folder Include="Logs"/>
     </ItemGroup>
     <ItemGroup>

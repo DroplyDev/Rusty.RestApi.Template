@@ -6,7 +6,7 @@ namespace Rusty.Template.Infrastructure.Mapping;
 ///     The weather forecast profile class
 /// </summary>
 /// <seealso cref="IRegister" />
-public sealed class WeatherForecastProfile : IRegister
+public sealed class UserProfile : IRegister
 {
     /// <summary>
     ///     Registers the config

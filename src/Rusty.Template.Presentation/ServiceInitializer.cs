@@ -89,7 +89,8 @@ public static class ServiceInitializer
     /// <param name="configuration">The configuration</param>
     public static void AddAuth(this IServiceCollection services, IConfiguration configuration)
     {
-        var authOptions = configuration.GetRequiredSection("AuthOptions").Get<AuthOptions>();
+        var authOptions = configuration.GetSection("AuthOptions").Get<AuthOptions>() ??
+                          throw new NullReferenceException();
         services.AddCors(options =>
         {
             options.AddPolicy("All", builder =>
@@ -223,7 +224,7 @@ public static class ServiceInitializer
     /// <param name="services">The services</param>
     public static void AddRepositories(this IServiceCollection services)
     {
-        services.AddScoped<IWeatherForecastRepo, WeatherForecastRepo>();
+        services.AddScoped<IUserRepo, UserRepo>();
     }
 
     /// <summary>
@@ -241,7 +242,7 @@ public static class ServiceInitializer
     public static void AddMapster(this IServiceCollection services)
     {
         var config = TypeAdapterConfig.GlobalSettings;
-        config.Scan(typeof(WeatherForecastProfile).Assembly);
+        config.Scan(typeof(UserProfile).Assembly);
         services.AddSingleton(config);
         services.AddScoped<IMapper, ServiceMapper>();
     }

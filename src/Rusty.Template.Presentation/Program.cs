@@ -32,7 +32,7 @@ app.UseSerilogRequestLogging(configure =>
 });
 //Prepare db
 // if (app.Environment.IsStaging())
-await app.Services.MigrateDatabaseAsync();
+await app.Services.CreateDatabaseFromContextIfNotExistsAsync();
 await app.Services.InitializeDatabaseDataAsync();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment()) app.UseDeveloperExceptionPage();
