@@ -17,13 +17,6 @@ public partial interface IBaseRepo<TEntity> where TEntity : class
     Task<TEntity?> GetByIdAsync(int id);
 
     /// <summary>
-    ///     Gets the by id with exception using the specified id
-    /// </summary>
-    /// <param name="id">The id</param>
-    /// <returns>A task containing the entity</returns>
-    Task<TEntity> GetByIdWithExceptionAsync(int id);
-
-    /// <summary>
     ///     Creates the entity
     /// </summary>
     /// <param name="entity">The entity</param>

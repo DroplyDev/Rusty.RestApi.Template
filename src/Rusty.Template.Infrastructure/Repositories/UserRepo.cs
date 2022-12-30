@@ -18,5 +18,6 @@ public class UserRepo : BaseRepo<User>, IUserRepo
     /// <param name="context">The context</param>
     public UserRepo(AppDbContext context) : base(context, item => item.UserName)
     {
+
     }
 }

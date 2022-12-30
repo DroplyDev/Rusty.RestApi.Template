@@ -59,6 +59,19 @@ public static class OrderByExtensions
     /// </summary>
     /// <typeparam name="TEntity">The entity</typeparam>
     /// <param name="query">The query</param>
+    /// <param name="orderByData">The order by data</param>
+    /// <returns>An ordered queryable of t entity</returns>
+    public static IOrderedQueryable<TEntity> OrderByWithDirection<TEntity>(
+        this IQueryable<TEntity> query, OrderByData orderByData) where TEntity : class
+    {
+        return query.OrderByWithDirection(orderByData.OrderBy, orderByData.OrderDirection);
+    }
+
+    /// <summary>
+    ///     Orders the by with direction using the specified query
+    /// </summary>
+    /// <typeparam name="TEntity">The entity</typeparam>
+    /// <param name="query">The query</param>
     /// <param name="keySelector">The key selector</param>
     /// <param name="orderDirection">The order direction</param>
     /// <returns>An ordered queryable of t entity</returns>

@@ -24,16 +24,7 @@ public abstract partial class BaseRepo<TEntity> : IBaseRepo<TEntity> where TEnti
     ///     The db set
     /// </summary>
     protected readonly DbSet<TEntity> DbSet;
-
-    /// <summary>
-    ///     The default order by
-    /// </summary>
-    protected readonly Expression<Func<TEntity, object>> DefaultOrderBy;
-
-    /// <summary>
-    ///     The default order direction
-    /// </summary>
-    protected readonly OrderDirection DefaultOrderDirection;
+    
 
     /// <summary>
     ///     Initializes a new instance of the <see /> class
@@ -44,23 +35,6 @@ public abstract partial class BaseRepo<TEntity> : IBaseRepo<TEntity> where TEnti
     {
         Context = context;
         DbSet = context.Set<TEntity>();
-        DefaultOrderBy = defaultOrderBy;
-        DefaultOrderDirection = OrderDirection.Desc;
-    }
-
-    /// <summary>
-    ///     Initializes a new instance of the <see /> class
-    /// </summary>
-    /// <param name="context">The context</param>
-    /// <param name="defaultOrderBy">The default order by</param>
-    /// <param name="defaultOrderDirection">The default order direction</param>
-    protected BaseRepo(AppDbContext context, Expression<Func<TEntity, object>> defaultOrderBy,
-        OrderDirection defaultOrderDirection)
-    {
-        Context = context;
-        DbSet = context.Set<TEntity>();
-        DefaultOrderBy = defaultOrderBy;
-        DefaultOrderDirection = defaultOrderDirection;
     }
 
     /// <summary>
@@ -295,18 +269,5 @@ public abstract partial class BaseRepo<TEntity> : IBaseRepo<TEntity> where TEnti
         if (includes is null)
             return DbSet;
         return includes(DbSet);
-    }
-
-    /// <summary>
-    ///     Orders the by or predefined using the specified query
-    /// </summary>
-    /// <param name="query">The query</param>
-    /// <param name="data">The data</param>
-    /// <returns>A queryable of t entity</returns>
-    protected IQueryable<TEntity> OrderByOrPredefined(IQueryable<TEntity> query, OrderByData? data)
-    {
-        return data is null
-            ? query.OrderByWithDirection(DefaultOrderBy, DefaultOrderDirection)
-            : query.OrderByWithDirection(data.OrderBy, data.OrderDirection);
     }
 }

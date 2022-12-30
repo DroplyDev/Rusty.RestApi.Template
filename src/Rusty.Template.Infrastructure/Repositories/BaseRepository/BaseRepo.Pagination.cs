@@ -47,7 +47,7 @@ public partial class BaseRepo<TEntity> where TEntity : class
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null)
     {
         var query = IncludeIfNotNull(includes);
-        query = OrderByOrPredefined(query, request.OrderByData);
+        query = query.OrderByWithDirection(request.OrderByData);
         return await query.PaginateWithTotalCountAsListAsync(request.PageData);
     }
 

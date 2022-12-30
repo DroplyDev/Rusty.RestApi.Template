@@ -26,7 +26,7 @@ namespace Rusty.Template.Presentation;
 /// <summary>
 ///     The service initializer class
 /// </summary>
-public static class ServiceInitializer
+internal static class DependencyInjection
 {
     /// <summary>
     ///     Adds the serilog using the specified host
