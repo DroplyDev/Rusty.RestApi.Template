@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using Mapster;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Rusty.Template.Contracts.Requests;
 using Rusty.Template.Contracts.Responses;
@@ -11,7 +12,7 @@ namespace Rusty.Template.Infrastructure.Repositories.BaseRepository;
 /// <summary>
 ///     The base repo class
 /// </summary>
-public partial class BaseRepo<TEntity> where TEntity : class
+public partial class BaseGenericRepo<TContext, TEntity> where TEntity : class where TContext : DbContext
 {
     /// <summary>
     ///     Paginates the skip items

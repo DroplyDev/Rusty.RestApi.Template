@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace prefix.Domain.Scaffolded;
+namespace Rusty.Template.Domain;
 
 [Index("Name", Name = "index_username")]
 public class Role

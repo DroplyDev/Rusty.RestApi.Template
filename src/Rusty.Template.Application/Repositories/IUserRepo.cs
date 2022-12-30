@@ -1,4 +1,4 @@
-using prefix.Domain.Scaffolded;
+using Rusty.Template.Domain;
 
 namespace Rusty.Template.Application.Repositories;
 

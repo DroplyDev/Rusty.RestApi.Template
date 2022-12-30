@@ -3,9 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Rusty.Template.Application.Repositories;
 using Rusty.Template.Contracts.Exceptions.Entity;
-using Rusty.Template.Contracts.SubTypes;
-using Rusty.Template.Infrastructure.Database;
-using Rusty.Template.Infrastructure.Repositories.Extensions;
 
 namespace Rusty.Template.Infrastructure.Repositories.BaseRepository;
 
@@ -13,12 +10,13 @@ namespace Rusty.Template.Infrastructure.Repositories.BaseRepository;
 ///     The base repo class
 /// </summary>
 /// <seealso cref="IBaseRepo{TEntity}" />
-public abstract partial class BaseRepo<TEntity> : IBaseRepo<TEntity> where TEntity : class
+public abstract partial class BaseGenericRepo<TContext, TEntity> : IBaseRepo<TEntity>
+    where TEntity : class where TContext : DbContext
 {
     /// <summary>
     ///     The context
     /// </summary>
-    protected readonly AppDbContext Context;
+    protected readonly TContext Context;
 
     /// <summary>
     ///     The db set
@@ -31,7 +29,7 @@ public abstract partial class BaseRepo<TEntity> : IBaseRepo<TEntity> where TEnti
     /// </summary>
     /// <param name="context">The context</param>
     /// <param name="defaultOrderBy">The default order by</param>
-    protected BaseRepo(AppDbContext context, Expression<Func<TEntity, object>> defaultOrderBy)
+    protected BaseGenericRepo(TContext context, Expression<Func<TEntity, object>> defaultOrderBy)
     {
         Context = context;
         DbSet = context.Set<TEntity>();

@@ -17,7 +17,7 @@ using Rusty.Template.Contracts.Dtos.WeatherForecast;
 using Rusty.Template.Contracts.Exceptions;
 using Rusty.Template.Infrastructure.Database;
 using Rusty.Template.Infrastructure.Mapping;
-using Rusty.Template.Infrastructure.Repositories;
+using Rusty.Template.Infrastructure.Repositories.AppDbRepo;
 using Rusty.Template.Presentation.Options;
 using Serilog;
 
@@ -208,10 +208,11 @@ internal static class DependencyInjection
     /// <exception cref="ApiException">Connection string was not found</exception>
     public static void AddDatabases(this IServiceCollection services, IConfiguration configuration)
     {
-        var efConStr = configuration.GetConnectionString("DefaultConnection");
-        services.AddSingleton(new ConnectionStringFactory(efConStr));
-        services.AddDbContext<AppDbContext>(options =>
+        services.AddDbContextFactory<AppDbContext>(options =>
         {
+            var efConStr = configuration.GetConnectionString("DefaultConnection");
+            services.AddSingleton(new ConnectionStringFactory(efConStr));
+            
             var factory = services.BuildServiceProvider().GetRequiredService<ConnectionStringFactory>();
             options.UseSqlServer(factory.ConnectionString)
                 .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);

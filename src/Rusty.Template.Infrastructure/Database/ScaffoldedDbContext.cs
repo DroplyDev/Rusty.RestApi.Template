@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using prefix.Domain.Scaffolded;
+using Rusty.Template.Domain;
 
 namespace Rusty.Template.Infrastructure.Database;
 

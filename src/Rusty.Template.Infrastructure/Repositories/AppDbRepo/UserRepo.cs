@@ -1,16 +1,16 @@
-using prefix.Domain.Scaffolded;
 using Rusty.Template.Application.Repositories;
+using Rusty.Template.Domain;
 using Rusty.Template.Infrastructure.Database;
 using Rusty.Template.Infrastructure.Repositories.BaseRepository;
 
-namespace Rusty.Template.Infrastructure.Repositories;
+namespace Rusty.Template.Infrastructure.Repositories.AppDbRepo;
 
 /// <summary>
 ///     The user repo class
 /// </summary>
-/// <seealso cref="BaseRepo{User}" />
+/// <seealso cref="BaseGenericRepo{TContext,TEntity}" />
 /// <seealso cref="IUserRepo" />
-public class UserRepo : BaseRepo<User>, IUserRepo
+public class UserRepo : AppDbRepo<User>, IUserRepo
 {
     /// <summary>
     ///     Initializes a new instance of the <see cref="UserRepo" /> class

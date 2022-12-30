@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-namespace prefix.Domain.Scaffolded;
+namespace Rusty.Template.Domain;
 
 [Keyless]
 [Table("UserInfo")]

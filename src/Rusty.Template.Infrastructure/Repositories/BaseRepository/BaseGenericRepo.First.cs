@@ -7,7 +7,7 @@ namespace Rusty.Template.Infrastructure.Repositories.BaseRepository;
 /// <summary>
 ///     The base repo class
 /// </summary>
-public partial class BaseRepo<TEntity> where TEntity : class
+public partial class BaseGenericRepo<TContext, TEntity> where TEntity : class where TContext : DbContext
 {
     /// <summary>
     ///     Firsts the or default using the specified expression
