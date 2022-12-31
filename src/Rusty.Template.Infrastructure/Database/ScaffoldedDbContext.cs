@@ -1,13 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Rusty.Template.Domain;
 
-#pragma warning disable CS1591
-
 namespace Rusty.Template.Infrastructure.Database;
 
 public partial class ScaffoldedDbContext : DbContext
 {
-    public ScaffoldedDbContext(DbContextOptions options) : base(options)
+    public ScaffoldedDbContext(DbContextOptions<ScaffoldedDbContext> options)
+        : base(options)
     {
     }
 
@@ -21,11 +20,26 @@ public partial class ScaffoldedDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Group>(entity => { entity.HasKey(e => e.Id).HasName("PK__Groups__3214EC07A5CCA748"); });
+        modelBuilder.Entity<Group>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("Groups_pk");
+
+            entity.HasIndex(e => e.Name, "Groups_Name_uindex").IsUnique();
+
+            entity.Property(e => e.Name)
+                .HasMaxLength(32)
+                .IsUnicode(false);
+        });
 
         modelBuilder.Entity<Role>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Roles__3214EC07D7D8A3BE");
+            entity.HasKey(e => e.Id).HasName("Roles_Id_uindex");
+
+            entity.HasIndex(e => e.Name, "Roles_Name_uindex").IsUnique();
+
+            entity.Property(e => e.Name)
+                .HasMaxLength(32)
+                .IsUnicode(false);
 
             entity.HasMany(d => d.Users).WithMany(p => p.Roles)
                 .UsingEntity<Dictionary<string, object>>(
@@ -33,26 +47,57 @@ public partial class ScaffoldedDbContext : DbContext
                     r => r.HasOne<User>().WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__User_Role__UserI__2F10007B"),
+                        .HasConstraintName("User_Role_Users_Id_fk"),
                     l => l.HasOne<Role>().WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.ClientSetNull)
-                        .HasConstraintName("FK__User_Role__RoleI__2E1BDC42"),
+                        .HasConstraintName("User_Role_Roles_Id_fk"),
                     j =>
                     {
-                        j.HasKey("RoleId", "UserId").HasName("PK__User_Rol__5B8242DEBDCF1821");
+                        j.HasKey("RoleId", "UserId").HasName("User_Role_pk");
                         j.ToTable("User_Role");
                     });
         });
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Users__3214EC0717E6E9A2");
+            entity.HasKey(e => e.Id).HasName("Users_pk");
 
-            entity.HasOne(d => d.Group).WithMany(p => p.Users).HasConstraintName("FK__Users__GroupId__276EDEB3");
+            entity.HasIndex(e => e.Email, "Users_Email_uindex").IsUnique();
+
+            entity.HasIndex(e => e.UserName, "Users_Username_uindex").IsUnique();
+
+            entity.Property(e => e.Email).HasMaxLength(255);
+            entity.Property(e => e.Password)
+                .HasMaxLength(32)
+                .IsUnicode(false);
+            entity.Property(e => e.UserName)
+                .HasMaxLength(32)
+                .IsUnicode(false);
+
+            entity.HasOne(d => d.Group).WithMany(p => p.Users)
+                .HasForeignKey(d => d.GroupId)
+                .HasConstraintName("Users_Groups_Id_fk");
         });
 
-        modelBuilder.Entity<UserInfo>(entity => { entity.Property(e => e.Id).ValueGeneratedOnAdd(); });
+        modelBuilder.Entity<UserInfo>(entity =>
+        {
+            entity.HasKey(e => e.UserId).HasName("UserInfo_pk");
+
+            entity.ToTable("UserInfo");
+
+            entity.Property(e => e.UserId).ValueGeneratedNever();
+            entity.Property(e => e.FirstName)
+                .HasMaxLength(32)
+                .IsUnicode(false);
+            entity.Property(e => e.LastName)
+                .HasMaxLength(32)
+                .IsUnicode(false);
+
+            entity.HasOne(d => d.User).WithOne(p => p.UserInfo)
+                .HasForeignKey<UserInfo>(d => d.UserId)
+                .HasConstraintName("UserInfo_Users_Id_fk");
+        });
 
         OnModelCreatingPartial(modelBuilder);
     }
