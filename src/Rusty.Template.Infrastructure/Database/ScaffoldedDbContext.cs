@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Rusty.Template.Domain;
 
+#pragma warning disable CS1591
+
 namespace Rusty.Template.Infrastructure.Database;
 
 public partial class ScaffoldedDbContext : DbContext

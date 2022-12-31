@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Rusty.Template.Application.Repositories;
-using Rusty.Template.Contracts.Dtos.WeatherForecast;
+using Rusty.Template.Contracts.Dtos.User;
 using Rusty.Template.Contracts.Exceptions;
 using Rusty.Template.Infrastructure.Database;
 using Rusty.Template.Infrastructure.Mapping;
@@ -78,8 +78,9 @@ internal static class DependencyInjection
     /// <param name="services">The services</param>
     public static void AddFluentValidation(this IServiceCollection services)
     {
-        services.AddFluentValidationAutoValidation();
-        services.AddValidatorsFromAssemblyContaining<WeatherForecastCreateDtoValidator>();
+        services.AddFluentValidationAutoValidation(opt =>
+            opt.DisableDataAnnotationsValidation = true);
+        services.AddValidatorsFromAssemblyContaining<UserCreateDtoValdiatior>();
     }
 
     /// <summary>
@@ -100,10 +101,17 @@ internal static class DependencyInjection
                     .AllowAnyHeader();
             });
         });
-        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
             .AddJwtBearer(options =>
             {
                 options.RequireHttpsMetadata = false;
+
+                options.Authority = "https://example.com";
+                options.Audience = "api";
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = false,
@@ -123,12 +131,13 @@ internal static class DependencyInjection
                         context.Response.ContentType = "application/json";
                         if (context.AuthenticateFailure?.GetType() == typeof(SecurityTokenExpiredException))
                         {
-                            await context.Response.WriteAsync("Token expired");
+                            await context.Response.WriteAsJsonAsync(new SecurityTokenExpiredException());
                             return;
                         }
 
                         await context.Response.WriteAsync("Not authorized");
                     },
+                    // OnForbidden = context => { },
                     OnAuthenticationFailed = context =>
                     {
                         if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
@@ -145,6 +154,7 @@ internal static class DependencyInjection
                 .Build();
         });
     }
+
     /// <summary>
     ///     Adds the swagger using the specified services
     /// </summary>
@@ -212,7 +222,7 @@ internal static class DependencyInjection
         {
             var efConStr = configuration.GetConnectionString("DefaultConnection");
             services.AddSingleton(new ConnectionStringFactory(efConStr));
-            
+
             var factory = services.BuildServiceProvider().GetRequiredService<ConnectionStringFactory>();
             options.UseSqlServer(factory.ConnectionString)
                 .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);

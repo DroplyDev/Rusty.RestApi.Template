@@ -22,6 +22,7 @@ services.AddEndpointsApiExplorer();
 services.AddRepositories();
 services.AddServices();
 services.AddMapster();
+
 // Build app
 var app = builder.Build();
 // set Serilog request logging

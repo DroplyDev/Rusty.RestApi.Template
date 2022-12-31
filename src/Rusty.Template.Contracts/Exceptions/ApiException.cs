@@ -19,13 +19,25 @@ public class ApiException : Exception
     /// <param name="message">The message</param>
     /// <param name="statusCode">The status code</param>
     /// <param name="logLevel"></param>
-    public ApiException(string message, int statusCode, LogEventLevel logLevel)
+    public ApiException(string message, int statusCode, LogEventLevel logLevel) : base(message)
     {
-        Message = message;
         StatusCode = statusCode;
         _logLevel = logLevel;
     }
 
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="ApiException" /> class
+    /// </summary>
+    /// <param name="message">The message</param>
+    /// <param name="statusCode">The status code</param>
+    /// <param name="logLevel">The log level</param>
+    /// <param name="innerException">The inner exception</param>
+    public ApiException(string message, int statusCode, LogEventLevel logLevel, Exception innerException)
+        : base(message, innerException)
+    {
+        StatusCode = statusCode;
+        _logLevel = logLevel;
+    }
     /// <summary>
     ///     Initializes a new instance of the <see cref="ApiException" /> class
     /// </summary>

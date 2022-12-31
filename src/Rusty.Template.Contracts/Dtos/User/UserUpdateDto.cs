@@ -1,5 +1,9 @@
-﻿namespace Rusty.Template.Contracts.Dtos;
+﻿namespace Rusty.Template.Contracts.Dtos.User;
 
-public class UserUpdateDto
+public sealed record UserUpdateDto(string data);
+
+public class UserUpdateDtoValidator : BaseValidator<UserUpdateDto>
 {
+    
+
 }

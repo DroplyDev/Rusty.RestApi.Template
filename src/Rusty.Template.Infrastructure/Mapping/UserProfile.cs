@@ -1,4 +1,6 @@
 using Mapster;
+using Rusty.Template.Contracts.Dtos.User;
+using Rusty.Template.Domain;
 
 namespace Rusty.Template.Infrastructure.Mapping;
 
@@ -14,5 +16,6 @@ public sealed class UserProfile : IRegister
     /// <param name="config">The config</param>
     public void Register(TypeAdapterConfig config)
     {
+        config.NewConfig<User, UserDto>().TwoWays();
     }
 }

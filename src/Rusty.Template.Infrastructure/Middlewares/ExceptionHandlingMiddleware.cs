@@ -63,7 +63,7 @@ public sealed class ExceptionHandlingMiddleware
     {
         context.Response.StatusCode = exception.StatusCode;
         context.Response.ContentType = "application/json";
-        return context.Response.WriteAsync(exception.ToString());
+        return context.Response.WriteAsJsonAsync(exception);
     }
 
     /// <summary>
@@ -76,7 +76,6 @@ public sealed class ExceptionHandlingMiddleware
         context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
         context.Response.ContentType = "application/json";
         return context.Response.WriteAsJsonAsync(
-            new ApiException(exception.Message, context.Response.StatusCode, LogEventLevel.Fatal)
-                .ToString());
+            new ApiException(exception.Message, context.Response.StatusCode, LogEventLevel.Fatal));
     }
 }

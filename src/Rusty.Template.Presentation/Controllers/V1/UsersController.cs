@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Rusty.Template.Application.Repositories;
-using Rusty.Template.Contracts.Dtos;
+using Rusty.Template.Contracts.Dtos.User;
 using Rusty.Template.Contracts.Requests;
 using Rusty.Template.Contracts.Responses;
 
