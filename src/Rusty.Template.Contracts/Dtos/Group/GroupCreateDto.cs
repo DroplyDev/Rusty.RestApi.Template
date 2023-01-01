@@ -5,7 +5,13 @@ namespace Rusty.Template.Contracts.Dtos.Group;
 /// <summary>
 ///     The group create dto
 /// </summary>
-public sealed record GroupCreateDto(string Name);
+public sealed class GroupCreateDto
+{
+    /// <summary>
+    ///     Gets or sets the value of the name
+    /// </summary>
+    public string Name { get; set; } = null!;
+}
 
 /// <summary>
 ///     The group create dto validator class
@@ -18,6 +24,8 @@ public sealed class GroupCreateDtoValidator : BaseValidator<GroupCreateDto>
     /// </summary>
     public GroupCreateDtoValidator()
     {
-        RuleFor(w => w.Name).MaximumLength(32);
+        RuleFor(w => w.Name)
+            .NotNull()
+            .MaximumLength(32);
     }
 }

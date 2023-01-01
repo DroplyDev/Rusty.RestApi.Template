@@ -8,10 +8,10 @@ public enum OrderDirection
     /// <summary>
     ///     The asc order direction
     /// </summary>
-    Asc = 0,
+    Asc = 1,
 
     /// <summary>
     ///     The desc order direction
     /// </summary>
-    Desc = 1
+    Desc = 2
 }

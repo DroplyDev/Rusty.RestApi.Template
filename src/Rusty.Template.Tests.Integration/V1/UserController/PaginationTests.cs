@@ -15,7 +15,7 @@ public class PaginationTests : BaseTests
         {
             OrderByData = new OrderByData
             {
-                OrderDirection = OrderDirection._0,
+                OrderDirection = OrderDirection.Asc,
                 OrderBy = "Username"
             },
             PageData = new PageData

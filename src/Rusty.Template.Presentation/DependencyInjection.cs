@@ -4,6 +4,7 @@ using FluentValidation;
 using FluentValidation.AspNetCore;
 using Mapster;
 using MapsterMapper;
+using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +20,7 @@ using Rusty.Template.Infrastructure.Database;
 using Rusty.Template.Infrastructure.Mapping;
 using Rusty.Template.Infrastructure.Repositories.AppDbRepo;
 using Rusty.Template.Presentation.Options;
+using Rusty.Template.Presentation.SchemaFilters;
 using Serilog;
 
 namespace Rusty.Template.Presentation;
@@ -110,17 +112,17 @@ internal static class DependencyInjection
             {
                 options.RequireHttpsMetadata = false;
 
-                options.Authority = "https://example.com";
-                options.Audience = "api";
+                // options.Authority = "https://example.com";
+                // options.Audience = "api";
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuer = false,
+                    ValidateIssuer = authOptions.ValidateIssuer,
                     ValidIssuer = authOptions.Issuer,
-                    ValidateAudience = false,
+                    ValidateAudience = authOptions.ValidateAudience,
                     ValidAudience = authOptions.Audience,
-                    ValidateLifetime = true,
+                    ValidateLifetime = authOptions.ValidateAccessTokenLifetime,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(authOptions.Key)),
-                    ValidateIssuerSigningKey = true
+                    ValidateIssuerSigningKey = authOptions.ValidateKey
                 };
                 options.Events = new JwtBearerEvents
                 {
@@ -166,6 +168,7 @@ internal static class DependencyInjection
         {
             var provider = services.BuildServiceProvider().GetRequiredService<IApiVersionDescriptionProvider>();
             var swaggerSection = configuration.GetSection("Swagger");
+            var licenseSection = swaggerSection.GetSection("License");
             foreach (var description in provider.ApiVersionDescriptions)
                 options.SwaggerDoc(
                     description.GroupName,
@@ -174,7 +177,17 @@ internal static class DependencyInjection
                         Title = swaggerSection["Title"],
                         Description = swaggerSection["Description"] +
                                       (description.IsDeprecated ? " [DEPRECATED]" : string.Empty),
-                        Version = description.ApiVersion.ToString()
+                        Version = description.ApiVersion.ToString(),
+                        TermsOfService = string.IsNullOrEmpty(swaggerSection["TermsOfServiceUrl"])
+                            ? null
+                            : new Uri(swaggerSection["TermsOfServiceUrl"]!),
+                        License = licenseSection is null
+                            ? null
+                            : new OpenApiLicense
+                            {
+                                Name = licenseSection["Name"],
+                                Url = new Uri(licenseSection["Url"]!)
+                            }
                     });
             var jwtSecurityScheme = new OpenApiSecurityScheme
             {
@@ -183,15 +196,13 @@ internal static class DependencyInjection
                 In = ParameterLocation.Header,
                 Type = SecuritySchemeType.Http,
                 Scheme = JwtBearerDefaults.AuthenticationScheme,
-                Description = "Put ONLY your JWT Bearer token on textbox below!",
-
+                Description = "Put ONLY your JWT Bearer token in text box below!",
                 Reference = new OpenApiReference
                 {
                     Id = JwtBearerDefaults.AuthenticationScheme,
                     Type = ReferenceType.SecurityScheme
                 }
             };
-
             options.AddSecurityDefinition(jwtSecurityScheme.Reference.Id, jwtSecurityScheme);
             options.AddSecurityRequirement(new OpenApiSecurityRequirement
             {
@@ -205,9 +216,21 @@ internal static class DependencyInjection
                 .Union(new[] { currentAssembly.GetName() })
                 .Select(a => Path.Combine(Path.GetDirectoryName(currentAssembly.Location)!, $"{a.Name}.xml"))
                 .Where(f => File.Exists(f)).ToArray();
-
             Array.ForEach(xmlDocs, d => { options.IncludeXmlComments(d); });
+
+            options.SupportNonNullableReferenceTypes();
+
+            options.OrderActionsBy(apiDesc =>
+                $"{apiDesc.ActionDescriptor.RouteValues["controller"]}_{apiDesc.HttpMethod}_{apiDesc.RelativePath}");
+
+            options.SchemaFilter<EnumSchemaFilter>();
         });
+        services.AddFluentValidationRulesToSwagger(options =>
+        {
+            options.SetNotNullableIfMinLengthGreaterThenZero = true;
+        });
+
+        services.AddRouting(options => options.LowercaseUrls = true);
     }
 
     /// <summary>

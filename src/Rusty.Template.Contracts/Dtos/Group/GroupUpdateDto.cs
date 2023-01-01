@@ -5,7 +5,13 @@ namespace Rusty.Template.Contracts.Dtos.Group;
 /// <summary>
 ///     The group update dto
 /// </summary>
-public sealed record GroupUpdateDto(string Name);
+public sealed class GroupUpdateDto
+{
+    /// <summary>
+    ///     Gets or sets the value of the name
+    /// </summary>
+    public string Name { get; set; } = null!;
+}
 
 /// <summary>
 ///     The group update dto validator class
@@ -18,6 +24,8 @@ public sealed class GroupUpdateDtoValidator : BaseValidator<GroupUpdateDto>
     /// </summary>
     public GroupUpdateDtoValidator()
     {
-        RuleFor(item => item.Name).MaximumLength(32);
+        RuleFor(item => item.Name)
+            .NotNull()
+            .MaximumLength(32);
     }
 }

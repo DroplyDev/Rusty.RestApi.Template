@@ -8,6 +8,7 @@ using Rusty.Template.Contracts.Requests;
 using Rusty.Template.Contracts.Responses;
 using Rusty.Template.Domain;
 using Rusty.Template.Infrastructure.Attributes;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Rusty.Template.Presentation.Controllers.V1;
 
@@ -33,51 +34,51 @@ public class UsersController : BaseApiController
     }
 
     /// <summary>
-    ///     Gets the all
+    ///     Gets all users
     /// </summary>
     /// <returns>A task containing the action result</returns>
     [ProducesResponseType(typeof(List<UserDto>), StatusCodes.Status200OK)]
     [HttpGet]
-    public async Task<IActionResult> GetAllAsync()
+    public async Task<IActionResult> GetAllUsersAsync()
     {
         return Ok(await _userRepo.GetAll().ProjectToType<UserDto>().ToListAsync());
     }
 
     /// <summary>
-    ///     Paginates list
+    ///    Gets paged list with user dto
     /// </summary>
     /// <param name="request">The request</param>
     /// <returns>A task containing the action result</returns>
     [ProducesResponseType(typeof(PagedResponse<UserDto>), StatusCodes.Status200OK)]
-    [HttpPost("Paged")]
-    public async Task<IActionResult> PaginateAsync(OrderedPagedRequest request)
+    [HttpPost("paged")]
+    public async Task<IActionResult> GetPagedUsersAsync(OrderedPagedRequest request)
     {
         return Ok(await _userRepo.PaginateAsync<UserDto>(request));
     }
 
     /// <summary>
-    ///     Gets user by id
+    ///     Gets user dto by id
     /// </summary>
     /// <param name="id">The id</param>
     /// <exception cref="EntityNotFoundByIdException{User}"></exception>
     /// <returns>A task containing the action result</returns>
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetByIdAsync(int id)
+    public async Task<IActionResult> GetUserByIdAsync(int id)
     {
         var user = await _userRepo.GetByIdAsync(id) ?? throw new EntityNotFoundByIdException<User>(id);
         return Ok(user.Adapt<UserDto>());
     }
 
     /// <summary>
-    ///     Gets user by username
+    ///     Gets user dto by username
     /// </summary>
     /// <param name="username">The username</param>
     /// <exception cref="EntityNotFoundByNameException{User}"></exception>
     /// <returns>A task containing the action result</returns>
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     [HttpGet("{username}")]
-    public async Task<IActionResult> GetByUsernameAsync(string username)
+    public async Task<IActionResult> GetUserByUsernameAsync(string username)
     {
         var user = await _userRepo.GetByUsernameAsync(username) ??
                    throw new EntityNotFoundByNameException<User>(username);
@@ -85,16 +86,50 @@ public class UsersController : BaseApiController
     }
 
     /// <summary>
+    ///     Gets the user update dto by id
+    /// </summary>
+    /// <param name="id">The id</param>
+    /// <exception cref="EntityNotFoundByIdException{User}"></exception>
+    /// <returns>A task containing the action result</returns>
+    [ProducesResponseType(typeof(UserUpdateDto), StatusCodes.Status200OK)]
+    [HttpGet("userToUpdate/{id:int}")]
+    public async Task<IActionResult> GetUserToUpdateByIdAsync(int id)
+    {
+        var user = await _userRepo.GetByIdAsync(id) ?? throw new EntityNotFoundByIdException<User>(id);
+        return Ok(user.Adapt<UserUpdateDto>());
+    }
+
+    /// <summary>
+    ///     Gets the user to update by name using the specified username
+    /// </summary>
+    /// <param name="username">The username</param>
+    /// <exception cref="EntityNotFoundByNameException{User}"></exception>
+    /// <returns>A task containing the action result</returns>
+    [ProducesResponseType(typeof(UserUpdateDto), StatusCodes.Status200OK)]
+    [HttpGet("userToUpdate/{username}")]
+    public async Task<IActionResult> GetUserToUpdateByNameAsync(string username)
+    {
+        var user = await _userRepo.GetByUsernameAsync(username) ??
+                   throw new EntityNotFoundByNameException<User>(username);
+        return Ok(user.Adapt<UserUpdateDto>());
+    }
+    /// <summary>
     ///     Creates the user
     /// </summary>
     /// <param name="dto">The dto</param>
     /// <returns>A task containing the action result</returns>
     [ProducesResponseType(StatusCodes.Status201Created)]
+    [SwaggerOperation(
+        Summary = "Creates a new product",
+        Description = "Requires admin privileges",
+        OperationId = "CreateAsync",
+        Tags = new[] { "Purchase", "Products" }
+    )]
     [HttpPost]
-    public async Task<IActionResult> CreateAsync(UserCreateDto dto)
+    public async Task<IActionResult> CreateUserAsync(UserCreateDto dto)
     {
         var user = await _userRepo.CreateAsync(dto.Adapt<User>());
-        return CreatedAtAction("GetById", new { id = user.Id }, user.Adapt<UserDto>());
+        return CreatedAtAction("GetUserById", new { id = user.Id }, user.Adapt<UserDto>());
     }
 
     /// <summary>
@@ -106,7 +141,7 @@ public class UsersController : BaseApiController
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [HttpPut("{id:int}")]
     [HttpPutIdCompare]
-    public async Task<IActionResult> UpdateAsync(int id, UserUpdateDto dto)
+    public async Task<IActionResult> UpdateUserAsync(int id, UserUpdateDto dto)
     {
         await _userRepo.UpdateAsync(dto.Adapt<User>());
         return NoContent();
@@ -119,7 +154,7 @@ public class UsersController : BaseApiController
     /// <returns>A task containing the action result</returns>
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> DeleteAsync(int id)
+    public async Task<IActionResult> DeleteUserAsync(int id)
     {
         await _userRepo.DeleteAsync(id);
         return NoContent();
