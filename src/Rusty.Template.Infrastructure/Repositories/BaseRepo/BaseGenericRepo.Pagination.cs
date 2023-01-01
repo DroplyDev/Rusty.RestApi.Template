@@ -7,7 +7,7 @@ using Rusty.Template.Contracts.Responses;
 using Rusty.Template.Contracts.SubTypes;
 using Rusty.Template.Infrastructure.Repositories.Extensions;
 
-namespace Rusty.Template.Infrastructure.Repositories.BaseRepository;
+namespace Rusty.Template.Infrastructure.Repositories.BaseRepo;
 
 /// <summary>
 ///     The base repo class

@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore.Query;
 using Rusty.Template.Contracts.Requests;
 using Rusty.Template.Contracts.Responses;
 
-namespace Rusty.Template.Application.Repositories;
+namespace Rusty.Template.Application.Repositories.BaseRepo;
 
 /// <summary>
 ///     The base repo interface

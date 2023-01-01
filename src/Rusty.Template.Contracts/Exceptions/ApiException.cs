@@ -38,6 +38,7 @@ public class ApiException : Exception
         StatusCode = statusCode;
         _logLevel = logLevel;
     }
+
     /// <summary>
     ///     Initializes a new instance of the <see cref="ApiException" /> class
     /// </summary>

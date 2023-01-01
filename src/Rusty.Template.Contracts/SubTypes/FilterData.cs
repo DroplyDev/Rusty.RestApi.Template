@@ -25,6 +25,5 @@ public sealed class FilterDataValidator : BaseValidator<FilterData>
             .GreaterThanOrEqualTo(DateTime.MinValue);
         RuleFor(d => d.DateTo.Date)
             .GreaterThanOrEqualTo(DateTime.MinValue);
-
     }
 }

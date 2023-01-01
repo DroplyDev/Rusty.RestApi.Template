@@ -21,6 +21,5 @@ public class OrderByDataValidator : BaseValidator<OrderByData>
     {
         RuleFor(d => d.OrderBy).NotEmpty();
         RuleFor(d => d.OrderDirection).IsInEnum();
-
     }
 }

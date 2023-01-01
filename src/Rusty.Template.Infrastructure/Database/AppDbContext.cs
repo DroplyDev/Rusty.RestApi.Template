@@ -8,7 +8,7 @@ namespace Rusty.Template.Infrastructure.Database;
 public class AppDbContext : ScaffoldedDbContext
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="AppDbContext"/> class
+    ///     Initializes a new instance of the <see cref="AppDbContext" /> class
     /// </summary>
     /// <param name="options">The options</param>
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
@@ -16,7 +16,7 @@ public class AppDbContext : ScaffoldedDbContext
     }
 
     /// <summary>
-    /// Ons the model creating using the specified model builder
+    ///     Ons the model creating using the specified model builder
     /// </summary>
     /// <param name="modelBuilder">The model builder</param>
     protected override void OnModelCreating(ModelBuilder modelBuilder)

@@ -45,27 +45,187 @@ namespace Rusty.Template.Tests.Integration
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
 
         /// <summary>
-        /// Gets the weather forecasts using the specified request
+        /// Gets the all
+        /// </summary>
+        /// <returns>Success</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<UserDto>> UsersAllAsync()
+        {
+            return UsersAllAsync(System.Threading.CancellationToken.None);
+        }
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <summary>
+        /// Gets the all
+        /// </summary>
+        /// <returns>Success</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<UserDto>> UsersAllAsync(System.Threading.CancellationToken cancellationToken)
+        {
+            var urlBuilder_ = new System.Text.StringBuilder();
+            urlBuilder_.Append("api/v1/Users");
+
+            var client_ = _httpClient;
+            var disposeClient_ = false;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+                    request_.Method = new System.Net.Http.HttpMethod("GET");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
+
+                    PrepareRequest(client_, request_, urlBuilder_);
+
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+
+                    PrepareRequest(client_, request_, url_);
+
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    var disposeResponse_ = true;
+                    try
+                    {
+                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        if (response_.Content != null && response_.Content.Headers != null)
+                        {
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
+                        }
+
+                        ProcessResponse(client_, response_);
+
+                        var status_ = (int)response_.StatusCode;
+                        if (status_ == 200)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<UserDto>>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            return objectResponse_.Object;
+                        }
+                        else
+                        {
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                        }
+                    }
+                    finally
+                    {
+                        if (disposeResponse_)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+                if (disposeClient_)
+                    client_.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// Creates the user
+        /// </summary>
+        /// <param name="body">The dto</param>
+        /// <returns>Created</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual System.Threading.Tasks.Task UsersPOSTAsync(UserCreateDto body)
+        {
+            return UsersPOSTAsync(body, System.Threading.CancellationToken.None);
+        }
+
+        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+        /// <summary>
+        /// Creates the user
+        /// </summary>
+        /// <param name="body">The dto</param>
+        /// <returns>Created</returns>
+        /// <exception cref="ApiException">A server side error occurred.</exception>
+        public virtual async System.Threading.Tasks.Task UsersPOSTAsync(UserCreateDto body, System.Threading.CancellationToken cancellationToken)
+        {
+            var urlBuilder_ = new System.Text.StringBuilder();
+            urlBuilder_.Append("api/v1/Users");
+
+            var client_ = _httpClient;
+            var disposeClient_ = false;
+            try
+            {
+                using (var request_ = new System.Net.Http.HttpRequestMessage())
+                {
+                    var json_ = System.Text.Json.JsonSerializer.Serialize(body, _settings.Value);
+                    var content_ = new System.Net.Http.StringContent(json_);
+                    content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
+                    request_.Content = content_;
+                    request_.Method = new System.Net.Http.HttpMethod("POST");
+
+                    PrepareRequest(client_, request_, urlBuilder_);
+
+                    var url_ = urlBuilder_.ToString();
+                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+
+                    PrepareRequest(client_, request_, url_);
+
+                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+                    var disposeResponse_ = true;
+                    try
+                    {
+                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+                        if (response_.Content != null && response_.Content.Headers != null)
+                        {
+                            foreach (var item_ in response_.Content.Headers)
+                                headers_[item_.Key] = item_.Value;
+                        }
+
+                        ProcessResponse(client_, response_);
+
+                        var status_ = (int)response_.StatusCode;
+                        if (status_ == 201)
+                        {
+                            return;
+                        }
+                        else
+                        {
+                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+                            throw new ApiException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+                        }
+                    }
+                    finally
+                    {
+                        if (disposeResponse_)
+                            response_.Dispose();
+                    }
+                }
+            }
+            finally
+            {
+                if (disposeClient_)
+                    client_.Dispose();
+            }
+        }
+
+        /// <summary>
+        /// Paginates list
         /// </summary>
         /// <param name="body">The request</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<WeatherForecastDtoPagedResponse> PagedAsync(OrderedPagedRequest body)
+        public virtual System.Threading.Tasks.Task<UserDtoPagedResponse> PagedAsync(OrderedPagedRequest body)
         {
             return PagedAsync(body, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// Gets the weather forecasts using the specified request
+        /// Paginates list
         /// </summary>
         /// <param name="body">The request</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<WeatherForecastDtoPagedResponse> PagedAsync(OrderedPagedRequest body, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<UserDtoPagedResponse> PagedAsync(OrderedPagedRequest body, System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/v1/WeatherForecasts/paged");
+            urlBuilder_.Append("api/v1/Users/Paged");
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -103,7 +263,7 @@ namespace Rusty.Template.Tests.Integration
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<WeatherForecastDtoPagedResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<UserDtoPagedResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -131,30 +291,30 @@ namespace Rusty.Template.Tests.Integration
         }
 
         /// <summary>
-        /// Gets the weather forecast using the specified id
+        /// Gets user by id
         /// </summary>
         /// <param name="id">The id</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<WeatherForecastDto> WeatherForecastsGETAsync(int id)
+        public virtual System.Threading.Tasks.Task<UserDto> UsersGETAsync(int id)
         {
-            return WeatherForecastsGETAsync(id, System.Threading.CancellationToken.None);
+            return UsersGETAsync(id, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// Gets the weather forecast using the specified id
+        /// Gets user by id
         /// </summary>
         /// <param name="id">The id</param>
         /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<WeatherForecastDto> WeatherForecastsGETAsync(int id, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<UserDto> UsersGETAsync(int id, System.Threading.CancellationToken cancellationToken)
         {
             if (id == null)
                 throw new System.ArgumentNullException("id");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/v1/WeatherForecasts/{id}");
+            urlBuilder_.Append("api/v1/Users/{id}");
             urlBuilder_.Replace("{id}", System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
             var client_ = _httpClient;
@@ -189,7 +349,7 @@ namespace Rusty.Template.Tests.Integration
                         var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<WeatherForecastDto>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<UserDto>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -217,32 +377,32 @@ namespace Rusty.Template.Tests.Integration
         }
 
         /// <summary>
-        /// Puts the weather forecast using the specified id
+        /// Updates the user
         /// </summary>
         /// <param name="id">The id</param>
-        /// <param name="body">The weather forecast</param>
+        /// <param name="body">The dto</param>
         /// <returns>No Content</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task WeatherForecastsPUTAsync(int id, WeatherForecastUpdateDto body)
+        public virtual System.Threading.Tasks.Task UsersPUTAsync(int id, UserUpdateDto body)
         {
-            return WeatherForecastsPUTAsync(id, body, System.Threading.CancellationToken.None);
+            return UsersPUTAsync(id, body, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// Puts the weather forecast using the specified id
+        /// Updates the user
         /// </summary>
         /// <param name="id">The id</param>
-        /// <param name="body">The weather forecast</param>
+        /// <param name="body">The dto</param>
         /// <returns>No Content</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task WeatherForecastsPUTAsync(int id, WeatherForecastUpdateDto body, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task UsersPUTAsync(int id, UserUpdateDto body, System.Threading.CancellationToken cancellationToken)
         {
             if (id == null)
                 throw new System.ArgumentNullException("id");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/v1/WeatherForecasts/{id}");
+            urlBuilder_.Append("api/v1/Users/{id}");
             urlBuilder_.Replace("{id}", System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
             var client_ = _httpClient;
@@ -303,30 +463,30 @@ namespace Rusty.Template.Tests.Integration
         }
 
         /// <summary>
-        /// Deletes the weather forecast using the specified id
+        /// Deletes the user
         /// </summary>
         /// <param name="id">The id</param>
         /// <returns>No Content</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task WeatherForecastsDELETEAsync(int id)
+        public virtual System.Threading.Tasks.Task UsersDELETEAsync(int id)
         {
-            return WeatherForecastsDELETEAsync(id, System.Threading.CancellationToken.None);
+            return UsersDELETEAsync(id, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// Deletes the weather forecast using the specified id
+        /// Deletes the user
         /// </summary>
         /// <param name="id">The id</param>
         /// <returns>No Content</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task WeatherForecastsDELETEAsync(int id, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task UsersDELETEAsync(int id, System.Threading.CancellationToken cancellationToken)
         {
             if (id == null)
                 throw new System.ArgumentNullException("id");
 
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/v1/WeatherForecasts/{id}");
+            urlBuilder_.Append("api/v1/Users/{id}");
             urlBuilder_.Replace("{id}", System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
 
             var client_ = _httpClient;
@@ -383,27 +543,31 @@ namespace Rusty.Template.Tests.Integration
         }
 
         /// <summary>
-        /// Posts the weather forecast using the specified weather forecast
+        /// Gets user by username
         /// </summary>
-        /// <param name="body">The weather forecast</param>
-        /// <returns>Created</returns>
+        /// <param name="username">The username</param>
+        /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual System.Threading.Tasks.Task<WeatherForecastDto> WeatherForecastsPOSTAsync(WeatherForecastCreateDto body)
+        public virtual System.Threading.Tasks.Task<UserDto> UsersGET2Async(string username)
         {
-            return WeatherForecastsPOSTAsync(body, System.Threading.CancellationToken.None);
+            return UsersGET2Async(username, System.Threading.CancellationToken.None);
         }
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// Posts the weather forecast using the specified weather forecast
+        /// Gets user by username
         /// </summary>
-        /// <param name="body">The weather forecast</param>
-        /// <returns>Created</returns>
+        /// <param name="username">The username</param>
+        /// <returns>Success</returns>
         /// <exception cref="ApiException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<WeatherForecastDto> WeatherForecastsPOSTAsync(WeatherForecastCreateDto body, System.Threading.CancellationToken cancellationToken)
+        public virtual async System.Threading.Tasks.Task<UserDto> UsersGET2Async(string username, System.Threading.CancellationToken cancellationToken)
         {
+            if (username == null)
+                throw new System.ArgumentNullException("username");
+
             var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/v1/WeatherForecasts");
+            urlBuilder_.Append("api/v1/Users/{username}");
+            urlBuilder_.Replace("{username}", System.Uri.EscapeDataString(ConvertToString(username, System.Globalization.CultureInfo.InvariantCulture)));
 
             var client_ = _httpClient;
             var disposeClient_ = false;
@@ -411,11 +575,7 @@ namespace Rusty.Template.Tests.Integration
             {
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
-                    var json_ = System.Text.Json.JsonSerializer.Serialize(body, _settings.Value);
-                    var content_ = new System.Net.Http.StringContent(json_);
-                    content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
-                    request_.Content = content_;
-                    request_.Method = new System.Net.Http.HttpMethod("POST");
+                    request_.Method = new System.Net.Http.HttpMethod("GET");
                     request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -439,9 +599,9 @@ namespace Rusty.Template.Tests.Integration
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 201)
+                        if (status_ == 200)
                         {
-                            var objectResponse_ = await ReadObjectResponseAsync<WeatherForecastDto>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            var objectResponse_ = await ReadObjectResponseAsync<UserDto>(response_, headers_, cancellationToken).ConfigureAwait(false);
                             if (objectResponse_.Object == null)
                             {
                                 throw new ApiException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
@@ -569,6 +729,42 @@ namespace Rusty.Template.Tests.Integration
     }
 
     /// <summary>
+    /// The group dto
+    /// </summary>
+    [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class GroupDto
+    {
+
+        [System.Text.Json.Serialization.JsonPropertyName("id")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public int? Id { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("name")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public string Name { get; set; }
+
+        public string ToJson()
+        {
+
+            var options = new System.Text.Json.JsonSerializerOptions();
+
+            return System.Text.Json.JsonSerializer.Serialize(this, options);
+
+        }
+        public static GroupDto FromJson(string data)
+        {
+
+            var options = new System.Text.Json.JsonSerializerOptions();
+
+            return System.Text.Json.JsonSerializer.Deserialize<GroupDto>(data, options);
+
+        }
+
+    }
+
+    /// <summary>
     /// The order by data
     /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
@@ -583,7 +779,24 @@ namespace Rusty.Template.Tests.Integration
         [System.Text.Json.Serialization.JsonPropertyName("orderDirection")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public OrderDirection OrderDirection { get; set; }
+        public OrderDirection? OrderDirection { get; set; }
+
+        public string ToJson()
+        {
+
+            var options = new System.Text.Json.JsonSerializerOptions();
+
+            return System.Text.Json.JsonSerializer.Serialize(this, options);
+
+        }
+        public static OrderByData FromJson(string data)
+        {
+
+            var options = new System.Text.Json.JsonSerializerOptions();
+
+            return System.Text.Json.JsonSerializer.Deserialize<OrderByData>(data, options);
+
+        }
 
     }
 
@@ -618,6 +831,23 @@ namespace Rusty.Template.Tests.Integration
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
         public OrderByData OrderByData { get; set; }
 
+        public string ToJson()
+        {
+
+            var options = new System.Text.Json.JsonSerializerOptions();
+
+            return System.Text.Json.JsonSerializer.Serialize(this, options);
+
+        }
+        public static OrderedPagedRequest FromJson(string data)
+        {
+
+            var options = new System.Text.Json.JsonSerializerOptions();
+
+            return System.Text.Json.JsonSerializer.Deserialize<OrderedPagedRequest>(data, options);
+
+        }
+
     }
 
     /// <summary>
@@ -630,100 +860,115 @@ namespace Rusty.Template.Tests.Integration
         [System.Text.Json.Serialization.JsonPropertyName("offset")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public int Offset { get; set; }
+        public int? Offset { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("limit")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public int Limit { get; set; }
+        public int? Limit { get; set; }
+
+        public string ToJson()
+        {
+
+            var options = new System.Text.Json.JsonSerializerOptions();
+
+            return System.Text.Json.JsonSerializer.Serialize(this, options);
+
+        }
+        public static PageData FromJson(string data)
+        {
+
+            var options = new System.Text.Json.JsonSerializerOptions();
+
+            return System.Text.Json.JsonSerializer.Deserialize<PageData>(data, options);
+
+        }
 
     }
 
-    /// <summary>
-    /// The weather forecast create dto
-    /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class WeatherForecastCreateDto
+    public partial class UserCreateDto
     {
-        /// <summary>
-        /// Gets or sets the value of the date
-        /// </summary>
 
-        [System.Text.Json.Serialization.JsonPropertyName("date")]
+        [System.Text.Json.Serialization.JsonPropertyName("userName")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public System.DateTimeOffset Date { get; set; }
+        public string UserName { get; set; }
 
-        /// <summary>
-        /// Gets or sets the value of the temperature c
-        /// </summary>
-
-        [System.Text.Json.Serialization.JsonPropertyName("temperatureC")]
+        [System.Text.Json.Serialization.JsonPropertyName("password")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public int TemperatureC { get; set; }
+        public string Password { get; set; }
 
-        /// <summary>
-        /// Gets or sets the value of the summary
-        /// </summary>
-
-        [System.Text.Json.Serialization.JsonPropertyName("summary")]
+        [System.Text.Json.Serialization.JsonPropertyName("email")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public string Summary { get; set; }
+        public string Email { get; set; }
+
+        [System.Text.Json.Serialization.JsonPropertyName("groupId")]
+
+        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
+        public int? GroupId { get; set; }
+
+        public string ToJson()
+        {
+
+            var options = new System.Text.Json.JsonSerializerOptions();
+
+            return System.Text.Json.JsonSerializer.Serialize(this, options);
+
+        }
+        public static UserCreateDto FromJson(string data)
+        {
+
+            var options = new System.Text.Json.JsonSerializerOptions();
+
+            return System.Text.Json.JsonSerializer.Deserialize<UserCreateDto>(data, options);
+
+        }
 
     }
 
-    /// <summary>
-    /// The weather forecast dto
-    /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class WeatherForecastDto
+    public partial class UserDto
     {
-        /// <summary>
-        /// Gets or sets the value of the id
-        /// </summary>
 
         [System.Text.Json.Serialization.JsonPropertyName("id")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
-        /// <summary>
-        /// Gets or sets the value of the date
-        /// </summary>
-
-        [System.Text.Json.Serialization.JsonPropertyName("date")]
+        [System.Text.Json.Serialization.JsonPropertyName("username")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public System.DateTimeOffset Date { get; set; }
+        public string Username { get; set; }
 
-        /// <summary>
-        /// Gets or sets the value of the temperature c
-        /// </summary>
-
-        [System.Text.Json.Serialization.JsonPropertyName("temperatureC")]
+        [System.Text.Json.Serialization.JsonPropertyName("email")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public int TemperatureC { get; set; }
+        public string Email { get; set; }
 
-        /// <summary>
-        /// Gets or sets the value of the temperature f
-        /// </summary>
-
-        [System.Text.Json.Serialization.JsonPropertyName("temperatureF")]
+        [System.Text.Json.Serialization.JsonPropertyName("groupDto")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public int TemperatureF { get; set; }
+        public GroupDto GroupDto { get; set; }
 
-        /// <summary>
-        /// Gets or sets the value of the summary
-        /// </summary>
+        public string ToJson()
+        {
 
-        [System.Text.Json.Serialization.JsonPropertyName("summary")]
+            var options = new System.Text.Json.JsonSerializerOptions();
 
-        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public string Summary { get; set; }
+            return System.Text.Json.JsonSerializer.Serialize(this, options);
+
+        }
+        public static UserDto FromJson(string data)
+        {
+
+            var options = new System.Text.Json.JsonSerializerOptions();
+
+            return System.Text.Json.JsonSerializer.Deserialize<UserDto>(data, options);
+
+        }
 
     }
 
@@ -731,44 +976,63 @@ namespace Rusty.Template.Tests.Integration
     /// The paged response
     /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class WeatherForecastDtoPagedResponse
+    public partial class UserDtoPagedResponse
     {
 
         [System.Text.Json.Serialization.JsonPropertyName("data")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public System.Collections.Generic.ICollection<WeatherForecastDto> Data { get; set; }
+        public System.Collections.Generic.ICollection<UserDto> Data { get; set; }
 
         [System.Text.Json.Serialization.JsonPropertyName("totalCount")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public int TotalCount { get; set; }
+        public int? TotalCount { get; set; }
+
+        public string ToJson()
+        {
+
+            var options = new System.Text.Json.JsonSerializerOptions();
+
+            return System.Text.Json.JsonSerializer.Serialize(this, options);
+
+        }
+        public static UserDtoPagedResponse FromJson(string data)
+        {
+
+            var options = new System.Text.Json.JsonSerializerOptions();
+
+            return System.Text.Json.JsonSerializer.Deserialize<UserDtoPagedResponse>(data, options);
+
+        }
 
     }
 
-    /// <summary>
-    /// The weather forecast update dto
-    /// </summary>
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
-    public partial class WeatherForecastUpdateDto
+    public partial class UserUpdateDto
     {
-        /// <summary>
-        /// Gets or sets the value of the id
-        /// </summary>
 
-        [System.Text.Json.Serialization.JsonPropertyName("id")]
+        [System.Text.Json.Serialization.JsonPropertyName("data")]
 
         [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public int Id { get; set; }
+        public string Data { get; set; }
 
-        /// <summary>
-        /// Gets or sets the value of the summary
-        /// </summary>
+        public string ToJson()
+        {
 
-        [System.Text.Json.Serialization.JsonPropertyName("summary")]
+            var options = new System.Text.Json.JsonSerializerOptions();
 
-        [System.Text.Json.Serialization.JsonIgnore(Condition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingDefault)]   
-        public string Summary { get; set; }
+            return System.Text.Json.JsonSerializer.Serialize(this, options);
+
+        }
+        public static UserUpdateDto FromJson(string data)
+        {
+
+            var options = new System.Text.Json.JsonSerializerOptions();
+
+            return System.Text.Json.JsonSerializer.Deserialize<UserUpdateDto>(data, options);
+
+        }
 
     }
 
@@ -810,7 +1074,6 @@ namespace Rusty.Template.Tests.Integration
     }
 
 }
-
 #pragma warning restore 1591
 #pragma warning restore 1573
 #pragma warning restore  472

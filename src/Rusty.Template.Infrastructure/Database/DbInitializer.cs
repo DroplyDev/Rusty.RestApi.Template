@@ -53,6 +53,7 @@ public static class DbInitializer
         var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         await context.Database.EnsureCreatedAsync();
     }
+
     /// <summary>
     ///     Lorems the ipsum using the specified min words
     /// </summary>

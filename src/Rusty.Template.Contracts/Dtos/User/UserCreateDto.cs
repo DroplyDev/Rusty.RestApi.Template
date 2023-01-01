@@ -1,12 +1,22 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using FluentValidation;
 
 namespace Rusty.Template.Contracts.Dtos.User;
 
+/// <summary>
+///     The user create dto
+/// </summary>
 public sealed record UserCreateDto(string UserName, string Password, string Email, int? GroupId);
 
+/// <summary>
+///     The user create dto valdiatior class
+/// </summary>
+/// <seealso cref="BaseValidator{UserCreateDto}" />
 public sealed class UserCreateDtoValdiatior : BaseValidator<UserCreateDto>
 {
+    /// <summary>
+    ///     Initializes a new instance of the <see cref="UserCreateDtoValdiatior" /> class
+    /// </summary>
     public UserCreateDtoValdiatior()
     {
         RuleFor(item => item.UserName)

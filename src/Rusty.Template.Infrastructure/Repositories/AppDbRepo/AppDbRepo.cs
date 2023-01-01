@@ -1,6 +1,6 @@
 using System.Linq.Expressions;
 using Rusty.Template.Infrastructure.Database;
-using Rusty.Template.Infrastructure.Repositories.BaseRepository;
+using Rusty.Template.Infrastructure.Repositories.BaseRepo;
 
 namespace Rusty.Template.Infrastructure.Repositories.AppDbRepo;
 

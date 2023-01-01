@@ -2,7 +2,7 @@ using FluentValidation;
 using Rusty.Template.Contracts.Dtos;
 using Rusty.Template.Contracts.SubTypes;
 
-namespace Rusty.Template.Contracts.Requests;
+namespace Rusty.Template.Contracts.Requests.Paginations;
 
 /// <summary>
 ///     The filtered ordered paged request

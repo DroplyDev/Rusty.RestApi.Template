@@ -218,11 +218,11 @@ internal static class DependencyInjection
     /// <exception cref="ApiException">Connection string was not found</exception>
     public static void AddDatabases(this IServiceCollection services, IConfiguration configuration)
     {
+        var efConStr = configuration.GetConnectionString("DefaultConnection");
+        services.AddSingleton(new ConnectionStringFactory(efConStr));
+
         services.AddDbContextFactory<AppDbContext>(options =>
         {
-            var efConStr = configuration.GetConnectionString("DefaultConnection");
-            services.AddSingleton(new ConnectionStringFactory(efConStr));
-
             var factory = services.BuildServiceProvider().GetRequiredService<ConnectionStringFactory>();
             options.UseSqlServer(factory.ConnectionString)
                 .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
@@ -236,6 +236,8 @@ internal static class DependencyInjection
     public static void AddRepositories(this IServiceCollection services)
     {
         services.AddScoped<IUserRepo, UserRepo>();
+        services.AddScoped<IGroupRepo, GroupRepo>();
+        services.AddScoped<IRoleRepo, RoleRepo>();
     }
 
     /// <summary>

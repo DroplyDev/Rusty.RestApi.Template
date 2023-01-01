@@ -1,10 +1,10 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
-using Rusty.Template.Application.Repositories;
+using Rusty.Template.Application.Repositories.BaseRepo;
 using Rusty.Template.Contracts.Exceptions.Entity;
 
-namespace Rusty.Template.Infrastructure.Repositories.BaseRepository;
+namespace Rusty.Template.Infrastructure.Repositories.BaseRepo;
 
 /// <summary>
 ///     The base repo class
@@ -22,7 +22,7 @@ public abstract partial class BaseGenericRepo<TContext, TEntity> : IBaseRepo<TEn
     ///     The db set
     /// </summary>
     protected readonly DbSet<TEntity> DbSet;
-    
+
 
     /// <summary>
     ///     Initializes a new instance of the <see /> class
@@ -43,17 +43,6 @@ public abstract partial class BaseGenericRepo<TContext, TEntity> : IBaseRepo<TEn
     public async Task<TEntity?> GetByIdAsync(int id)
     {
         return await DbSet.FindAsync(id);
-    }
-
-    /// <summary>
-    ///     Gets the by id with exception using the specified id
-    /// </summary>
-    /// <param name="id">The id</param>
-    /// <exception cref="EntityNotFoundByIdException{TEntity}"></exception>
-    /// <returns>A task containing the entity</returns>
-    public async Task<TEntity> GetByIdWithExceptionAsync(int id)
-    {
-        return await DbSet.FindAsync(id) ?? throw new EntityNotFoundByIdException<TEntity>(id);
     }
 
     /// <summary>
@@ -254,6 +243,17 @@ public abstract partial class BaseGenericRepo<TContext, TEntity> : IBaseRepo<TEn
     public async Task<int> SaveChangesAsync()
     {
         return await Context.SaveChangesAsync();
+    }
+
+    /// <summary>
+    ///     Gets the by id with exception using the specified id
+    /// </summary>
+    /// <param name="id">The id</param>
+    /// <exception cref="EntityNotFoundByIdException{TEntity}"></exception>
+    /// <returns>A task containing the entity</returns>
+    public async Task<TEntity> GetByIdWithExceptionAsync(int id)
+    {
+        return await DbSet.FindAsync(id) ?? throw new EntityNotFoundByIdException<TEntity>(id);
     }
 
     /// <summary>
