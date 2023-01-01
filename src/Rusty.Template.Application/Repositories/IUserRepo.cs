@@ -13,6 +13,7 @@ public interface IUserRepo : IBaseRepo<User>
     ///     Gets the by username using the specified username
     /// </summary>
     /// <param name="username">The username</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>A task containing the user</returns>
-    Task<User?> GetByUsernameAsync(string username);
+    Task<User?> GetByUsernameAsync(string username, CancellationToken cancellationToken);
 }

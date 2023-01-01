@@ -57,16 +57,17 @@ public static class PaginationExtensions
     /// <typeparam name="TEntity">The entity</typeparam>
     /// <param name="query">The query</param>
     /// <param name="pageData">The page data</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>A task containing a paged response of t result</returns>
     public static async Task<PagedResponse<TEntity>> PaginateWithTotalCountAsListAsync<TEntity>(
-        this IQueryable<TEntity> query, PageData? pageData)
+        this IQueryable<TEntity> query, PageData? pageData, CancellationToken cancellationToken)
     {
         if (pageData is not null)
             return new PagedResponse<TEntity>(
-                await query.Paginate(pageData.Offset, pageData.Limit).ToListAsync(),
+                await query.Paginate(pageData.Offset, pageData.Limit).ToListAsync(cancellationToken),
                 await query.CountAsync()
             );
-        var data = await query.ToListAsync();
+        var data = await query.ToListAsync(cancellationToken);
         return new PagedResponse<TEntity>(
             data,
             data.Count

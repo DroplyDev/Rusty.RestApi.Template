@@ -215,7 +215,7 @@ internal static class DependencyInjection
             var xmlDocs = currentAssembly.GetReferencedAssemblies()
                 .Union(new[] { currentAssembly.GetName() })
                 .Select(a => Path.Combine(Path.GetDirectoryName(currentAssembly.Location)!, $"{a.Name}.xml"))
-                .Where(f => File.Exists(f)).ToArray();
+                .Where(File.Exists).ToArray();
             Array.ForEach(xmlDocs, d => { options.IncludeXmlComments(d); });
 
             options.SupportNonNullableReferenceTypes();

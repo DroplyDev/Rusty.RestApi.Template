@@ -13,9 +13,10 @@ public partial interface IBaseRepo<TEntity> where TEntity : class
     ///     Paginates the request
     /// </summary>
     /// <param name="request">The request</param>
+    /// <param name="cancellationToken"></param>
     /// <param name="includes">The includes</param>
     /// <returns>A task containing a paged response of t entity</returns>
-    Task<PagedResponse<TEntity>> PaginateAsync(OrderedPagedRequest request,
+    Task<PagedResponse<TEntity>> PaginateAsync(OrderedPagedRequest request, CancellationToken cancellationToken,
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null);
 
     /// <summary>
@@ -23,8 +24,10 @@ public partial interface IBaseRepo<TEntity> where TEntity : class
     /// </summary>
     /// <typeparam name="TResult">The result</typeparam>
     /// <param name="request">The request</param>
+    /// <param name="cancellationToken"></param>
     /// <param name="includes">The includes</param>
     /// <returns>A task containing a paged response of t result</returns>
     Task<PagedResponse<TResult>> PaginateAsync<TResult>(OrderedPagedRequest request,
+        CancellationToken cancellationToken,
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null) where TResult : class;
 }

@@ -23,9 +23,10 @@ public class RoleRepo : AppDbRepo<Role>, IRoleRepo
     ///     Gets the by name using the specified name
     /// </summary>
     /// <param name="name">The name</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>A task containing the role</returns>
-    public async Task<Role?> GetByNameAsync(string name)
+    public async Task<Role?> GetByNameAsync(string name, CancellationToken cancellationToken)
     {
-        return await FirstOrDefaultAsync(item => item.Name == name);
+        return await FirstOrDefaultAsync(item => item.Name == name, cancellationToken);
     }
 }

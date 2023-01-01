@@ -13,6 +13,7 @@ public interface IRoleRepo : IBaseRepo<Role>
     ///     Gets the by name using the specified name
     /// </summary>
     /// <param name="name">The name</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>A task containing the role</returns>
-    Task<Role?> GetByNameAsync(string name);
+    Task<Role?> GetByNameAsync(string name, CancellationToken cancellationToken);
 }

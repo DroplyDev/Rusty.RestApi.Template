@@ -39,10 +39,21 @@ public abstract partial class BaseGenericRepo<TContext, TEntity> : IBaseRepo<TEn
     ///     Gets the by id using the specified id
     /// </summary>
     /// <param name="id">The id</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>A task containing the entity</returns>
-    public async Task<TEntity?> GetByIdAsync(int id)
+    public async Task<TEntity?> GetByIdAsync(int id, CancellationToken cancellationToken)
     {
-        return await DbSet.FindAsync(id);
+        return await DbSet.FindAsync(new object[] { id }, cancellationToken);
+    }
+
+    /// <summary>
+    ///     Gets the by id using the specified id
+    /// </summary>
+    /// <param name="id">The id</param>
+    /// <returns>The entity</returns>
+    public TEntity? GetById(int id)
+    {
+        return DbSet.Find(id);
     }
 
     /// <summary>
@@ -152,9 +163,9 @@ public abstract partial class BaseGenericRepo<TContext, TEntity> : IBaseRepo<TEn
     /// <exception cref="EntityNotFoundByIdException{TEntity}"></exception>
     public async Task DeleteAsync(int id)
     {
-        var entity = await GetByIdAsync(id);
-        if (entity is null)
-            throw new EntityNotFoundByIdException<TEntity>(id);
+        var entity = await GetByIdAsync(id, CancellationToken.None)
+                     ?? throw new EntityNotFoundByIdException<TEntity>(id);
+
         DeleteNoSave(entity);
         await SaveChangesAsync();
     }
@@ -191,49 +202,55 @@ public abstract partial class BaseGenericRepo<TContext, TEntity> : IBaseRepo<TEn
     ///     Exists the id
     /// </summary>
     /// <param name="id">The id</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>A task containing the bool</returns>
-    public virtual async Task<bool> ExistsAsync(int id)
+    public virtual async Task<bool> ExistsAsync(int id, CancellationToken cancellationToken)
     {
-        return await GetByIdAsync(id) is not null;
+        return await GetByIdAsync(id, cancellationToken) is not null;
     }
 
     /// <summary>
     ///     Exists the entity
     /// </summary>
     /// <param name="entity">The entity</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>A task containing the bool</returns>
-    public virtual async Task<bool> ExistsAsync(TEntity entity)
+    public virtual async Task<bool> ExistsAsync(TEntity entity, CancellationToken cancellationToken)
     {
-        return await DbSet.FindAsync(entity) is not null;
+        return await DbSet.FindAsync(new object[] { entity }, cancellationToken) is not null;
     }
 
     /// <summary>
     ///     Exists the expression
     /// </summary>
     /// <param name="expression">The expression</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>A task containing the bool</returns>
-    public virtual async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> expression)
+    public virtual async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> expression,
+        CancellationToken cancellationToken)
     {
-        return await DbSet.AnyAsync(expression);
+        return await DbSet.AnyAsync(expression, cancellationToken);
     }
 
     /// <summary>
     ///     checks if collection is empty
     /// </summary>
     /// <returns>A task containing the bool</returns>
-    public async Task<bool> IsEmptyAsync()
+    public async Task<bool> IsEmptyAsync(CancellationToken cancellationToken)
     {
-        return !await DbSet.AnyAsync();
+        return !await DbSet.AnyAsync(cancellationToken);
     }
 
     /// <summary>
     ///     Ises the empty using the specified expression
     /// </summary>
     /// <param name="expression">The expression</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>A task containing the bool</returns>
-    public async Task<bool> IsEmptyAsync(Expression<Func<TEntity, bool>> expression)
+    public async Task<bool> IsEmptyAsync(Expression<Func<TEntity, bool>> expression,
+        CancellationToken cancellationToken)
     {
-        return !await DbSet.AnyAsync(expression);
+        return !await DbSet.AnyAsync(expression, cancellationToken);
     }
 
     /// <summary>
@@ -243,17 +260,6 @@ public abstract partial class BaseGenericRepo<TContext, TEntity> : IBaseRepo<TEn
     public async Task<int> SaveChangesAsync()
     {
         return await Context.SaveChangesAsync();
-    }
-
-    /// <summary>
-    ///     Gets the by id with exception using the specified id
-    /// </summary>
-    /// <param name="id">The id</param>
-    /// <exception cref="EntityNotFoundByIdException{TEntity}"></exception>
-    /// <returns>A task containing the entity</returns>
-    public async Task<TEntity> GetByIdWithExceptionAsync(int id)
-    {
-        return await DbSet.FindAsync(id) ?? throw new EntityNotFoundByIdException<TEntity>(id);
     }
 
     /// <summary>

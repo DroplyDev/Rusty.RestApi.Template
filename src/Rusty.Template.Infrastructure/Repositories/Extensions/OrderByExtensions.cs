@@ -22,10 +22,9 @@ public static class OrderByExtensions
     {
         var entityType = typeof(TEntity);
         //Create x=>x.PropName
-        var propertyInfo = entityType.GetProperty(propertyName);
-        if (propertyInfo is null)
-            throw new EntityOrderParamNameNotValidException<TEntity>(
-                $@"You can not sort by {propertyName}. It does not exist in response dto");
+        var propertyInfo = entityType.GetProperty(propertyName)
+                           ?? throw new EntityOrderParamNameNotValidException<TEntity>(
+                               $@"You can not sort by {propertyName}. It does not exist in response dto");
 
         var arg = Expression.Parameter(entityType, "x");
         var property = Expression.Property(arg, propertyName);

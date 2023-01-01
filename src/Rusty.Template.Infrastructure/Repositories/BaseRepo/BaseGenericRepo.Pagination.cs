@@ -42,14 +42,16 @@ public partial class BaseGenericRepo<TContext, TEntity> where TEntity : class wh
     ///     Paginates the request
     /// </summary>
     /// <param name="request">The request</param>
+    /// <param name="cancellationToken"></param>
     /// <param name="includes">The includes</param>
     /// <returns>A task containing a paged response of t entity</returns>
     public async Task<PagedResponse<TEntity>> PaginateAsync(OrderedPagedRequest request,
+        CancellationToken cancellationToken,
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null)
     {
         var query = IncludeIfNotNull(includes);
         query = query.OrderByWithDirection(request.OrderByData);
-        return await query.PaginateWithTotalCountAsListAsync(request.PageData);
+        return await query.PaginateWithTotalCountAsListAsync(request.PageData, cancellationToken);
     }
 
 
@@ -58,14 +60,16 @@ public partial class BaseGenericRepo<TContext, TEntity> where TEntity : class wh
     /// </summary>
     /// <typeparam name="TResult">The result</typeparam>
     /// <param name="request">The request</param>
+    /// <param name="cancellationToken"></param>
     /// <param name="includes">The includes</param>
     /// <returns>A task containing a paged response of t result</returns>
     public async Task<PagedResponse<TResult>> PaginateAsync<TResult>(OrderedPagedRequest request,
+        CancellationToken cancellationToken,
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null) where TResult : class
     {
         var query = IncludeIfNotNull(includes);
         var result = query.ProjectToType<TResult>();
         result = result.OrderByWithDirection(request.OrderByData.OrderBy, request.OrderByData.OrderDirection);
-        return await result.PaginateWithTotalCountAsListAsync(request.PageData);
+        return await result.PaginateWithTotalCountAsListAsync(request.PageData, cancellationToken);
     }
 }

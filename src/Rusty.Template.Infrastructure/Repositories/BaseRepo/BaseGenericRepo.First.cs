@@ -25,12 +25,14 @@ public partial class BaseGenericRepo<TContext, TEntity> where TEntity : class wh
     ///     Firsts the or default using the specified expression
     /// </summary>
     /// <param name="expression">The expression</param>
+    /// <param name="cancellationToken"></param>
     /// <param name="includes">The includes</param>
     /// <returns>A task containing the entity</returns>
     public virtual async Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> expression,
+        CancellationToken cancellationToken,
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null)
     {
-        return await IncludeIfNotNull(includes).FirstOrDefaultAsync(expression);
+        return await IncludeIfNotNull(includes).FirstOrDefaultAsync(expression, cancellationToken);
     }
 
     /// <summary>
@@ -49,11 +51,13 @@ public partial class BaseGenericRepo<TContext, TEntity> where TEntity : class wh
     ///     Firsts the expression
     /// </summary>
     /// <param name="expression">The expression</param>
+    /// <param name="cancellationToken"></param>
     /// <param name="includes">The includes</param>
     /// <returns>A task containing the entity</returns>
     public virtual async Task<TEntity> FirstAsync(Expression<Func<TEntity, bool>> expression,
+        CancellationToken cancellationToken,
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null)
     {
-        return await IncludeIfNotNull(includes).FirstAsync(expression);
+        return await IncludeIfNotNull(includes).FirstAsync(expression, cancellationToken);
     }
 }

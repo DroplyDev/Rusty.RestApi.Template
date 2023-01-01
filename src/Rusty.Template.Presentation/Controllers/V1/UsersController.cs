@@ -39,34 +39,38 @@ public class UsersController : BaseApiController
     /// <returns>A task containing the action result</returns>
     [ProducesResponseType(typeof(List<UserDto>), StatusCodes.Status200OK)]
     [HttpGet]
-    public async Task<IActionResult> GetAllUsersAsync()
+    public async Task<IActionResult> GetAllUsersAsync(CancellationToken cancellationToken)
     {
-        return Ok(await _userRepo.GetAll().ProjectToType<UserDto>().ToListAsync());
+        return Ok(await _userRepo.GetAll().ProjectToType<UserDto>().ToListAsync(cancellationToken));
     }
 
     /// <summary>
     ///    Gets paged list with user dto
     /// </summary>
     /// <param name="request">The request</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>A task containing the action result</returns>
     [ProducesResponseType(typeof(PagedResponse<UserDto>), StatusCodes.Status200OK)]
     [HttpPost("paged")]
-    public async Task<IActionResult> GetPagedUsersAsync(OrderedPagedRequest request)
+    public async Task<IActionResult> GetPagedUsersAsync(OrderedPagedRequest request,
+        CancellationToken cancellationToken)
     {
-        return Ok(await _userRepo.PaginateAsync<UserDto>(request));
+        return Ok(await _userRepo.PaginateAsync<UserDto>(request, cancellationToken));
     }
 
     /// <summary>
     ///     Gets user dto by id
     /// </summary>
     /// <param name="id">The id</param>
+    /// <param name="cancellationToken"></param>
     /// <exception cref="EntityNotFoundByIdException{User}"></exception>
     /// <returns>A task containing the action result</returns>
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     [HttpGet("{id:int}")]
-    public async Task<IActionResult> GetUserByIdAsync(int id)
+    public async Task<IActionResult> GetUserByIdAsync(int id, CancellationToken cancellationToken)
     {
-        var user = await _userRepo.GetByIdAsync(id) ?? throw new EntityNotFoundByIdException<User>(id);
+        var user = await _userRepo.GetByIdAsync(id, cancellationToken) ??
+                   throw new EntityNotFoundByIdException<User>(id);
         return Ok(user.Adapt<UserDto>());
     }
 
@@ -74,13 +78,14 @@ public class UsersController : BaseApiController
     ///     Gets user dto by username
     /// </summary>
     /// <param name="username">The username</param>
+    /// <param name="cancellationToken"></param>
     /// <exception cref="EntityNotFoundByNameException{User}"></exception>
     /// <returns>A task containing the action result</returns>
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     [HttpGet("{username}")]
-    public async Task<IActionResult> GetUserByUsernameAsync(string username)
+    public async Task<IActionResult> GetUserByUsernameAsync(string username, CancellationToken cancellationToken)
     {
-        var user = await _userRepo.GetByUsernameAsync(username) ??
+        var user = await _userRepo.GetByUsernameAsync(username, cancellationToken) ??
                    throw new EntityNotFoundByNameException<User>(username);
         return Ok(user.Adapt<UserDto>());
     }
@@ -89,13 +94,15 @@ public class UsersController : BaseApiController
     ///     Gets the user update dto by id
     /// </summary>
     /// <param name="id">The id</param>
+    /// <param name="cancellationToken"></param>
     /// <exception cref="EntityNotFoundByIdException{User}"></exception>
     /// <returns>A task containing the action result</returns>
     [ProducesResponseType(typeof(UserUpdateDto), StatusCodes.Status200OK)]
     [HttpGet("userToUpdate/{id:int}")]
-    public async Task<IActionResult> GetUserToUpdateByIdAsync(int id)
+    public async Task<IActionResult> GetUserToUpdateByIdAsync(int id, CancellationToken cancellationToken)
     {
-        var user = await _userRepo.GetByIdAsync(id) ?? throw new EntityNotFoundByIdException<User>(id);
+        var user = await _userRepo.GetByIdAsync(id, cancellationToken) ??
+                   throw new EntityNotFoundByIdException<User>(id);
         return Ok(user.Adapt<UserUpdateDto>());
     }
 
@@ -103,13 +110,14 @@ public class UsersController : BaseApiController
     ///     Gets the user to update by name using the specified username
     /// </summary>
     /// <param name="username">The username</param>
+    /// <param name="cancellationToken"></param>
     /// <exception cref="EntityNotFoundByNameException{User}"></exception>
     /// <returns>A task containing the action result</returns>
     [ProducesResponseType(typeof(UserUpdateDto), StatusCodes.Status200OK)]
     [HttpGet("userToUpdate/{username}")]
-    public async Task<IActionResult> GetUserToUpdateByNameAsync(string username)
+    public async Task<IActionResult> GetUserToUpdateByNameAsync(string username, CancellationToken cancellationToken)
     {
-        var user = await _userRepo.GetByUsernameAsync(username) ??
+        var user = await _userRepo.GetByUsernameAsync(username, cancellationToken) ??
                    throw new EntityNotFoundByNameException<User>(username);
         return Ok(user.Adapt<UserUpdateDto>());
     }

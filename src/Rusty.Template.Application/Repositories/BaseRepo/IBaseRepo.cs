@@ -13,9 +13,11 @@ public partial interface IBaseRepo<TEntity> where TEntity : class
     ///     Gets the by id using the specified id
     /// </summary>
     /// <param name="id">The id</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>A task containing the entity</returns>
-    Task<TEntity?> GetByIdAsync(int id);
+    Task<TEntity?> GetByIdAsync(int id, CancellationToken cancellationToken);
 
+    TEntity? GetById(int id);
     /// <summary>
     ///     Creates the entity
     /// </summary>
@@ -106,35 +108,39 @@ public partial interface IBaseRepo<TEntity> where TEntity : class
     ///     Existses the id
     /// </summary>
     /// <param name="id">The id</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>A task containing the bool</returns>
-    Task<bool> ExistsAsync(int id);
+    Task<bool> ExistsAsync(int id, CancellationToken cancellationToken);
 
     /// <summary>
     ///     Existses the entity
     /// </summary>
     /// <param name="entity">The entity</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>A task containing the bool</returns>
-    Task<bool> ExistsAsync(TEntity entity);
+    Task<bool> ExistsAsync(TEntity entity, CancellationToken cancellationToken);
 
     /// <summary>
     ///     Existses the expression
     /// </summary>
     /// <param name="expression">The expression</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>A task containing the bool</returns>
-    Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> expression);
+    Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> expression, CancellationToken cancellationToken);
 
     /// <summary>
     ///     Ises the empty
     /// </summary>
     /// <returns>A task containing the bool</returns>
-    Task<bool> IsEmptyAsync();
+    Task<bool> IsEmptyAsync(CancellationToken cancellationToken);
 
     /// <summary>
     ///     Ises the empty using the specified expression
     /// </summary>
     /// <param name="expression">The expression</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>A task containing the bool</returns>
-    Task<bool> IsEmptyAsync(Expression<Func<TEntity, bool>> expression);
+    Task<bool> IsEmptyAsync(Expression<Func<TEntity, bool>> expression, CancellationToken cancellationToken);
 
     /// <summary>
     ///     Saves the changes
@@ -156,9 +162,10 @@ public partial interface IBaseRepo<TEntity> where TEntity : class
     ///     Firsts the or default using the specified expression
     /// </summary>
     /// <param name="expression">The expression</param>
+    /// <param name="cancellationToken"></param>
     /// <param name="includes">The includes</param>
     /// <returns>A task containing the entity</returns>
-    Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> expression,
+    Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> expression, CancellationToken cancellationToken,
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null);
 
     /// <summary>
@@ -174,9 +181,10 @@ public partial interface IBaseRepo<TEntity> where TEntity : class
     ///     Firsts the expression
     /// </summary>
     /// <param name="expression">The expression</param>
+    /// <param name="cancellationToken"></param>
     /// <param name="includes">The includes</param>
     /// <returns>A task containing the entity</returns>
-    Task<TEntity> FirstAsync(Expression<Func<TEntity, bool>> expression,
+    Task<TEntity> FirstAsync(Expression<Func<TEntity, bool>> expression, CancellationToken cancellationToken,
         Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null);
 
     //Get All

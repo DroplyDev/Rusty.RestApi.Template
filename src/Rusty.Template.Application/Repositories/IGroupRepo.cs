@@ -13,6 +13,7 @@ public interface IGroupRepo : IBaseRepo<Group>
     ///     Gets the by name using the specified name
     /// </summary>
     /// <param name="name">The name</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>A task containing the group</returns>
-    Task<Group?> GetByNameAsync(string name);
+    Task<Group?> GetByNameAsync(string name, CancellationToken cancellationToken);
 }

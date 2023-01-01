@@ -23,9 +23,10 @@ public class GroupRepo : AppDbRepo<Group>, IGroupRepo
     ///     Gets the by name using the specified name
     /// </summary>
     /// <param name="name">The name</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>A task containing the group</returns>
-    public async Task<Group?> GetByNameAsync(string name)
+    public async Task<Group?> GetByNameAsync(string name, CancellationToken cancellationToken)
     {
-        return await FirstOrDefaultAsync(item => item.Name == name);
+        return await FirstOrDefaultAsync(item => item.Name == name, cancellationToken);
     }
 }

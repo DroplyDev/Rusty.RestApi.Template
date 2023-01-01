@@ -24,9 +24,10 @@ public class UserRepo : AppDbRepo<User>, IUserRepo
     ///     Gets the by username using the specified username
     /// </summary>
     /// <param name="username">The username</param>
+    /// <param name="cancellationToken"></param>
     /// <returns>A task containing the user</returns>
-    public async Task<User?> GetByUsernameAsync(string username)
+    public async Task<User?> GetByUsernameAsync(string username, CancellationToken cancellationToken)
     {
-        return await FirstOrDefaultAsync(item => item.UserName == username);
+        return await FirstOrDefaultAsync(item => item.UserName == username, cancellationToken);
     }
 }
