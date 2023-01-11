@@ -1,5 +1,4 @@
 using FluentValidation;
-using Rusty.Template.Contracts.Dtos;
 using Rusty.Template.Contracts.SubTypes;
 
 namespace Rusty.Template.Contracts.Requests.Paginations;
@@ -28,8 +27,8 @@ public sealed record FilteredOrderedPagedRequest
 /// <summary>
 ///     The filtered ordered paged request validator class
 /// </summary>
-/// <seealso cref="BaseValidator{T}" />
-public sealed class FilteredOrderedPagedRequestValidator : BaseValidator<FilteredOrderedPagedRequest>
+/// <seealso cref="AbstractValidator{T}" />
+public sealed class FilteredOrderedPagedRequestValidator : AbstractValidator<FilteredOrderedPagedRequest>
 {
     /// <summary>
     ///     Initializes a new instance of the <see cref="FilteredOrderedPagedRequestValidator" /> class

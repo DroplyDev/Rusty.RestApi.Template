@@ -28,8 +28,8 @@ public sealed class ExceptionHandlingMiddleware
     /// <param name="next">The next</param>
     public ExceptionHandlingMiddleware(ILogger logger, RequestDelegate next)
     {
-        _logger = logger;
-        _next = next;
+	    _logger = logger;
+	    _next = next;
     }
 
     /// <summary>
@@ -38,20 +38,20 @@ public sealed class ExceptionHandlingMiddleware
     /// <param name="context">The context</param>
     public async Task InvokeAsync(HttpContext context)
     {
-        try
-        {
-            await _next(context);
-        }
-        catch (ApiException ex)
-        {
-            _logger.Write(ex.GetLevel(), ex, ex.Message);
-            await HandleExceptionAsync(context, ex);
-        }
-        catch (Exception ex)
-        {
-            _logger.Fatal(ex, ex.Message);
-            await HandleExceptionAsync(context, ex);
-        }
+	    try
+	    {
+		    await _next(context);
+	    }
+	    catch (ApiException ex)
+	    {
+		    _logger.Write(ex.GetLevel(), ex, ex.Description);
+		    await HandleExceptionAsync(context, ex);
+	    }
+	    catch (Exception ex)
+	    {
+		    _logger.Fatal(ex, ex.Message);
+		    await HandleExceptionAsync(context, ex);
+	    }
     }
 
     /// <summary>
@@ -61,9 +61,9 @@ public sealed class ExceptionHandlingMiddleware
     /// <param name="exception">The exception</param>
     private static Task HandleExceptionAsync(HttpContext context, ApiException exception)
     {
-        context.Response.StatusCode = exception.StatusCode;
-        context.Response.ContentType = "application/json";
-        return context.Response.WriteAsJsonAsync(exception);
+	    context.Response.StatusCode = exception.StatusCode;
+	    context.Response.ContentType = "application/json";
+	    return context.Response.WriteAsJsonAsync(exception.ToString());
     }
 
     /// <summary>
@@ -73,9 +73,9 @@ public sealed class ExceptionHandlingMiddleware
     /// <param name="exception">The exception</param>
     private static Task HandleExceptionAsync(HttpContext context, Exception exception)
     {
-        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-        context.Response.ContentType = "application/json";
-        return context.Response.WriteAsJsonAsync(
-            new ApiException(exception.Message, context.Response.StatusCode, LogEventLevel.Fatal));
+	    context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+	    context.Response.ContentType = "application/json";
+	    return context.Response.WriteAsJsonAsync(
+		    new ApiException(exception.Message, context.Response.StatusCode, LogEventLevel.Fatal).ToString());
     }
 }

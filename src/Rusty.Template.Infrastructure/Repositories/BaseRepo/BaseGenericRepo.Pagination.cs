@@ -22,17 +22,15 @@ public partial class BaseGenericRepo<TContext, TEntity> where TEntity : class wh
     /// <param name="orderBy">The order by</param>
     /// <param name="orderDirection">The order direction</param>
     /// <param name="expression">The expression</param>
-    /// <param name="includes">The includes</param>
     /// <returns>A queryable of t entity collection and int total count</returns>
     public virtual ( IQueryable<TEntity> Collection, int TotalCount) Paginate(int skipItems, int takeItems,
-        string orderBy, OrderDirection orderDirection,
-        Expression<Func<TEntity, bool>>? expression,
-        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null)
+                                                                              string orderBy,
+                                                                              OrderDirection orderDirection,
+                                                                              Expression<Func<TEntity, bool>>?
+                                                                                  expression)
     {
-        var query = IncludeIfNotNull(includes);
-
-        query = query.WhereNullable(expression);
-
+        var query = DbSet.WhereNullable(expression);
+        
         query = query.OrderByWithDirection(orderBy, orderDirection);
 
         return query.PaginateWithTotalCount(skipItems, takeItems);

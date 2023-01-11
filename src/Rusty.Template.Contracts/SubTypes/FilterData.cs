@@ -1,5 +1,4 @@
 using FluentValidation;
-using Rusty.Template.Contracts.Dtos;
 
 namespace Rusty.Template.Contracts.SubTypes;
 
@@ -11,8 +10,8 @@ public sealed record FilterData(DateTime DateFrom, DateTime DateTo);
 /// <summary>
 ///     The filter data validator class
 /// </summary>
-/// <seealso cref="BaseValidator{T}" />
-public sealed class FilterDataValidator : BaseValidator<FilterData>
+/// <seealso cref="AbstractValidator{T}" />
+public sealed class FilterDataValidator : AbstractValidator<FilterData>
 {
     /// <summary>
     ///     Initializes a new instance of the <see cref="FilterDataValidator" /> class

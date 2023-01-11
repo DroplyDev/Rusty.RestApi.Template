@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 using Rusty.Template.Contracts.SubTypes;
 using Rusty.Template.Infrastructure.Repositories.Extensions;
 
@@ -13,12 +12,10 @@ public partial class BaseGenericRepo<TContext, TEntity> where TEntity : class wh
     /// <summary>
     ///     Gets the all using the specified includes
     /// </summary>
-    /// <param name="includes">The includes</param>
     /// <returns>A queryable of t entity</returns>
-    public virtual IQueryable<TEntity> GetAll(
-        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null)
+    public virtual IQueryable<TEntity> GetAll()
     {
-        return IncludeIfNotNull(includes);
+        return DbSet;
     }
 
     /// <summary>
@@ -26,12 +23,9 @@ public partial class BaseGenericRepo<TContext, TEntity> where TEntity : class wh
     /// </summary>
     /// <param name="orderBy">The order by</param>
     /// <param name="orderDirection">The order direction</param>
-    /// <param name="includes">The includes</param>
     /// <returns>A queryable of t entity</returns>
-    public virtual IQueryable<TEntity> GetAll(string orderBy, OrderDirection orderDirection,
-        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null)
+    public virtual IQueryable<TEntity> GetAll(string orderBy, OrderDirection orderDirection)
     {
-        return IncludeIfNotNull(includes)
-            .OrderByWithDirection(orderBy, orderDirection);
+        return DbSet.OrderByWithDirection(orderBy, orderDirection);
     }
 }

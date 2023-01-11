@@ -15,9 +15,9 @@ public partial interface IBaseRepo<TEntity> where TEntity : class
     /// <param name="id">The id</param>
     /// <param name="cancellationToken"></param>
     /// <returns>A task containing the entity</returns>
-    Task<TEntity?> GetByIdAsync(int id, CancellationToken cancellationToken);
+    Task<TEntity?> GetByIdAsync(object id, CancellationToken cancellationToken);
 
-    TEntity? GetById(int id);
+    TEntity? GetById(object id);
     /// <summary>
     ///     Creates the entity
     /// </summary>
@@ -191,19 +191,16 @@ public partial interface IBaseRepo<TEntity> where TEntity : class
     /// <summary>
     ///     Gets the all using the specified includes
     /// </summary>
-    /// <param name="includes">The includes</param>
     /// <returns>A queryable of t entity</returns>
-    IQueryable<TEntity> GetAll(Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null);
+    IQueryable<TEntity> GetAll();
 
     /// <summary>
     ///     Gets the all using the specified order by
     /// </summary>
     /// <param name="orderBy">The order by</param>
     /// <param name="orderDirection">The order direction</param>
-    /// <param name="includes">The includes</param>
     /// <returns>A queryable of t entity</returns>
-    IQueryable<TEntity> GetAll(string orderBy, OrderDirection orderDirection,
-        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null);
+    IQueryable<TEntity> GetAll(string orderBy, OrderDirection orderDirection);
 
     //Pagination
     /// <summary>
@@ -214,22 +211,18 @@ public partial interface IBaseRepo<TEntity> where TEntity : class
     /// <param name="orderBy">The order by</param>
     /// <param name="orderDirection">The order direction</param>
     /// <param name="expression">The expression</param>
-    /// <param name="includes">The includes</param>
     /// <returns>A queryable of t entity collection and int total count</returns>
     ( IQueryable<TEntity> Collection, int TotalCount) Paginate(int skipItems, int takeItems, string orderBy,
-        OrderDirection orderDirection,
-        Expression<Func<TEntity, bool>>? expression,
-        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null);
+                                                               OrderDirection orderDirection,
+                                                               Expression<Func<TEntity, bool>>? expression);
 
     //Where
     /// <summary>
     ///     Wheres the expression
     /// </summary>
     /// <param name="expression">The expression</param>
-    /// <param name="includes">The includes</param>
     /// <returns>A queryable of t entity</returns>
-    IQueryable<TEntity> Where(Expression<Func<TEntity, bool>> expression,
-        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null);
+    IQueryable<TEntity> Where(Expression<Func<TEntity, bool>> expression);
 
     /// <summary>
     ///     Wheres the expression
@@ -237,9 +230,7 @@ public partial interface IBaseRepo<TEntity> where TEntity : class
     /// <param name="expression">The expression</param>
     /// <param name="orderBy">The order by</param>
     /// <param name="orderDirection">The order direction</param>
-    /// <param name="includes">The includes</param>
     /// <returns>A queryable of t entity</returns>
     IQueryable<TEntity> Where(Expression<Func<TEntity, bool>> expression, string orderBy,
-        OrderDirection orderDirection,
-        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null);
+                              OrderDirection orderDirection);
 }

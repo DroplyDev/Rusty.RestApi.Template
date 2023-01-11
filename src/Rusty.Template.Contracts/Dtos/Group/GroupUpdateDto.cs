@@ -1,31 +1,12 @@
-using FluentValidation;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Rusty.Template.Contracts.Dtos.Group;
 
-/// <summary>
-///     The group update dto
-/// </summary>
+[SwaggerSchema("The dto for group update")]
 public sealed class GroupUpdateDto
 {
-    /// <summary>
-    ///     Gets or sets the value of the name
-    /// </summary>
+    [SwaggerSchema("The group name")]
+
     public string Name { get; set; } = null!;
 }
 
-/// <summary>
-///     The group update dto validator class
-/// </summary>
-/// <seealso cref="BaseValidator{GroupUpdateDto}" />
-public sealed class GroupUpdateDtoValidator : BaseValidator<GroupUpdateDto>
-{
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="GroupUpdateDtoValidator" /> class
-    /// </summary>
-    public GroupUpdateDtoValidator()
-    {
-        RuleFor(item => item.Name)
-            .NotNull()
-            .MaximumLength(32);
-    }
-}

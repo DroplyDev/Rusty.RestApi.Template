@@ -19,6 +19,7 @@ using Rusty.Template.Contracts.Exceptions;
 using Rusty.Template.Infrastructure.Database;
 using Rusty.Template.Infrastructure.Mapping;
 using Rusty.Template.Infrastructure.Repositories.AppDbRepo;
+using Rusty.Template.Presentation.OperationFilters;
 using Rusty.Template.Presentation.Options;
 using Rusty.Template.Presentation.SchemaFilters;
 using Serilog;
@@ -80,9 +81,11 @@ internal static class DependencyInjection
     /// <param name="services">The services</param>
     public static void AddFluentValidation(this IServiceCollection services)
     {
-        services.AddFluentValidationAutoValidation(opt =>
+	    ValidatorOptions.Global.DefaultClassLevelCascadeMode = CascadeMode.Continue;
+	    ValidatorOptions.Global.DefaultRuleLevelCascadeMode = CascadeMode.Continue;
+	    services.AddFluentValidationAutoValidation(opt =>
             opt.DisableDataAnnotationsValidation = true);
-        services.AddValidatorsFromAssemblyContaining<UserCreateDtoValdiatior>();
+	    services.AddValidatorsFromAssemblyContaining<UserCreateDtoValidator>();
     }
 
     /// <summary>
@@ -133,7 +136,7 @@ internal static class DependencyInjection
                         context.Response.ContentType = "application/json";
                         if (context.AuthenticateFailure?.GetType() == typeof(SecurityTokenExpiredException))
                         {
-                            await context.Response.WriteAsJsonAsync(new SecurityTokenExpiredException());
+	                        await context.Response.WriteAsJsonAsync(new SecurityTokenExpiredException("Token expired"));
                             return;
                         }
 
@@ -164,73 +167,83 @@ internal static class DependencyInjection
     /// <param name="configuration">The configuration</param>
     public static void AddSwagger(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddSwaggerGen(options =>
-        {
-            var provider = services.BuildServiceProvider().GetRequiredService<IApiVersionDescriptionProvider>();
-            var swaggerSection = configuration.GetSection("Swagger");
-            var licenseSection = swaggerSection.GetSection("License");
-            foreach (var description in provider.ApiVersionDescriptions)
-                options.SwaggerDoc(
-                    description.GroupName,
-                    new OpenApiInfo
-                    {
-                        Title = swaggerSection["Title"],
-                        Description = swaggerSection["Description"] +
-                                      (description.IsDeprecated ? " [DEPRECATED]" : string.Empty),
-                        Version = description.ApiVersion.ToString(),
-                        TermsOfService = string.IsNullOrEmpty(swaggerSection["TermsOfServiceUrl"])
-                            ? null
-                            : new Uri(swaggerSection["TermsOfServiceUrl"]!),
-                        License = licenseSection is null
-                            ? null
-                            : new OpenApiLicense
-                            {
-                                Name = licenseSection["Name"],
-                                Url = new Uri(licenseSection["Url"]!)
-                            }
-                    });
-            var jwtSecurityScheme = new OpenApiSecurityScheme
-            {
-                BearerFormat = "JWT",
-                Name = "JWT Authentication",
-                In = ParameterLocation.Header,
-                Type = SecuritySchemeType.Http,
-                Scheme = JwtBearerDefaults.AuthenticationScheme,
-                Description = "Put ONLY your JWT Bearer token in text box below!",
-                Reference = new OpenApiReference
-                {
-                    Id = JwtBearerDefaults.AuthenticationScheme,
-                    Type = ReferenceType.SecurityScheme
-                }
-            };
-            options.AddSecurityDefinition(jwtSecurityScheme.Reference.Id, jwtSecurityScheme);
-            options.AddSecurityRequirement(new OpenApiSecurityRequirement
-            {
-                {
-                    jwtSecurityScheme,
-                    Array.Empty<string>()
-                }
-            });
-            var currentAssembly = Assembly.GetExecutingAssembly();
-            var xmlDocs = currentAssembly.GetReferencedAssemblies()
-                .Union(new[] { currentAssembly.GetName() })
-                .Select(a => Path.Combine(Path.GetDirectoryName(currentAssembly.Location)!, $"{a.Name}.xml"))
-                .Where(File.Exists).ToArray();
-            Array.ForEach(xmlDocs, d => { options.IncludeXmlComments(d); });
+	    services.AddSwaggerGen(options =>
+	    {
+		    var provider = services.BuildServiceProvider().GetRequiredService<IApiVersionDescriptionProvider>();
+		    var swaggerSection = configuration.GetSection("Swagger");
+		    var licenseSection = swaggerSection.GetSection("License");
+		    foreach (var description in provider.ApiVersionDescriptions)
+			    options.SwaggerDoc(
+				    description.GroupName,
+				    new OpenApiInfo
+				    {
+					    Title = swaggerSection["Title"],
+					    Description = swaggerSection["Description"] +
+					                  (description.IsDeprecated ? " [DEPRECATED]" : string.Empty),
+					    Version = description.ApiVersion.ToString(),
+					    TermsOfService = string.IsNullOrEmpty(swaggerSection["TermsOfServiceUrl"])
+						    ? null
+						    : new Uri(swaggerSection["TermsOfServiceUrl"]!),
+					    License = licenseSection is null
+						    ? null
+						    : new OpenApiLicense
+						    {
+							    Name = licenseSection["Name"],
+							    Url = new Uri(licenseSection["Url"]!)
+						    }
+				    });
+		    var jwtSecurityScheme = new OpenApiSecurityScheme
+		    {
+			    BearerFormat = "JWT",
+			    Name = "JWT Authentication",
+			    In = ParameterLocation.Header,
+			    Type = SecuritySchemeType.Http,
+			    Scheme = JwtBearerDefaults.AuthenticationScheme,
+			    Description = "Put ONLY your JWT Bearer token in text box below!",
+			    Reference = new OpenApiReference
+			    {
+				    Id = JwtBearerDefaults.AuthenticationScheme,
+				    Type = ReferenceType.SecurityScheme
+			    }
+		    };
+		    options.AddSecurityDefinition(jwtSecurityScheme.Reference.Id, jwtSecurityScheme);
+		    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+		    {
+			    {
+				    jwtSecurityScheme,
+				    Array.Empty<string>()
+			    }
+		    });
+		    var currentAssembly = Assembly.GetExecutingAssembly();
+		    var xmlDocs = currentAssembly.GetReferencedAssemblies()
+		                                 .Union(new[] { currentAssembly.GetName() })
+		                                 .Select(a => Path.Combine(Path.GetDirectoryName(currentAssembly.Location)!,
+			                                 $"{a.Name}.xml"))
+		                                 .Where(File.Exists).ToArray();
+		    Array.ForEach(xmlDocs, d => { options.IncludeXmlComments(d); });
 
-            options.SupportNonNullableReferenceTypes();
 
-            options.OrderActionsBy(apiDesc =>
-                $"{apiDesc.ActionDescriptor.RouteValues["controller"]}_{apiDesc.HttpMethod}_{apiDesc.RelativePath}");
+		    options.EnableAnnotations(true, true);
 
-            options.SchemaFilter<EnumSchemaFilter>();
-        });
-        services.AddFluentValidationRulesToSwagger(options =>
-        {
-            options.SetNotNullableIfMinLengthGreaterThenZero = true;
-        });
+		    options.OrderActionsBy(apiDesc =>
+			    $"{apiDesc.ActionDescriptor.RouteValues["controller"]}_{apiDesc.HttpMethod}_{apiDesc.RelativePath}");
 
-        services.AddRouting(options => options.LowercaseUrls = true);
+		    // options.SchemaFilter<EnumSchemaFilter>();
+		    options.UseInlineDefinitionsForEnums();
+		    options.SchemaFilter<RequireNonNullablePropertiesSchemaFilter>();
+
+		    options.OperationFilter<ValidationOperationFilter>();
+		    options.OperationFilter<AuthorizeRolesOperationFilter>();
+
+		    options.SupportNonNullableReferenceTypes(); // Sets Nullable flags appropriately.              
+		    options.UseAllOfForInheritance(); // Allows $ref objects to be nullable
+	    });
+	    services.AddFluentValidationRulesToSwagger(options =>
+	    {
+		    options.SetNotNullableIfMinLengthGreaterThenZero = true;
+	    });
+
+	    services.AddRouting(options => options.LowercaseUrls = true);
     }
 
     /// <summary>

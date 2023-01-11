@@ -1,5 +1,4 @@
 using FluentValidation;
-using Rusty.Template.Contracts.Dtos;
 
 namespace Rusty.Template.Contracts.SubTypes;
 
@@ -11,8 +10,8 @@ public sealed record OrderByData(string OrderBy, OrderDirection OrderDirection =
 /// <summary>
 ///     The order by data validator class
 /// </summary>
-/// <seealso cref="BaseValidator{T}" />
-public class OrderByDataValidator : BaseValidator<OrderByData>
+/// <seealso cref="AbstractValidator{T}" />
+public class OrderByDataValidator : AbstractValidator<OrderByData>
 {
     /// <summary>
     ///     Initializes a new instance of the <see cref="OrderByDataValidator" /> class

@@ -6,7 +6,6 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <AppSettingsFile>appsettings.json</AppSettingsFile>
         <AppSettingsDevelopmentFile>appsettings.Development.json</AppSettingsDevelopmentFile>
         <AppSettingsProductionFile>appsettings.Production.json</AppSettingsProductionFile>

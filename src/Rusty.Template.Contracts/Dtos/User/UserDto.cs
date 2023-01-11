@@ -1,29 +1,23 @@
 using Rusty.Template.Contracts.Dtos.Group;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Rusty.Template.Contracts.Dtos.User;
 
-/// <summary>
-///     The user dto
-/// </summary>
+[SwaggerSchema("The dto for user retrieval ")]
+
 public sealed record UserDto
 {
-    /// <summary>
-    ///     Gets or sets the value of the id
-    /// </summary>
+    [SwaggerSchema("The user id")]
+
     public int Id { get; init; }
 
-    /// <summary>
-    ///     Gets or sets the value of the name
-    /// </summary>
-    public string Name { get; init; } = null!;
+    [SwaggerSchema("The user name")] public string UserName { get; init; } = null!;
 
-    /// <summary>
-    ///     Gets or sets the value of the email
-    /// </summary>
+    [SwaggerSchema("The user email")]
+
     public string Email { get; init; } = null!;
 
-    /// <summary>
-    ///     Gets or sets the value of the group dto
-    /// </summary>
+    [SwaggerSchema("The user group")]
+
     public GroupDto? GroupDto { get; init; }
 }

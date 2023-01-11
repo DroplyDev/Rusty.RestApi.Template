@@ -1,5 +1,4 @@
 using FluentValidation;
-using Rusty.Template.Contracts.Dtos;
 
 namespace Rusty.Template.Contracts.SubTypes;
 
@@ -11,8 +10,8 @@ public sealed record PageData(int Offset = 0, int Limit = 0);
 /// <summary>
 ///     The page data validator class
 /// </summary>
-/// <seealso cref="BaseValidator{T}" />
-public sealed class PageDataValidator : BaseValidator<PageData>
+/// <seealso cref="AbstractValidator{T}" />
+public sealed class PageDataValidator : AbstractValidator<PageData>
 {
     /// <summary>
     ///     Initializes a new instance of the <see cref="PageDataValidator" /> class

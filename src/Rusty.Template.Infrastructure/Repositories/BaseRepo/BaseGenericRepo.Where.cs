@@ -1,6 +1,5 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 using Rusty.Template.Contracts.SubTypes;
 using Rusty.Template.Infrastructure.Repositories.Extensions;
 
@@ -15,12 +14,10 @@ public partial class BaseGenericRepo<TContext, TEntity> where TEntity : class wh
     ///     Wheres the expression
     /// </summary>
     /// <param name="expression">The expression</param>
-    /// <param name="includes">The includes</param>
     /// <returns>A queryable of t entity</returns>
-    public virtual IQueryable<TEntity> Where(Expression<Func<TEntity, bool>> expression,
-        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null)
+    public virtual IQueryable<TEntity> Where(Expression<Func<TEntity, bool>> expression)
     {
-        return IncludeIfNotNull(includes).Where(expression);
+        return DbSet.Where(expression);
     }
 
     /// <summary>
@@ -29,14 +26,12 @@ public partial class BaseGenericRepo<TContext, TEntity> where TEntity : class wh
     /// <param name="expression">The expression</param>
     /// <param name="orderBy">The order by</param>
     /// <param name="orderDirection">The order direction</param>
-    /// <param name="includes">The includes</param>
     /// <returns>A queryable of t entity</returns>
     public virtual IQueryable<TEntity> Where(Expression<Func<TEntity, bool>> expression, string orderBy,
-        OrderDirection orderDirection,
-        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null)
+                                             OrderDirection orderDirection)
     {
-        return IncludeIfNotNull(includes)
-            .Where(expression)
-            .OrderByWithDirection(orderBy, orderDirection);
+        return DbSet
+               .Where(expression)
+               .OrderByWithDirection(orderBy, orderDirection);
     }
 }

@@ -12,45 +12,44 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace Rusty.Template.Presentation.Controllers.V1;
 
-/// <summary>
-///     The users controller class
-/// </summary>
-/// <seealso cref="BaseApiController" />
 [ApiVersion("1.0", Deprecated = false)]
 public class UsersController : BaseApiController
 {
-    /// <summary>
-    ///     The user repo
-    /// </summary>
     private readonly IUserRepo _userRepo;
-
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="UsersController" /> class
-    /// </summary>
-    /// <param name="userRepo">The user repo</param>
     public UsersController(IUserRepo userRepo)
     {
         _userRepo = userRepo;
     }
 
-    /// <summary>
-    ///     Gets all users
-    /// </summary>
-    /// <returns>A task containing the action result</returns>
-    [ProducesResponseType(typeof(List<UserDto>), StatusCodes.Status200OK)]
+    [SwaggerOperation(
+        Summary = "Get all users",
+        Description = "Returns trader list",
+        OperationId = nameof(GetAllUsersAsync),
+        Tags = new[] { "Users", "GetAll" }
+    )]
+    [SwaggerResponse(
+        StatusCodes.Status200OK,
+        "Users retrieved successfully",
+        typeof(List<UserDto>)
+    )]
     [HttpGet]
     public async Task<IActionResult> GetAllUsersAsync(CancellationToken cancellationToken)
     {
         return Ok(await _userRepo.GetAll().ProjectToType<UserDto>().ToListAsync(cancellationToken));
+
     }
 
-    /// <summary>
-    ///    Gets paged list with user dto
-    /// </summary>
-    /// <param name="request">The request</param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>A task containing the action result</returns>
-    [ProducesResponseType(typeof(PagedResponse<UserDto>), StatusCodes.Status200OK)]
+    [SwaggerOperation(
+        Summary = "Get paged users",
+        Description = "Returns paged list",
+        OperationId = nameof(GetPagedUsersAsync),
+        Tags = new[] { "Users", "Paginate" }
+    )]
+    [SwaggerResponse(
+        StatusCodes.Status200OK,
+        "Users retrieved successfully",
+        typeof(PagedResponse<UserDto>)
+    )]
     [HttpPost("paged")]
     public async Task<IActionResult> GetPagedUsersAsync(OrderedPagedRequest request,
         CancellationToken cancellationToken)
@@ -58,14 +57,17 @@ public class UsersController : BaseApiController
         return Ok(await _userRepo.PaginateAsync<UserDto>(request, cancellationToken));
     }
 
-    /// <summary>
-    ///     Gets user dto by id
-    /// </summary>
-    /// <param name="id">The id</param>
-    /// <param name="cancellationToken"></param>
-    /// <exception cref="EntityNotFoundByIdException{User}"></exception>
-    /// <returns>A task containing the action result</returns>
-    [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
+    [SwaggerOperation(
+        Summary = "Get user by id",
+        Description = "Returns paged list",
+        OperationId = nameof(GetUserByIdAsync),
+        Tags = new[] { "Users", "GetById" }
+    )]
+    [SwaggerResponse(
+        StatusCodes.Status200OK,
+        "User retrieved successfully",
+        typeof(UserDto)
+    )]
     [HttpGet("{id:int}")]
     public async Task<IActionResult> GetUserByIdAsync(int id, CancellationToken cancellationToken)
     {
@@ -74,14 +76,17 @@ public class UsersController : BaseApiController
         return Ok(user.Adapt<UserDto>());
     }
 
-    /// <summary>
-    ///     Gets user dto by username
-    /// </summary>
-    /// <param name="username">The username</param>
-    /// <param name="cancellationToken"></param>
-    /// <exception cref="EntityNotFoundByNameException{User}"></exception>
-    /// <returns>A task containing the action result</returns>
-    [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
+    [SwaggerOperation(
+        Summary = "Get user by username",
+        Description = "Returns user",
+        OperationId = nameof(GetUserByUsernameAsync),
+        Tags = new[] { "Users", "GetByName" }
+    )]
+    [SwaggerResponse(
+        StatusCodes.Status200OK,
+        "User retrieved successfully",
+        typeof(UserDto)
+    )]
     [HttpGet("{username}")]
     public async Task<IActionResult> GetUserByUsernameAsync(string username, CancellationToken cancellationToken)
     {
@@ -90,14 +95,17 @@ public class UsersController : BaseApiController
         return Ok(user.Adapt<UserDto>());
     }
 
-    /// <summary>
-    ///     Gets the user update dto by id
-    /// </summary>
-    /// <param name="id">The id</param>
-    /// <param name="cancellationToken"></param>
-    /// <exception cref="EntityNotFoundByIdException{User}"></exception>
-    /// <returns>A task containing the action result</returns>
-    [ProducesResponseType(typeof(UserUpdateDto), StatusCodes.Status200OK)]
+    [SwaggerOperation(
+        Summary = "Get user to update by id",
+        Description = "Returns user dto for update",
+        OperationId = nameof(GetUserToUpdateByIdAsync),
+        Tags = new[] { "Users", "GetForUpdateById" }
+    )]
+    [SwaggerResponse(
+        StatusCodes.Status200OK,
+        "User retrieved successfully",
+        typeof(UserUpdateDto)
+    )]
     [HttpGet("userToUpdate/{id:int}")]
     public async Task<IActionResult> GetUserToUpdateByIdAsync(int id, CancellationToken cancellationToken)
     {
@@ -106,14 +114,17 @@ public class UsersController : BaseApiController
         return Ok(user.Adapt<UserUpdateDto>());
     }
 
-    /// <summary>
-    ///     Gets the user to update by name using the specified username
-    /// </summary>
-    /// <param name="username">The username</param>
-    /// <param name="cancellationToken"></param>
-    /// <exception cref="EntityNotFoundByNameException{User}"></exception>
-    /// <returns>A task containing the action result</returns>
-    [ProducesResponseType(typeof(UserUpdateDto), StatusCodes.Status200OK)]
+    [SwaggerOperation(
+        Summary = "Get user to update by username",
+        Description = "Returns user dto for update",
+        OperationId = nameof(GetUserToUpdateByIdAsync),
+        Tags = new[] { "Users", "GetForUpdateByName" }
+    )]
+    [SwaggerResponse(
+        StatusCodes.Status200OK,
+        "User retrieved successfully",
+        typeof(UserUpdateDto)
+    )]
     [HttpGet("userToUpdate/{username}")]
     public async Task<IActionResult> GetUserToUpdateByNameAsync(string username, CancellationToken cancellationToken)
     {
@@ -121,17 +132,14 @@ public class UsersController : BaseApiController
                    throw new EntityNotFoundByNameException<User>(username);
         return Ok(user.Adapt<UserUpdateDto>());
     }
-    /// <summary>
-    ///     Creates the user
-    /// </summary>
-    /// <param name="dto">The dto</param>
-    /// <returns>A task containing the action result</returns>
-    [ProducesResponseType(StatusCodes.Status201Created)]
     [SwaggerOperation(
-        Summary = "Creates a new product",
-        Description = "Requires admin privileges",
-        OperationId = "CreateAsync",
-        Tags = new[] { "Purchase", "Products" }
+        Summary = "Create new user",
+        Description = "Creates new user",
+        OperationId = nameof(CreateUserAsync),
+        Tags = new[] { "Users", "Create" }
+    )]
+    [SwaggerResponse(
+        StatusCodes.Status201Created, "User created successfully"
     )]
     [HttpPost]
     public async Task<IActionResult> CreateUserAsync(UserCreateDto dto)
@@ -140,13 +148,15 @@ public class UsersController : BaseApiController
         return CreatedAtAction("GetUserById", new { id = user.Id }, user.Adapt<UserDto>());
     }
 
-    /// <summary>
-    ///     Updates the user
-    /// </summary>
-    /// <param name="id">The id</param>
-    /// <param name="dto">The dto</param>
-    /// <returns>A task containing the action result</returns>
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [SwaggerOperation(
+        Summary = "Update user",
+        Description = "Updates existing user",
+        OperationId = nameof(UpdateUserAsync),
+        Tags = new[] { "Users", "Update" }
+    )]
+    [SwaggerResponse(
+        StatusCodes.Status204NoContent, "User updated successfully"
+    )]
     [HttpPut("{id:int}")]
     [HttpPutIdCompare]
     public async Task<IActionResult> UpdateUserAsync(int id, UserUpdateDto dto)
@@ -155,12 +165,15 @@ public class UsersController : BaseApiController
         return NoContent();
     }
 
-    /// <summary>
-    ///     Deletes the user
-    /// </summary>
-    /// <param name="id">The id</param>
-    /// <returns>A task containing the action result</returns>
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [SwaggerOperation(
+        Summary = "Delete user",
+        Description = "Deletes existing user",
+        OperationId = nameof(UpdateUserAsync),
+        Tags = new[] { "Users", "Delete" }
+    )]
+    [SwaggerResponse(
+        StatusCodes.Status204NoContent, "User deleted successfully"
+    )]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteUserAsync(int id)
     {

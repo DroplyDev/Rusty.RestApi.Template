@@ -41,9 +41,9 @@ public abstract partial class BaseGenericRepo<TContext, TEntity> : IBaseRepo<TEn
     /// <param name="id">The id</param>
     /// <param name="cancellationToken"></param>
     /// <returns>A task containing the entity</returns>
-    public async Task<TEntity?> GetByIdAsync(int id, CancellationToken cancellationToken)
+    public async Task<TEntity?> GetByIdAsync(object id, CancellationToken cancellationToken)
     {
-        return await DbSet.FindAsync(new object[] { id }, cancellationToken);
+        return await DbSet.FindAsync(new[] { id }, cancellationToken);
     }
 
     /// <summary>
@@ -51,7 +51,7 @@ public abstract partial class BaseGenericRepo<TContext, TEntity> : IBaseRepo<TEn
     /// </summary>
     /// <param name="id">The id</param>
     /// <returns>The entity</returns>
-    public TEntity? GetById(int id)
+    public TEntity? GetById(object id)
     {
         return DbSet.Find(id);
     }

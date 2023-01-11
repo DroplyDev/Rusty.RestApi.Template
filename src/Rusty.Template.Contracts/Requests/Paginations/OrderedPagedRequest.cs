@@ -1,5 +1,4 @@
 using FluentValidation;
-using Rusty.Template.Contracts.Dtos;
 using Rusty.Template.Contracts.SubTypes;
 
 // ReSharper disable All
@@ -25,8 +24,8 @@ public sealed record OrderedPagedRequest
 /// <summary>
 ///     The order by paged request validator class
 /// </summary>
-/// <seealso cref="BaseValidator{T}" />
-public sealed class OrderByPagedRequestValidator : BaseValidator<OrderedPagedRequest>
+/// <seealso cref="AbstractValidator{T}" />
+public sealed class OrderByPagedRequestValidator : AbstractValidator<OrderedPagedRequest>
 {
     /// <summary>
     ///     Initializes a new instance of the <see cref="OrderByPagedRequestValidator" /> class
