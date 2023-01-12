@@ -1,4 +1,8 @@
-﻿using FluentValidation;
+﻿#region
+
+using FluentValidation;
+
+#endregion
 
 namespace Rusty.Template.Contracts.Dtos.User;
 

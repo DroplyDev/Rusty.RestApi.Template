@@ -44,24 +44,19 @@ namespace Rusty.Template.Tests.Integration
         partial void PrepareRequest(System.Net.Http.HttpClient client, System.Net.Http.HttpRequestMessage request, System.Text.StringBuilder urlBuilder);
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
 
-        /// <summary>
-        /// Deletes the user
-        /// </summary>
-        /// <param name="id">The id</param>
-        /// <returns>No Content</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
+
+
+
+
         public virtual System.Threading.Tasks.Task UsersDELETEAsync(int id)
         {
             return UsersDELETEAsync(id, System.Threading.CancellationToken.None);
         }
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <summary>
-        /// Deletes the user
-        /// </summary>
-        /// <param name="id">The id</param>
-        /// <returns>No Content</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
+
+
+
+
         public virtual async System.Threading.Tasks.Task UsersDELETEAsync(int id, System.Threading.CancellationToken cancellationToken)
         {
             if (id == null)
@@ -124,24 +119,19 @@ namespace Rusty.Template.Tests.Integration
             }
         }
 
-        /// <summary>
-        /// Gets user dto by id
-        /// </summary>
-        /// <param name="id">The id</param>
-        /// <returns>Success</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
+
+
+
+
         public virtual System.Threading.Tasks.Task<UserDto> UsersGETAsync(int id)
         {
             return UsersGETAsync(id, System.Threading.CancellationToken.None);
         }
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <summary>
-        /// Gets user dto by id
-        /// </summary>
-        /// <param name="id">The id</param>
-        /// <returns>Success</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
+
+
+
+
         public virtual async System.Threading.Tasks.Task<UserDto> UsersGETAsync(int id, System.Threading.CancellationToken cancellationToken)
         {
             if (id == null)
@@ -210,26 +200,21 @@ namespace Rusty.Template.Tests.Integration
             }
         }
 
-        /// <summary>
-        /// Updates the user
-        /// </summary>
-        /// <param name="id">The id</param>
-        /// <param name="body">The dto</param>
-        /// <returns>No Content</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
+
+
+
+
+
         public virtual System.Threading.Tasks.Task UsersPUTAsync(int id, UserUpdateDto body)
         {
             return UsersPUTAsync(id, body, System.Threading.CancellationToken.None);
         }
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <summary>
-        /// Updates the user
-        /// </summary>
-        /// <param name="id">The id</param>
-        /// <param name="body">The dto</param>
-        /// <returns>No Content</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
+
+
+
+
+
         public virtual async System.Threading.Tasks.Task UsersPUTAsync(int id, UserUpdateDto body, System.Threading.CancellationToken cancellationToken)
         {
             if (id == null)
@@ -296,22 +281,17 @@ namespace Rusty.Template.Tests.Integration
             }
         }
 
-        /// <summary>
-        /// Gets all users
-        /// </summary>
-        /// <returns>Success</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
+
+
+
         public virtual System.Threading.Tasks.Task<System.Collections.Generic.ICollection<UserDto>> UsersAllAsync()
         {
             return UsersAllAsync(System.Threading.CancellationToken.None);
         }
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <summary>
-        /// Gets all users
-        /// </summary>
-        /// <returns>Success</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
+
+
+
         public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<UserDto>> UsersAllAsync(System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
@@ -376,24 +356,19 @@ namespace Rusty.Template.Tests.Integration
             }
         }
 
-        /// <summary>
-        /// Creates the user
-        /// </summary>
-        /// <param name="body">The dto</param>
-        /// <returns>Created</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
+
+
+
+
         public virtual System.Threading.Tasks.Task UsersPOSTAsync(UserCreateDto body)
         {
             return UsersPOSTAsync(body, System.Threading.CancellationToken.None);
         }
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <summary>
-        /// Creates the user
-        /// </summary>
-        /// <param name="body">The dto</param>
-        /// <returns>Created</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
+
+
+
+
         public virtual async System.Threading.Tasks.Task UsersPOSTAsync(UserCreateDto body, System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
@@ -456,24 +431,19 @@ namespace Rusty.Template.Tests.Integration
             }
         }
 
-        /// <summary>
-        /// Gets user dto by username
-        /// </summary>
-        /// <param name="username">The username</param>
-        /// <returns>Success</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
+
+
+
+
         public virtual System.Threading.Tasks.Task<UserDto> UsersGET2Async(string username)
         {
             return UsersGET2Async(username, System.Threading.CancellationToken.None);
         }
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <summary>
-        /// Gets user dto by username
-        /// </summary>
-        /// <param name="username">The username</param>
-        /// <returns>Success</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
+
+
+
+
         public virtual async System.Threading.Tasks.Task<UserDto> UsersGET2Async(string username, System.Threading.CancellationToken cancellationToken)
         {
             if (username == null)
@@ -542,24 +512,19 @@ namespace Rusty.Template.Tests.Integration
             }
         }
 
-        /// <summary>
-        /// Gets the user update dto by id
-        /// </summary>
-        /// <param name="id">The id</param>
-        /// <returns>Success</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
+
+
+
+
         public virtual System.Threading.Tasks.Task<UserUpdateDto> UsertoupdateAsync(int id)
         {
             return UsertoupdateAsync(id, System.Threading.CancellationToken.None);
         }
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <summary>
-        /// Gets the user update dto by id
-        /// </summary>
-        /// <param name="id">The id</param>
-        /// <returns>Success</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
+
+
+
+
         public virtual async System.Threading.Tasks.Task<UserUpdateDto> UsertoupdateAsync(int id, System.Threading.CancellationToken cancellationToken)
         {
             if (id == null)
@@ -628,24 +593,19 @@ namespace Rusty.Template.Tests.Integration
             }
         }
 
-        /// <summary>
-        /// Gets the user to update by name using the specified username
-        /// </summary>
-        /// <param name="username">The username</param>
-        /// <returns>Success</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
+
+
+
+
         public virtual System.Threading.Tasks.Task<UserUpdateDto> Usertoupdate2Async(string username)
         {
             return Usertoupdate2Async(username, System.Threading.CancellationToken.None);
         }
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <summary>
-        /// Gets the user to update by name using the specified username
-        /// </summary>
-        /// <param name="username">The username</param>
-        /// <returns>Success</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
+
+
+
+
         public virtual async System.Threading.Tasks.Task<UserUpdateDto> Usertoupdate2Async(string username, System.Threading.CancellationToken cancellationToken)
         {
             if (username == null)
@@ -714,24 +674,19 @@ namespace Rusty.Template.Tests.Integration
             }
         }
 
-        /// <summary>
-        /// Gets paged list with user dto
-        /// </summary>
-        /// <param name="body">The request</param>
-        /// <returns>Success</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
+
+
+
+
         public virtual System.Threading.Tasks.Task<UserDtoPagedResponse> PagedAsync(OrderedPagedRequest body)
         {
             return PagedAsync(body, System.Threading.CancellationToken.None);
         }
 
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <summary>
-        /// Gets paged list with user dto
-        /// </summary>
-        /// <param name="body">The request</param>
-        /// <returns>Success</returns>
-        /// <exception cref="ApiException">A server side error occurred.</exception>
+
+
+
+
         public virtual async System.Threading.Tasks.Task<UserDtoPagedResponse> PagedAsync(OrderedPagedRequest body, System.Threading.CancellationToken cancellationToken)
         {
             var urlBuilder_ = new System.Text.StringBuilder();
@@ -903,29 +858,22 @@ namespace Rusty.Template.Tests.Integration
         }
     }
 
-    /// <summary>
-    /// The group dto
-    /// </summary>
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class GroupDto
     {
-        /// <summary>
-        /// Gets or sets the value of the id
-        /// </summary>
+
+
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int? Id { get; set; }
 
-        /// <summary>
-        /// Gets or sets the value of the group name
-        /// </summary>
+
         [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Name { get; set; }
 
     }
 
-    /// <summary>
-    /// The order by data
-    /// </summary>
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class OrderByData
     {
@@ -939,9 +887,7 @@ namespace Rusty.Template.Tests.Integration
 
     }
 
-    /// <summary>
-    /// The order direction enum
-    /// </summary>
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public enum OrderDirection
     {
@@ -954,9 +900,7 @@ namespace Rusty.Template.Tests.Integration
 
     }
 
-    /// <summary>
-    /// The order by paged request
-    /// </summary>
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class OrderedPagedRequest
     {
@@ -968,9 +912,7 @@ namespace Rusty.Template.Tests.Integration
 
     }
 
-    /// <summary>
-    /// The page data
-    /// </summary>
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class PageData
     {
@@ -984,65 +926,49 @@ namespace Rusty.Template.Tests.Integration
 
     }
 
-    /// <summary>
-    /// The user create dto
-    /// </summary>
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class UserCreateDto
     {
-        /// <summary>
-        /// Gets or sets the value of the username
-        /// </summary>
+
+
         [Newtonsoft.Json.JsonProperty("userName", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         [System.ComponentModel.DataAnnotations.StringLength(32, MinimumLength = 8)]
         public string UserName { get; set; }
 
-        /// <summary>
-        /// Gets or sets the value of the password
-        /// </summary>
+
         [Newtonsoft.Json.JsonProperty("password", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required]
         [System.ComponentModel.DataAnnotations.StringLength(32, MinimumLength = 8)]
         public string Password { get; set; }
 
-        /// <summary>
-        /// Gets or sets the value of the email
-        /// </summary>
+
         [Newtonsoft.Json.JsonProperty("email", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         [System.ComponentModel.DataAnnotations.StringLength(255)]
         public string Email { get; set; }
 
-        /// <summary>
-        /// Gets or sets the value of the group id
-        /// </summary>
+
         [Newtonsoft.Json.JsonProperty("groupId", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int? GroupId { get; set; }
 
     }
 
-    /// <summary>
-    /// The user dto
-    /// </summary>
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class UserDto
     {
-        /// <summary>
-        /// Gets or sets the value of the id
-        /// </summary>
+
+
         [Newtonsoft.Json.JsonProperty("id", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public int? Id { get; set; }
 
-        /// <summary>
-        /// Gets or sets the value of the name
-        /// </summary>
+
         [Newtonsoft.Json.JsonProperty("name", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Name { get; set; }
 
-        /// <summary>
-        /// Gets or sets the value of the email
-        /// </summary>
+
         [Newtonsoft.Json.JsonProperty("email", Required = Newtonsoft.Json.Required.DisallowNull, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public string Email { get; set; }
 
@@ -1051,9 +977,7 @@ namespace Rusty.Template.Tests.Integration
 
     }
 
-    /// <summary>
-    /// The paged response
-    /// </summary>
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class UserDtoPagedResponse
     {
@@ -1065,15 +989,12 @@ namespace Rusty.Template.Tests.Integration
 
     }
 
-    /// <summary>
-    /// The user update dto
-    /// </summary>
+
     [System.CodeDom.Compiler.GeneratedCode("NJsonSchema", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
     public partial class UserUpdateDto
     {
-        /// <summary>
-        /// Gets or sets the value of the email
-        /// </summary>
+
+
         [Newtonsoft.Json.JsonProperty("email", Required = Newtonsoft.Json.Required.Always)]
         [System.ComponentModel.DataAnnotations.Required(AllowEmptyStrings = true)]
         [System.ComponentModel.DataAnnotations.StringLength(255)]

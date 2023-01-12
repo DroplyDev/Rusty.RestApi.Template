@@ -1,8 +1,12 @@
+#region
+
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Rusty.Template.Infrastructure.Database;
 using Rusty.Template.Infrastructure.Middlewares;
 using Rusty.Template.Presentation;
 using Serilog;
+
+#endregion
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Configuration.AddConfigurations();
@@ -28,8 +32,8 @@ var app = builder.Build();
 // set Serilog request logging
 app.UseSerilogRequestLogging(configure =>
 {
-    configure.MessageTemplate =
-        "HTTP {RequestMethod} {RequestPath} ({UserId} {UserName} responded {StatusCode} in {Elapsed:0.0000}ms)";
+	configure.MessageTemplate =
+		"HTTP {RequestMethod} {RequestPath} ({UserId} {UserName} responded {StatusCode} in {Elapsed:0.0000}ms)";
 });
 //Prepare db
 // if (app.Environment.IsStaging())
@@ -42,10 +46,10 @@ app.UseHttpsRedirection();
 app.UseSwagger();
 app.UseSwaggerUI(options =>
 {
-    var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
-    foreach (var description in provider.ApiVersionDescriptions)
-        options.SwaggerEndpoint($"../swagger/{description.GroupName}/swagger.json",
-            description.GroupName.ToUpperInvariant());
+	var provider = app.Services.GetRequiredService<IApiVersionDescriptionProvider>();
+	foreach (var description in provider.ApiVersionDescriptions)
+		options.SwaggerEndpoint($"../swagger/{description.GroupName}/swagger.json",
+			description.GroupName.ToUpperInvariant());
 });
 app.UseRouting();
 app.UseCors("All");

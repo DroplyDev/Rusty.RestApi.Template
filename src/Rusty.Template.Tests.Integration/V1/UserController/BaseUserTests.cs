@@ -5,7 +5,7 @@
 [Trait("Category", "Get")]
 public class BaseUserTests : BaseTests
 {
-    public BaseUserTests(WebApiFactory apiFactory) : base(apiFactory)
-    {
-    }
+	public BaseUserTests(WebApiFactory apiFactory) : base(apiFactory)
+	{
+	}
 }
