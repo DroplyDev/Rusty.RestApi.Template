@@ -17,6 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Rusty.Template.Application.Repositories;
 using Rusty.Template.Contracts.Dtos.User;
+using Rusty.Template.Domain.Exceptions;
 using Rusty.Template.Infrastructure.Database;
 using Rusty.Template.Infrastructure.Mapping;
 using Rusty.Template.Infrastructure.Repositories.AppDbRepo;
@@ -228,13 +229,11 @@ internal static class DependencyInjection
 
 	public static void AddDatabases(this IServiceCollection services, IConfiguration configuration)
 	{
-		var efConStr = configuration.GetConnectionString("DefaultConnection");
-		services.AddSingleton(new ConnectionStringFactory(efConStr));
-
-		services.AddDbContextFactory<AppDbContext>(options =>
+		services.AddDbContext<AppDbContext>(options =>
 		{
-			var factory = services.BuildServiceProvider().GetRequiredService<ConnectionStringFactory>();
-			options.UseSqlServer(factory.ConnectionString)
+			var efConStr = configuration.GetConnectionString("DefaultConnection") ??
+						   throw new ConnectionStringIsNotValidException();
+			options.UseSqlServer(efConStr)
 				   .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 		});
 	}

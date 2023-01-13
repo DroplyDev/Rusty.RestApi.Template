@@ -44,12 +44,9 @@ public class WebApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
 		var connectionString = _dbContainer.ConnectionString + "TrustServerCertificate=True";
 		builder.ConfigureAppConfiguration(configurationBuilder =>
 		{
-			configurationBuilder.AddConfiguration(_configurationBuilder.Build());
+			var config = _configurationBuilder.Build();
+			config["ConnectionStrings:DefaultConnection"] = connectionString;
+			configurationBuilder.AddConfiguration(config);
 		});
-		//     builder.ConfigureTestServices(services =>
-		//     {
-		//         services.RemoveAll(typeof(ConnectionStringFactory));
-		//         services.AddSingleton(new ConnectionStringFactory(connectionString));
-		//     });
 	}
 }

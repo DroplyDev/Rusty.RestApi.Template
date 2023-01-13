@@ -1,7 +1,6 @@
 ﻿#region
 
 using Bogus;
-using Microsoft.Extensions.DependencyInjection;
 using Rusty.Template.Domain;
 using Rusty.Template.Infrastructure.Database;
 
@@ -11,13 +10,12 @@ namespace Rusty.Template.Tests.Integration;
 
 public abstract class BaseTests : IClassFixture<WebApiFactory>
 {
-	protected readonly AppDbContext _appDbContext;
+	private readonly AppDbContext _appDbContext;
 	protected readonly NSwagClient Client;
 
 	protected BaseTests(WebApiFactory apiFactory)
 	{
 		Client = new NSwagClient(apiFactory.CreateClient());
-		_appDbContext = apiFactory.Services.GetRequiredService<AppDbContext>();
 	}
 
 	protected async Task InitUserDataAsync()
