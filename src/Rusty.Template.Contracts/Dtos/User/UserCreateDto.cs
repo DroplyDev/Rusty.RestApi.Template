@@ -16,7 +16,9 @@ public sealed class UserCreateDto
 
 	public string Password { get; set; } = null!;
 
-	[SwaggerSchema("The user email")] public string Email { get; set; } = null!;
+	[SwaggerSchema("The user email")]
+	public string Email { get; set; } = null!;
 
-	[SwaggerSchema("The user group id")] public int? GroupId { get; set; } = null!;
+	[SwaggerSchema("The user group id")]
+	public int? GroupId { get; set; } = null!;
 }
