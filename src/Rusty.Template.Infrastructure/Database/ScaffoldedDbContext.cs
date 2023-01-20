@@ -10,13 +10,13 @@ public partial class ScaffoldedDbContext : DbContext
     {
     }
 
-    public virtual DbSet<Group> Groups { get; set; }
+    public virtual DbSet<Group> Groups { get; set; } = null!;
 
-    public virtual DbSet<Role> Roles { get; set; }
+    public virtual DbSet<Role> Roles { get; set; } = null!;
 
-    public virtual DbSet<User> Users { get; set; }
+    public virtual DbSet<User> Users { get; set; } = null!;
 
-    public virtual DbSet<UserInfo> UserInfos { get; set; }
+    public virtual DbSet<UserInfo> UserInfos { get; set; } = null!;
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

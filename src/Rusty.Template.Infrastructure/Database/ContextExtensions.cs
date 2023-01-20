@@ -9,33 +9,6 @@ namespace Rusty.Template.Infrastructure.Database;
 
 public static class ContextExtensions
 {
-	// public static void ApplyGlobalFilters<T>(this ModelBuilder modelBuilder, string propertyName, T value)
-	// {
-	// 	var entities = modelBuilder.Model.GetEntityTypes();
-	//
-	// 	foreach (var entity in entities)
-	// 	{
-	// 		var properties = entity.GetProperties();
-	//
-	// 		if (properties.Any(p => p.Name == propertyName))
-	// 		{
-	// 			modelBuilder.Entity(entity.ClrType).HasQueryFilter(p => EF.Property<T>(p, propertyName) == value);
-	// 		}
-	//
-	// 		var navigations = entity.GetNavigations();
-	//
-	// 		foreach (var navigation in navigations)
-	// 		{
-	// 			var targetEntity = navigation.ForeignKey.DeclaringEntityType;
-	// 			var targetProperties = targetEntity.GetProperties();
-	//
-	// 			if (targetProperties.Any(p => p.Name == propertyName))
-	// 			{
-	// 				modelBuilder.Entity(entity.ClrType).HasQueryFilter(p => EF.Property<T>(p, navigation.Name + "." + propertyName) == value);
-	// 			}
-	// 		}
-	// 	}
-	// }
 	public static void ApplyGlobalFilters<T>(this ModelBuilder
 												 modelBuilder, string propertyName, T value)
 	{

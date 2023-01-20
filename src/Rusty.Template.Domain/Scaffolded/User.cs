@@ -18,5 +18,5 @@ public class User
 
     public virtual UserInfo? UserInfo { get; set; }
 
-    public virtual ICollection<Role> Roles { get; } = new List<Role>();
+    public virtual ICollection<Role> Roles { get; } = new HashSet<Role>();
 }

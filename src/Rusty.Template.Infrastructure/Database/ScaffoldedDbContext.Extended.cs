@@ -8,7 +8,7 @@ namespace Rusty.Template.Infrastructure.Database;
 
 public abstract partial class ScaffoldedDbContext
 {
-	public ScaffoldedDbContext(DbContextOptions options)
+	protected ScaffoldedDbContext(DbContextOptions options)
 		: base(options)
 	{
 	}
