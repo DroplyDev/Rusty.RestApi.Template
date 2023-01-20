@@ -11,12 +11,10 @@ namespace Rusty.Template.Infrastructure.Repositories.BaseRepo;
 public partial class BaseGenericRepo<TContext, TEntity> where TEntity : class where TContext : DbContext
 {
 	public virtual TEntity? FirstOrDefault(Expression<Func<TEntity, bool>> expression,
-										   Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes =
-											   null)
+										   Func<IQueryable<TEntity>, IQueryable<TEntity>>? includes = null)
 	{
 		return IncludeIfNotNull(includes).FirstOrDefault(expression);
 	}
-
 
 	public virtual async Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> expression,
 															CancellationToken cancellationToken,
@@ -28,16 +26,14 @@ public partial class BaseGenericRepo<TContext, TEntity> where TEntity : class wh
 
 
 	public virtual TEntity First(Expression<Func<TEntity, bool>> expression,
-								 Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null)
+								 Func<IQueryable<TEntity>, IQueryable<TEntity>>? includes = null)
 	{
 		return IncludeIfNotNull(includes).First(expression);
 	}
 
-
 	public virtual async Task<TEntity> FirstAsync(Expression<Func<TEntity, bool>> expression,
 												  CancellationToken cancellationToken,
-												  Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>?
-													  includes = null)
+												  Func<IQueryable<TEntity>, IQueryable<TEntity>>? includes = null)
 	{
 		return await IncludeIfNotNull(includes).FirstAsync(expression, cancellationToken);
 	}

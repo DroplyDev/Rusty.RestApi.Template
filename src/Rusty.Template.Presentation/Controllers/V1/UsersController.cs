@@ -17,6 +17,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace Rusty.Template.Presentation.Controllers.V1;
 
 [ApiVersion("1.0", Deprecated = false)]
+// [AuthorizeRoles("Admin")]
 public class UsersController : BaseApiController
 {
 	private readonly IUserRepo _userRepo;
@@ -28,9 +29,7 @@ public class UsersController : BaseApiController
 
 	[SwaggerOperation(
 		Summary = "Get all users",
-		Description = "Returns trader list",
-		OperationId = nameof(GetAllUsersAsync),
-		Tags = new[] { "Users", "GetAll" }
+		Description = "Returns trader list"
 	)]
 	[SwaggerResponse(
 		StatusCodes.Status200OK,
@@ -45,9 +44,7 @@ public class UsersController : BaseApiController
 
 	[SwaggerOperation(
 		Summary = "Get paged users",
-		Description = "Returns paged list",
-		OperationId = nameof(GetPagedUsersAsync),
-		Tags = new[] { "Users", "Paginate" }
+		Description = "Returns paged list"
 	)]
 	[SwaggerResponse(
 		StatusCodes.Status200OK,
@@ -63,9 +60,7 @@ public class UsersController : BaseApiController
 
 	[SwaggerOperation(
 		Summary = "Get user by id",
-		Description = "Returns paged list",
-		OperationId = nameof(GetUserByIdAsync),
-		Tags = new[] { "Users", "GetById" }
+		Description = "Returns paged list"
 	)]
 	[SwaggerResponse(
 		StatusCodes.Status200OK,
@@ -82,9 +77,7 @@ public class UsersController : BaseApiController
 
 	[SwaggerOperation(
 		Summary = "Get user by username",
-		Description = "Returns user",
-		OperationId = nameof(GetUserByUsernameAsync),
-		Tags = new[] { "Users", "GetByName" }
+		Description = "Returns user"
 	)]
 	[SwaggerResponse(
 		StatusCodes.Status200OK,
@@ -101,16 +94,14 @@ public class UsersController : BaseApiController
 
 	[SwaggerOperation(
 		Summary = "Get user to update by id",
-		Description = "Returns user dto for update",
-		OperationId = nameof(GetUserToUpdateByIdAsync),
-		Tags = new[] { "Users", "GetForUpdateById" }
+		Description = "Returns user dto for update"
 	)]
 	[SwaggerResponse(
 		StatusCodes.Status200OK,
 		"User retrieved successfully",
 		typeof(UserUpdateDto)
 	)]
-	[HttpGet("userToUpdate/{id:int}")]
+	[HttpGet("update/{id:int}")]
 	public async Task<IActionResult> GetUserToUpdateByIdAsync(int id, CancellationToken cancellationToken)
 	{
 		var user = await _userRepo.GetByIdAsync(id, cancellationToken) ??
@@ -120,16 +111,14 @@ public class UsersController : BaseApiController
 
 	[SwaggerOperation(
 		Summary = "Get user to update by username",
-		Description = "Returns user dto for update",
-		OperationId = nameof(GetUserToUpdateByIdAsync),
-		Tags = new[] { "Users", "GetForUpdateByName" }
+		Description = "Returns user dto for update"
 	)]
 	[SwaggerResponse(
 		StatusCodes.Status200OK,
 		"User retrieved successfully",
 		typeof(UserUpdateDto)
 	)]
-	[HttpGet("userToUpdate/{username}")]
+	[HttpGet("update/{username}")]
 	public async Task<IActionResult> GetUserToUpdateByNameAsync(string username, CancellationToken cancellationToken)
 	{
 		var user = await _userRepo.GetByUsernameAsync(username, cancellationToken) ??
@@ -139,9 +128,7 @@ public class UsersController : BaseApiController
 
 	[SwaggerOperation(
 		Summary = "Create new user",
-		Description = "Creates new user",
-		OperationId = nameof(CreateUserAsync),
-		Tags = new[] { "Users", "Create" }
+		Description = "Creates new user"
 	)]
 	[SwaggerResponse(
 		StatusCodes.Status201Created, "User created successfully"
@@ -155,9 +142,7 @@ public class UsersController : BaseApiController
 
 	[SwaggerOperation(
 		Summary = "Update user",
-		Description = "Updates existing user",
-		OperationId = nameof(UpdateUserAsync),
-		Tags = new[] { "Users", "Update" }
+		Description = "Updates existing user"
 	)]
 	[SwaggerResponse(
 		StatusCodes.Status204NoContent, "User updated successfully"
@@ -172,15 +157,13 @@ public class UsersController : BaseApiController
 
 	[SwaggerOperation(
 		Summary = "Delete user",
-		Description = "Deletes existing user",
-		OperationId = nameof(UpdateUserAsync),
-		Tags = new[] { "Users", "Delete" }
+		Description = "Deletes existing user"
 	)]
 	[SwaggerResponse(
 		StatusCodes.Status204NoContent, "User deleted successfully"
 	)]
 	[HttpDelete("{id:int}")]
-	public async Task<IActionResult> DeleteUserAsync(int id)
+	public async Task<IActionResult> DeleteUserAsync(object id)
 	{
 		await _userRepo.DeleteAsync(id);
 		return NoContent();

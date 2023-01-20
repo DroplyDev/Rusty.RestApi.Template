@@ -2,26 +2,13 @@ namespace Rusty.Template.Presentation.Options;
 
 public class AuthOptions
 {
-	public string Issuer { get; set; } = null!;
-
-
-	public bool ValidateIssuer { get; set; }
-
-
-	public string Audience { get; set; } = null!;
-
-
-	public bool ValidateAudience { get; set; }
-
-
-	public string Key { get; set; } = null!;
-
-
-	public bool ValidateKey { get; set; }
-
-
-	public int AccessTokenLifetime { get; set; }
-
-
-	public bool ValidateAccessTokenLifetime { get; set; }
+	public string Issuer { get; init; } = null!;
+	public bool ValidateIssuer { get; init; }
+	public string Audience { get; init; } = null!;
+	public bool ValidateAudience { get; init; }
+	public string Key { get; init; } = null!;
+	public bool ValidateKey { get; init; }
+	public int TokenValidityInMinutes { get; init; }
+	public bool ValidateAccessTokenLifetime { get; init; }
+	public int RefreshTokenValidityInDays { get; init; }
 }

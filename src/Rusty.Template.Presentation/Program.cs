@@ -19,6 +19,7 @@ services.AddDatabases(configuration);
 services.AddSwagger(configuration);
 services.AddApiVersioningSupport(configuration);
 services.AddAuth(configuration);
+services.AddConfigurations(configuration);
 services.AddLogging();
 services.AddFluentValidation();
 services.AddControllers();
@@ -33,7 +34,7 @@ var app = builder.Build();
 app.UseSerilogRequestLogging(configure =>
 {
 	configure.MessageTemplate =
-		"HTTP {RequestMethod} {RequestPath} ({UserId} {UserName} responded {StatusCode} in {Elapsed:0.0000}ms)";
+		"HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000}ms";
 });
 //Prepare db
 // if (app.Environment.IsStaging())

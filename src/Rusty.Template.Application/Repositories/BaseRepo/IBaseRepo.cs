@@ -45,7 +45,7 @@ public partial interface IBaseRepo<TEntity> where TEntity : class
 	#region Delete
 
 	Task DeleteAsync(TEntity entity);
-	Task DeleteAsync(int id);
+	Task DeleteAsync(object id);
 	void DeleteNoSave(TEntity entity);
 	Task DeleteRangeAsync(IEnumerable<TEntity> entities);
 	void DeleteNoSaveRange(IEnumerable<TEntity> entities);
@@ -55,7 +55,7 @@ public partial interface IBaseRepo<TEntity> where TEntity : class
 
 	#region Exists
 
-	Task<bool> ExistsAsync(int id, CancellationToken cancellationToken);
+	Task<bool> ExistsAsync(object id, CancellationToken cancellationToken);
 
 	Task<bool> ExistsAsync(TEntity entity, CancellationToken cancellationToken);
 
@@ -74,17 +74,17 @@ public partial interface IBaseRepo<TEntity> where TEntity : class
 	#region First
 
 	TEntity? FirstOrDefault(Expression<Func<TEntity, bool>> expression,
-							Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null);
+							Func<IQueryable<TEntity>, IQueryable<TEntity>>? includes = null);
 
 	Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> expression, CancellationToken cancellationToken,
 									   Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes =
 										   null);
 
 	TEntity First(Expression<Func<TEntity, bool>> expression,
-				  Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null);
+				  Func<IQueryable<TEntity>, IQueryable<TEntity>>? includes = null);
 
 	Task<TEntity> FirstAsync(Expression<Func<TEntity, bool>> expression, CancellationToken cancellationToken,
-							 Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null);
+							 Func<IQueryable<TEntity>, IQueryable<TEntity>>? includes = null);
 
 	#endregion
 

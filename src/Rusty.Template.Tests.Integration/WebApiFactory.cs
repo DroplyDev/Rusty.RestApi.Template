@@ -22,11 +22,12 @@ public class WebApiFactory : WebApplicationFactory<IApiMarker>, IAsyncLifetime
 		_configurationBuilder.AddJsonFile("appsettings.Staging.json", false, true);
 		var configurationRoot = _configurationBuilder.Build();
 		var dockerSection = configurationRoot.GetSection("Docker");
+
 		_dbContainer = new TestcontainersBuilder<MsSqlTestcontainer>()
-					   .WithDatabase(new MsSqlTestcontainerConfiguration(dockerSection["Image"])
-					   {
-						   Password = dockerSection["Password"]
-					   }).Build();
+			.WithDatabase(new MsSqlTestcontainerConfiguration(dockerSection["Image"])
+			{
+				Password = dockerSection["Password"]
+			}).Build();
 	}
 
 	public async Task InitializeAsync()

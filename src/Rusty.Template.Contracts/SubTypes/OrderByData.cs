@@ -6,7 +6,11 @@ using FluentValidation;
 
 namespace Rusty.Template.Contracts.SubTypes;
 
-public sealed record OrderByData(string OrderBy, OrderDirection OrderDirection = OrderDirection.Desc);
+public sealed class OrderByData
+{
+	public string OrderBy { get; set; } = null!;
+	public OrderDirection OrderDirection { get; set; }
+}
 
 public class OrderByDataValidator : AbstractValidator<OrderByData>
 {

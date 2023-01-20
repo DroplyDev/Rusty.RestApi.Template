@@ -6,5 +6,5 @@ using Rusty.Template.Contracts.Dtos.User;
 
 namespace Rusty.Template.Contracts.Responses.User;
 
-public sealed record UserPagedResponse(List<UserDto> Data, int TotalCount)
+public sealed record UserDtoPagedResponse(List<UserDto> Data, int TotalCount)
 	: PagedResponse<UserDto>(Data, TotalCount);

@@ -12,7 +12,7 @@ public class GetAllTests : BaseUserTests
 		//Arrange
 
 		//Act
-		var response = await Client.UsersAllAsync();
+		var response = await Client.GetAllUsersAsync();
 		//Assert
 		response.Count.Should().Be(100);
 	}

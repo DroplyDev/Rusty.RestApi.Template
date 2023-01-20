@@ -1,5 +1,7 @@
 #region
 
+using System.Collections;
+using System.Text.Json;
 using Serilog.Events;
 
 #endregion
@@ -34,8 +36,25 @@ public class ApiException : Exception
 		return _logLevel;
 	}
 
-	public override string ToString()
+	public virtual string ToJsonResponse()
 	{
-		return Description;
+		return JsonSerializer.Serialize(new
+		{
+			ErrorMessage = Description,
+			StatusCode
+		});
+	}
+
+	public virtual IDictionary GetLogData()
+	{
+		var data = Data;
+		data.Remove("Identifier");
+		data.Remove("TargetSite");
+		data.Remove("HelpLink");
+		data.Remove("HResult");
+		data.Remove("StackTrace");
+		data.Remove("Source");
+
+		return data;
 	}
 }

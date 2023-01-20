@@ -1,12 +1,10 @@
-#region
+﻿#region
 
 using FluentValidation;
 
 #endregion
 
-namespace Rusty.Template.Contracts.Requests;
-
-public sealed record LoginRequest(string Username, string Password);
+namespace Rusty.Template.Contracts.Requests.Authentication;
 
 public class LoginRequestValidator : AbstractValidator<LoginRequest>
 {

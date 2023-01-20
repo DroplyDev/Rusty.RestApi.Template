@@ -26,16 +26,16 @@ public static class OrderByExtensions
 		//Get System.Linq.Queryable.OrderByDescending() method.
 		var enumerableType = typeof(Queryable);
 		var method = enumerableType.GetMethods()
-								   .Where(m =>
-									   m.Name ==
-									   (orderDirection == OrderDirection.Asc ? "OrderBy" : "OrderByDescending") &&
-									   m.IsGenericMethodDefinition)
-								   .Single(m =>
-								   {
-									   var parameters = m.GetParameters().ToList();
-									   //Put more restriction here to ensure selecting the right overload                
-									   return parameters.Count == 2; //overload that has 2 parameters
-								   });
+			.Where(m =>
+				m.Name ==
+				(orderDirection == OrderDirection.Asc ? "OrderBy" : "OrderByDescending") &&
+				m.IsGenericMethodDefinition)
+			.Single(m =>
+			{
+				var parameters = m.GetParameters().ToList();
+				//Put more restriction here to ensure selecting the right overload                
+				return parameters.Count == 2; //overload that has 2 parameters
+			});
 		//The linq's OrderByDescending<TEntity, TKey> has two generic types, which provided here
 		var genericMethod = method
 			.MakeGenericMethod(entityType, propertyInfo?.PropertyType!);

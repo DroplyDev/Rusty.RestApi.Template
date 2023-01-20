@@ -8,12 +8,12 @@ namespace Rusty.Template.Contracts.Exceptions.Entity;
 
 public class EntityNotFoundByIdException<TEntity> : BaseEntityException<TEntity> where TEntity : class
 {
-	public EntityNotFoundByIdException(int identifier) : base(
-		$@"{typeof(TEntity).Name} with id {identifier} was not found", 404, LogEventLevel.Warning)
+	public EntityNotFoundByIdException(object id) : base(
+		$@"{typeof(TEntity).Name} with id {id} was not found", 404, LogEventLevel.Warning)
 	{
-		Identifier = identifier;
+		Id = id;
 	}
 
 
-	public int Identifier { get; }
+	public object Id { get; }
 }

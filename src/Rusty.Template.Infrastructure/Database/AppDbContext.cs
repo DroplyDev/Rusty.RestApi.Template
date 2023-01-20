@@ -15,33 +15,32 @@ public class AppDbContext : ScaffoldedDbContext
 
 	protected override void OnModelCreating(ModelBuilder modelBuilder)
 	{
+		// modelBuilder.Entity<User>().HasQueryFilter(item => item.IsDeleted == true);
+		//
+		// modelBuilder.Entity<UserInfo>().HasQueryFilter(item => item.User.IsDeleted == true);
 		modelBuilder.ApplyGlobalFilters("IsDeleted", false);
 		modelBuilder.ApplyGlobalFilters<DateTime?>("DeleteDate", null);
 		base.OnModelCreating(modelBuilder);
 	}
-
 
 	[DbFunction("JSON_VALUE", IsBuiltIn = true, IsNullable = false)]
 	public static string JsonValue(string expression, string path)
 	{
 		throw new NotSupportedException();
 	}
-
-
+	
 	[DbFunction("JSON_QUERY", IsBuiltIn = true, IsNullable = false)]
 	public static string JsonQuery(string expression, string path)
 	{
 		throw new NotSupportedException();
 	}
-
-
+	
 	public override int SaveChanges()
 	{
 		UpdateDefaultActionStatuses();
 		return base.SaveChanges();
 	}
-
-
+	
 	public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess,
 											   CancellationToken cancellationToken = default)
 	{

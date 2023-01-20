@@ -2,7 +2,6 @@
 
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 using Rusty.Template.Application.Repositories.BaseRepo;
 using Rusty.Template.Contracts.Exceptions.Entity;
 
@@ -106,7 +105,7 @@ public abstract partial class BaseGenericRepo<TContext, TEntity> : IBaseRepo<TEn
 	}
 
 
-	public async Task DeleteAsync(int id)
+	public async Task DeleteAsync(object id)
 	{
 		var entity = await GetByIdAsync(id, CancellationToken.None)
 					 ?? throw new EntityNotFoundByIdException<TEntity>(id);
@@ -135,7 +134,7 @@ public abstract partial class BaseGenericRepo<TContext, TEntity> : IBaseRepo<TEn
 	}
 
 
-	public virtual async Task<bool> ExistsAsync(int id, CancellationToken cancellationToken)
+	public virtual async Task<bool> ExistsAsync(object id, CancellationToken cancellationToken)
 	{
 		return await GetByIdAsync(id, cancellationToken) is not null;
 	}
@@ -174,7 +173,7 @@ public abstract partial class BaseGenericRepo<TContext, TEntity> : IBaseRepo<TEn
 
 
 	protected IQueryable<TEntity> IncludeIfNotNull(
-		Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null)
+		Func<IQueryable<TEntity>, IQueryable<TEntity>>? includes = null)
 	{
 		if (includes is null)
 			return DbSet;

@@ -12,17 +12,16 @@ public class AuthorizeRolesOperationFilter : IOperationFilter
 {
 	public void Apply(OpenApiOperation operation, OperationFilterContext context)
 	{
-		var authAttributes = context.MethodInfo.DeclaringType!.GetCustomAttributes(true)
-									.Union(context.MethodInfo.GetCustomAttributes(true))
-									.OfType<AuthorizeRolesAttribute>();
-
+		var authAttributes = context.MethodInfo.GetCustomAttributes(true)
+			.OfType<AuthorizeRolesAttribute>();
 		if (authAttributes.Any())
-		{
-			operation.Responses.TryAdd(StatusCodes.Status401Unauthorized.ToString(),
-				new OpenApiResponse
-					{ Description = "You need to authorize with jwt token before accessing secure endpoints" });
-			operation.Responses.TryAdd(StatusCodes.Status403Forbidden.ToString(),
-				new OpenApiResponse { Description = "You do not have access to this endpoint" });
-		}
+			operation.TryAddResponse<UnauthorizedAccessException>(context,
+				StatusCodes.Status401Unauthorized,
+				"You need to authorize with jwt token before accessing secure endpoints"
+			);
+		// operation.TryAddResponse<AccessViolationException>(context,
+		// 	StatusCodes.Status403Forbidden,
+		// 	"You do not have access to this endpoint"
+		// 	);
 	}
 }

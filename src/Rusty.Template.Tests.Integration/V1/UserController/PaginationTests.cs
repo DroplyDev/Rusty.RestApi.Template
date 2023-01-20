@@ -25,7 +25,7 @@ public class PaginationTests : BaseTests
 			}
 		};
 		//Act
-		var response = await Client.PagedAsync(request);
+		var response = await Client.GetPagedUsersAsync(request);
 		//Assert
 		// response.Data.Should().NotBeEmpty();
 		// response.TotalCount.Should().Be(100);

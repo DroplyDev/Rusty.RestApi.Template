@@ -21,7 +21,7 @@ public partial class BaseGenericRepo<TContext, TEntity> where TEntity : class wh
 											 OrderDirection orderDirection)
 	{
 		return DbSet
-			   .Where(expression)
-			   .OrderByWithDirection(orderBy, orderDirection);
+			.Where(expression)
+			.OrderByWithDirection(orderBy, orderDirection);
 	}
 }

@@ -43,10 +43,15 @@ internal static class DependencyInjection
 	{
 		configuration.AddJsonFile("appsettings.json", false, true);
 		configuration.AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json",
-			true);
+			false, true);
 		configuration.AddEnvironmentVariables();
 	}
 
+	public static void AddConfigurations(this IServiceCollection services, IConfiguration configuration)
+	{
+		services.AddOptions();
+		services.Configure<AuthOptions>(configuration.GetSection("AuthOptions"));
+	}
 
 	public static void AddApiVersioningSupport(this IServiceCollection services, IConfiguration configuration)
 	{
@@ -85,62 +90,63 @@ internal static class DependencyInjection
 			options.AddPolicy("All", builder =>
 			{
 				builder.WithOrigins("*")
-					   .AllowAnyMethod()
-					   .AllowAnyHeader();
+					.AllowAnyMethod()
+					.AllowAnyHeader();
 			});
 		});
 		services.AddAuthentication(options =>
+			{
+				options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+				options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+				options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+			})
+			.AddJwtBearer(options =>
+			{
+				options.RequireHttpsMetadata = false;
+
+				// options.Authority = "https://example.com";
+				// options.Audience = "api";
+				options.TokenValidationParameters = new TokenValidationParameters
 				{
-					options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-					options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-				})
-				.AddJwtBearer(options =>
+					ValidateIssuer = authOptions.ValidateIssuer,
+					ValidIssuer = authOptions.Issuer,
+					ValidateAudience = authOptions.ValidateAudience,
+					ValidAudience = authOptions.Audience,
+					ValidateLifetime = authOptions.ValidateAccessTokenLifetime,
+					IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(authOptions.Key)),
+					ValidateIssuerSigningKey = authOptions.ValidateKey
+				};
+				options.Events = new JwtBearerEvents
 				{
-					options.RequireHttpsMetadata = false;
-
-					// options.Authority = "https://example.com";
-					// options.Audience = "api";
-					options.TokenValidationParameters = new TokenValidationParameters
+					OnChallenge = async context =>
 					{
-						ValidateIssuer = authOptions.ValidateIssuer,
-						ValidIssuer = authOptions.Issuer,
-						ValidateAudience = authOptions.ValidateAudience,
-						ValidAudience = authOptions.Audience,
-						ValidateLifetime = authOptions.ValidateAccessTokenLifetime,
-						IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(authOptions.Key)),
-						ValidateIssuerSigningKey = authOptions.ValidateKey
-					};
-					options.Events = new JwtBearerEvents
-					{
-						OnChallenge = async context =>
+						context.HandleResponse();
+						context.Response.StatusCode = 401;
+						context.Response.ContentType = "application/json";
+						if (context.AuthenticateFailure?.GetType() == typeof(SecurityTokenExpiredException))
 						{
-							context.HandleResponse();
-							context.Response.StatusCode = 401;
-							context.Response.ContentType = "application/json";
-							if (context.AuthenticateFailure?.GetType() == typeof(SecurityTokenExpiredException))
-							{
-								await context.Response.WriteAsJsonAsync(
-									new SecurityTokenExpiredException("Token expired"));
-								return;
-							}
-
-							await context.Response.WriteAsync("Not authorized");
-						},
-						// OnForbidden = context => { },
-						OnAuthenticationFailed = context =>
-						{
-							if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
-								context.Response.Headers.Add("Token-Expired", "true");
-
-							return Task.CompletedTask;
+							await context.Response.WriteAsJsonAsync(
+								new SecurityTokenExpiredException("Token expired"));
+							return;
 						}
-					};
-				});
+
+						await context.Response.WriteAsync("Not authorized");
+					},
+					// OnForbidden = context => { },
+					OnAuthenticationFailed = context =>
+					{
+						if (context.Exception.GetType() == typeof(SecurityTokenExpiredException))
+							context.Response.Headers.Add("Token-Expired", "true");
+
+						return Task.CompletedTask;
+					}
+				};
+			});
 		services.AddAuthorization(options =>
 		{
 			options.DefaultPolicy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
-									.RequireAuthenticatedUser()
-									.Build();
+				.RequireAuthenticatedUser()
+				.Build();
 		});
 	}
 
@@ -196,25 +202,27 @@ internal static class DependencyInjection
 			});
 			var currentAssembly = Assembly.GetExecutingAssembly();
 			var xmlDocs = currentAssembly.GetReferencedAssemblies()
-										 .Union(new[] { currentAssembly.GetName() })
-										 .Select(a => Path.Combine(Path.GetDirectoryName(currentAssembly.Location)!,
-											 $"{a.Name}.xml"))
-										 .Where(File.Exists).ToArray();
+				.Union(new[] { currentAssembly.GetName() })
+				.Select(a => Path.Combine(Path.GetDirectoryName(currentAssembly.Location)!,
+					$"{a.Name}.xml"))
+				.Where(File.Exists).ToArray();
 			Array.ForEach(xmlDocs, d => { options.IncludeXmlComments(d); });
 
 
 			options.EnableAnnotations(true, true);
+			// options.OperationFilter<OrderingFilter>();
 
 			options.OrderActionsBy(apiDesc =>
-				$"{apiDesc.ActionDescriptor.RouteValues["controller"]}_{apiDesc.HttpMethod}_{apiDesc.RelativePath}");
+				$"{apiDesc.ActionDescriptor.RouteValues["controller"]}_{apiDesc.HttpMethod}");
+			// options.OrderActionsBy(apiDesc =>
+			// $"{apiDesc.ActionDescriptor.RouteValues["controller"]}_{apiDesc.HttpMethod}_{apiDesc.RelativePath}");
 
-			// options.SchemaFilter<EnumSchemaFilter>();
 			options.UseInlineDefinitionsForEnums();
 			options.SchemaFilter<RequireNonNullablePropertiesSchemaFilter>();
 
+			options.OperationFilter<OperationIdFilter>();
 			options.OperationFilter<ValidationOperationFilter>();
-			options.OperationFilter<AuthorizeRolesOperationFilter>();
-
+			// options.OperationFilter<AuthorizeRolesOperationFilter>();
 			options.SupportNonNullableReferenceTypes(); // Sets Nullable flags appropriately.              
 			options.UseAllOfForInheritance(); // Allows $ref objects to be nullable
 		});
@@ -234,7 +242,7 @@ internal static class DependencyInjection
 			var efConStr = configuration.GetConnectionString("DefaultConnection") ??
 						   throw new ConnectionStringIsNotValidException();
 			options.UseSqlServer(efConStr)
-				   .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+				.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 		});
 	}
 

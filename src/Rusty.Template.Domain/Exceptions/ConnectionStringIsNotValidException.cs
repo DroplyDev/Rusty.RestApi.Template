@@ -1,5 +1,6 @@
 ﻿namespace Rusty.Template.Domain.Exceptions;
 
-public class ConnectionStringIsNotValidException : Exception
+public class ConnectionStringIsNotValidException : DomainException
 {
+	
 }
