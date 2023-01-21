@@ -15,7 +15,7 @@ builder.Configuration.AddConfigurations();
 builder.Host.AddSerilog();
 var configuration = builder.Configuration;
 var services = builder.Services;
-services.AddDatabases(configuration);
+services.AddDatabases(configuration, builder.Environment);
 services.AddSwagger(configuration);
 services.AddApiVersioningSupport(configuration);
 services.AddAuth(configuration);

@@ -9,11 +9,6 @@
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
-<#@ import namespace="Microsoft.EntityFrameworkCore" #>
-<#@ import namespace="Microsoft.EntityFrameworkCore.Design" #>
-<#@ import namespace="Microsoft.EntityFrameworkCore.Infrastructure" #>
-<#@ import namespace="Microsoft.EntityFrameworkCore.Scaffolding" #>
-<#@ import namespace="Microsoft.Extensions.DependencyInjection" #>
 <#
     if (!ProductInfo.GetVersion().StartsWith("7.0"))
     {
@@ -27,8 +22,8 @@
 
     var usings = new List<string>
     {
-        //"System",
-        //"System.Collections.Generic",
+        "System",
+        "System.Collections.Generic",
         "Microsoft.EntityFrameworkCore"
     };
 
@@ -68,7 +63,7 @@ public partial class <#= Options.ContextName #> : DbContext
     foreach (var entityType in Model.GetEntityTypes().Where(e => !e.IsSimpleManyToManyJoinEntityType()))
     {
 #>
-    public virtual DbSet<<#= entityType.Name #>> <#= entityType.GetDbSetName() #> { get; set; } = null!;
+    public virtual DbSet<<#= entityType.Name #>> <#= entityType.GetDbSetName() #> { get; set; }
 
 <#
     }
@@ -324,20 +319,14 @@ public partial class <#= Options.ContextName #> : DbContext
 <#
     mainEnvironment = GenerationEnvironment;
     GenerationEnvironment = new StringBuilder();
-#>
-#region
 
-<#
     foreach (var ns in usings.Distinct().OrderBy(x => x, new NamespaceComparer()))
     {
 #>
 using <#= ns #>;
 <#
     }
-#>
 
-#endregion
-<#
     WriteLine("");
 
     GenerationEnvironment.Append(mainEnvironment);

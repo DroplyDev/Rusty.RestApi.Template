@@ -6,7 +6,7 @@ set project=%rootedPrefix%.Infrastructure\%prefix%.Infrastructure.csproj
 set startupProject=%rootedPrefix%.Presentation\%prefix%.Presentation.csproj
 set configuration=Debug
 set connectionString="Server=RUSTY;Initial Catalog=ApiTest;Trusted_Connection=true;MultipleActiveResultSets=true;TrustServerCertificate=True"
-set context=ScaffoldedDbContext
+set context=AppDbContext
 set contextDir=%dirPrefix%.Infrastructure\Database
 set contextNamespace=%prefix%.Infrastructure.Database
 set entityNamespace=%prefix%.Domain

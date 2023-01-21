@@ -235,14 +235,20 @@ internal static class DependencyInjection
 	}
 
 
-	public static void AddDatabases(this IServiceCollection services, IConfiguration configuration)
+	public static void AddDatabases(this IServiceCollection services, IConfiguration configuration,
+									IWebHostEnvironment env)
 	{
 		services.AddDbContext<AppDbContext>(options =>
 		{
 			var efConStr = configuration.GetConnectionString("DefaultConnection") ??
 						   throw new ConnectionStringIsNotValidException();
-			options.UseSqlServer(efConStr)
+			var contextOptions = options.UseSqlServer(efConStr)
 				.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+			if (env.IsDevelopment())
+			{
+			}
+
+			contextOptions.EnableSensitiveDataLogging().EnableDetailedErrors();
 		});
 	}
 
