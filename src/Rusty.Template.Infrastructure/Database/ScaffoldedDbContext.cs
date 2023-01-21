@@ -26,9 +26,11 @@ public partial class ScaffoldedDbContext : DbContext
 
             entity.HasIndex(e => e.Name, "Groups_Name_uindex").IsUnique();
 
+            entity.Property(e => e.Id).HasComment("Primary key id");
             entity.Property(e => e.Name)
                 .HasMaxLength(32)
-                .IsUnicode(false);
+                .IsUnicode(false)
+                .HasComment("Group name");
         });
 
         modelBuilder.Entity<Role>(entity =>
@@ -37,9 +39,11 @@ public partial class ScaffoldedDbContext : DbContext
 
             entity.HasIndex(e => e.Name, "Roles_Name_uindex").IsUnique();
 
+            entity.Property(e => e.Id).HasComment("Primary key id");
             entity.Property(e => e.Name)
                 .HasMaxLength(32)
-                .IsUnicode(false);
+                .IsUnicode(false)
+                .HasComment("Role name");
 
             entity.HasMany(d => d.Users).WithMany(p => p.Roles)
                 .UsingEntity<Dictionary<string, object>>(
@@ -67,15 +71,20 @@ public partial class ScaffoldedDbContext : DbContext
 
             entity.HasIndex(e => e.UserName, "Users_Username_uindex").IsUnique();
 
+            entity.Property(e => e.Id).HasComment("Primary key id");
             entity.Property(e => e.Email)
                 .HasMaxLength(255)
-                .HasComment("");
+                .HasComment("User email");
+            entity.Property(e => e.GroupId).HasComment("Group id foreign key");
+            entity.Property(e => e.IsDeleted).HasComment("Prop that shows if user is deleted");
             entity.Property(e => e.Password)
                 .HasMaxLength(32)
-                .IsUnicode(false);
+                .IsUnicode(false)
+                .HasComment("User strong password");
             entity.Property(e => e.UserName)
                 .HasMaxLength(32)
-                .IsUnicode(false);
+                .IsUnicode(false)
+                .HasComment("Unique UserName for login and identification");
 
             entity.HasOne(d => d.Group).WithMany(p => p.Users)
                 .HasForeignKey(d => d.GroupId)
@@ -88,13 +97,17 @@ public partial class ScaffoldedDbContext : DbContext
 
             entity.ToTable("UserInfo");
 
-            entity.Property(e => e.UserId).ValueGeneratedNever();
+            entity.Property(e => e.UserId)
+                .ValueGeneratedNever()
+                .HasComment("User id foreign key");
             entity.Property(e => e.FirstName)
                 .HasMaxLength(32)
-                .IsUnicode(false);
+                .IsUnicode(false)
+                .HasComment("User first name");
             entity.Property(e => e.LastName)
                 .HasMaxLength(32)
-                .IsUnicode(false);
+                .IsUnicode(false)
+                .HasComment("User last name");
 
             entity.HasOne(d => d.User).WithOne(p => p.UserInfo)
                 .HasForeignKey<UserInfo>(d => d.UserId)

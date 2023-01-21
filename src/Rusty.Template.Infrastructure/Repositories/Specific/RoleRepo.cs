@@ -6,7 +6,7 @@ using Rusty.Template.Infrastructure.Database;
 
 #endregion
 
-namespace Rusty.Template.Infrastructure.Repositories.AppDbRepo;
+namespace Rusty.Template.Infrastructure.Repositories.Specific;
 
 public class RoleRepo : AppDbRepo<Role>, IRoleRepo
 {

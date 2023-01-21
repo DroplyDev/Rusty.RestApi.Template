@@ -7,7 +7,7 @@ using Rusty.Template.Contracts.Exceptions.Entity;
 
 #endregion
 
-namespace Rusty.Template.Infrastructure.Repositories.BaseRepo;
+namespace Rusty.Template.Infrastructure.Repositories.Base;
 
 public abstract partial class BaseGenericRepo<TContext, TEntity> : IBaseRepo<TEntity>
 	where TEntity : class where TContext : DbContext

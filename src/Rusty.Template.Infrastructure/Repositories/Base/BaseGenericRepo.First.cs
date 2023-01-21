@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Query;
 
 #endregion
 
-namespace Rusty.Template.Infrastructure.Repositories.BaseRepo;
+namespace Rusty.Template.Infrastructure.Repositories.Base;
 
 public partial class BaseGenericRepo<TContext, TEntity> where TEntity : class where TContext : DbContext
 {

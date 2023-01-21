@@ -2,11 +2,11 @@
 
 using System.Linq.Expressions;
 using Rusty.Template.Infrastructure.Database;
-using Rusty.Template.Infrastructure.Repositories.BaseRepo;
+using Rusty.Template.Infrastructure.Repositories.Base;
 
 #endregion
 
-namespace Rusty.Template.Infrastructure.Repositories.AppDbRepo;
+namespace Rusty.Template.Infrastructure.Repositories;
 
 public abstract class AppDbRepo<TEntity> : BaseGenericRepo<AppDbContext, TEntity> where TEntity : class
 {

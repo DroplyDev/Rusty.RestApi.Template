@@ -20,7 +20,7 @@ using Rusty.Template.Contracts.Dtos.User;
 using Rusty.Template.Domain.Exceptions;
 using Rusty.Template.Infrastructure.Database;
 using Rusty.Template.Infrastructure.Mapping;
-using Rusty.Template.Infrastructure.Repositories.AppDbRepo;
+using Rusty.Template.Infrastructure.Repositories.Specific;
 using Rusty.Template.Presentation.OperationFilters;
 using Rusty.Template.Presentation.Options;
 using Rusty.Template.Presentation.SchemaFilters;
