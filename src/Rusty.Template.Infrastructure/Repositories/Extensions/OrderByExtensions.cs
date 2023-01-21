@@ -1,8 +1,8 @@
 #region
 
 using System.Linq.Expressions;
-using Rusty.Template.Contracts.Exceptions.Entity;
 using Rusty.Template.Contracts.SubTypes;
+using Rusty.Template.Domain.Exceptions.Entity;
 
 #endregion
 

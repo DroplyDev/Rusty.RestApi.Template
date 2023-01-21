@@ -1,3 +1,12 @@
+#region
+
+using Swashbuckle.AspNetCore.Annotations;
+
+#endregion
+
 namespace Rusty.Template.Contracts.Responses;
 
-public record PagedResponse<TEntity>(List<TEntity> Data, int TotalCount);
+[SwaggerSchema("Paged payload response")]
+public record PagedResponse<TEntity>([SwaggerSchema("Paged data")] List<TEntity> Data,
+									 [SwaggerSchema("Total record count without pagination")]
+									 int TotalCount);

@@ -1,3 +1,13 @@
-﻿namespace Rusty.Template.Contracts.Responses;
+﻿#region
 
-public sealed record LoginResponse(string JwtToken, DateTime JwtTokenExpiration, string RefreshToken);
+using Swashbuckle.AspNetCore.Annotations;
+
+#endregion
+
+namespace Rusty.Template.Contracts.Responses;
+
+[SwaggerSchema("Login response")]
+public sealed record LoginResponse([SwaggerSchema("JWT token for authentication")]
+								   string JwtToken,
+								   [SwaggerSchema("JWT token expiration date")]
+								   DateTime JwtTokenExpiration);

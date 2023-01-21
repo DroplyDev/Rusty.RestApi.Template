@@ -10,7 +10,9 @@ public class LoginRequestValidator : AbstractValidator<LoginRequest>
 {
 	public LoginRequestValidator()
 	{
-		RuleFor(item => item.Username).NotEmpty();
-		RuleFor(item => item.Password).NotEmpty();
+		RuleFor(item => item.Username)
+			.NotEmpty();
+		RuleFor(item => item.Password)
+			.NotEmpty();
 	}
 }

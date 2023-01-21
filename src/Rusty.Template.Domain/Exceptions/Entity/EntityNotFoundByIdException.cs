@@ -4,7 +4,7 @@ using Serilog.Events;
 
 #endregion
 
-namespace Rusty.Template.Contracts.Exceptions.Entity;
+namespace Rusty.Template.Domain.Exceptions.Entity;
 
 public class EntityNotFoundByIdException<TEntity> : BaseEntityException<TEntity> where TEntity : class
 {

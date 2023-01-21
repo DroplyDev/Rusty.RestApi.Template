@@ -10,7 +10,7 @@ namespace Rusty.Template.Infrastructure.Repositories.Specific;
 
 public class GroupRepo : AppDbRepo<Group>, IGroupRepo
 {
-	public GroupRepo(AppDbContext context) : base(context, item => item.Name)
+	public GroupRepo(AppDbContext context) : base(context)
 	{
 	}
 

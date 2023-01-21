@@ -1,12 +1,11 @@
 #region
 
 using System.Collections;
-using System.Text.Json;
 using Serilog.Events;
 
 #endregion
 
-namespace Rusty.Template.Contracts.Exceptions;
+namespace Rusty.Template.Domain.Exceptions;
 
 public class ApiException : Exception
 {
@@ -35,16 +34,6 @@ public class ApiException : Exception
 	{
 		return _logLevel;
 	}
-
-	public virtual string ToJsonResponse()
-	{
-		return JsonSerializer.Serialize(new
-		{
-			ErrorMessage = Description,
-			StatusCode
-		});
-	}
-
 	public virtual IDictionary GetLogData()
 	{
 		var data = Data;

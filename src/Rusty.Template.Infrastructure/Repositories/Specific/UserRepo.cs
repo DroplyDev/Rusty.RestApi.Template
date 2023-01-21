@@ -10,7 +10,7 @@ namespace Rusty.Template.Infrastructure.Repositories.Specific;
 
 public class UserRepo : AppDbRepo<User>, IUserRepo
 {
-	public UserRepo(AppDbContext context) : base(context, item => item.UserName)
+	public UserRepo(AppDbContext context) : base(context)
 	{
 	}
 

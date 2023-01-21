@@ -10,7 +10,7 @@ namespace Rusty.Template.Infrastructure.Repositories.Specific;
 
 public class RoleRepo : AppDbRepo<Role>, IRoleRepo
 {
-	public RoleRepo(AppDbContext context) : base(context, item => item.Name)
+	public RoleRepo(AppDbContext context) : base(context)
 	{
 	}
 

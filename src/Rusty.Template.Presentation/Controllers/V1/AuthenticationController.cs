@@ -47,45 +47,45 @@ public class AuthenticationController : BaseApiController
 			foreach (var userRole in userRoles) authClaims.Add(new Claim(ClaimTypes.Role, userRole));
 
 			var token = CreateToken(authClaims);
-			var refreshToken = GenerateRefreshToken();
+			// var refreshToken = GenerateRefreshToken();
 
 			// user.RefreshToken = refreshToken;
 			// user.RefreshTokenExpiryTime = DateTime.Now.AddDays(_authOptions.RefreshTokenValidityInDays);
 
 			await _userRepo.UpdateAsync(user);
 			var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-			return Ok(new LoginResponse(tokenString, token.ValidTo, refreshToken));
+			return Ok(new LoginResponse(tokenString, token.ValidTo));
 		}
 
 		return Unauthorized();
 	}
 
-	[HttpPost("refresh-token")]
-	public async Task<IActionResult> RefreshToken(RefreshTokenRequest refreshTokenRequest,
-												  CancellationToken cancellationToken)
-	{
-		var principal = GetPrincipalFromExpiredToken(refreshTokenRequest.JwtToken);
-		if (principal == null) return BadRequest("Invalid access token or refresh token");
-		var username = principal.Identity!.Name!;
-		var user = await _userRepo.GetByUsernameAsync(username, cancellationToken);
-
-		// if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
-		// {
-		// 	return BadRequest("Invalid access token or refresh token");
-		// }
-
-		var newAccessToken = CreateToken(principal.Claims.ToList());
-		var newRefreshToken = GenerateRefreshToken();
-
-		// user.RefreshToken = newRefreshToken;
-		// await _userManager.UpdateAsync(user);
-
-		return new ObjectResult(new
-		{
-			accessToken = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
-			refreshToken = newRefreshToken
-		});
-	}
+	// [HttpPost("refresh-token")]
+	// public async Task<IActionResult> RefreshToken(RefreshTokenRequest refreshTokenRequest,
+	// 											  CancellationToken cancellationToken)
+	// {
+	// 	var principal = GetPrincipalFromExpiredToken(refreshTokenRequest.JwtToken);
+	// 	if (principal == null) return BadRequest("Invalid access token or refresh token");
+	// 	var username = principal.Identity!.Name!;
+	// 	var user = await _userRepo.GetByUsernameAsync(username, cancellationToken);
+	//
+	// 	// if (user == null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
+	// 	// {
+	// 	// 	return BadRequest("Invalid access token or refresh token");
+	// 	// }
+	//
+	// 	var newAccessToken = CreateToken(principal.Claims.ToList());
+	// 	var newRefreshToken = GenerateRefreshToken();
+	//
+	// 	// user.RefreshToken = newRefreshToken;
+	// 	// await _userManager.UpdateAsync(user);
+	//
+	// 	return new ObjectResult(new
+	// 	{
+	// 		accessToken = new JwtSecurityTokenHandler().WriteToken(newAccessToken),
+	// 		refreshToken = newRefreshToken
+	// 	});
+	// }
 
 	private JwtSecurityToken CreateToken(List<Claim> authClaims)
 	{

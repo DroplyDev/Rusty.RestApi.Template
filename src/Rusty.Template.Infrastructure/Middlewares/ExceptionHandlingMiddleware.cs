@@ -3,9 +3,9 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using Microsoft.AspNetCore.Http;
-using Rusty.Template.Contracts.Exceptions;
+using Rusty.Template.Contracts.Responses;
+using Rusty.Template.Domain.Exceptions;
 using Serilog;
-using Serilog.Events;
 
 #endregion
 
@@ -51,22 +51,20 @@ public sealed class ExceptionHandlingMiddleware
 	{
 		context.Response.StatusCode = exception.StatusCode;
 		context.Response.ContentType = ContentType;
-		return context.Response.WriteAsync(exception.ToJsonResponse());
+		return context.Response.WriteAsJsonAsync(new ApiExceptionResponse(exception.Message,
+			context.Response.StatusCode));
 	}
 
 	private static Task HandleExceptionAsync(HttpContext context, Exception exception)
 	{
 		context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 		context.Response.ContentType = ContentType;
-		return context.Response.WriteAsync(
-			new ApiException(exception.Message, context.Response.StatusCode, LogEventLevel.Fatal).ToJsonResponse());
+		return context.Response.WriteAsJsonAsync(new ApiExceptionResponse(exception.Message,
+			context.Response.StatusCode));
 	}
 
 	private void LogException(ApiException ex)
 	{
 		_logger.Write(ex.GetLevel(), ex, ex.Description);
-		// _logger.ForContext<ApiException>().Write(ex.GetLevel(), ex, ex.Message,ex.Description,ex.StatusCode,ex.StackTrace);
-		// _logger.ForContext("Properties", ex.GetLogData(), destructureObjects: true)
-		// 	   .Write(ex.GetLevel(), ex.Description,ex );
 	}
 }

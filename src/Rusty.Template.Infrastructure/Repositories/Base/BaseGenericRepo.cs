@@ -3,7 +3,7 @@
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Rusty.Template.Application.Repositories.BaseRepo;
-using Rusty.Template.Contracts.Exceptions.Entity;
+using Rusty.Template.Domain.Exceptions.Entity;
 
 #endregion
 
@@ -18,7 +18,7 @@ public abstract partial class BaseGenericRepo<TContext, TEntity> : IBaseRepo<TEn
 	protected readonly DbSet<TEntity> DbSet;
 
 
-	protected BaseGenericRepo(TContext context, Expression<Func<TEntity, object>> defaultOrderBy)
+	protected BaseGenericRepo(TContext context)
 	{
 		Context = context;
 		DbSet = context.Set<TEntity>();

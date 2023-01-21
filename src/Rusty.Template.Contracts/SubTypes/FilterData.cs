@@ -1,22 +1,18 @@
 #region
 
-using FluentValidation;
+using Swashbuckle.AspNetCore.Annotations;
 
 #endregion
 
 namespace Rusty.Template.Contracts.SubTypes;
 
-public sealed record FilterData(DateTime DateFrom, DateTime DateTo);
-
-public sealed class FilterDataValidator : AbstractValidator<FilterData>
+[SwaggerSchema("Filter data subtype")]
+public sealed class FilterData
 {
-	public FilterDataValidator()
-	{
-		RuleFor(d => d.DateFrom)
-			.LessThanOrEqualTo(DateTime.Now)
-			.LessThanOrEqualTo(d => d.DateTo.Date)
-			.GreaterThanOrEqualTo(DateTime.MinValue);
-		RuleFor(d => d.DateTo.Date)
-			.GreaterThanOrEqualTo(DateTime.MinValue);
-	}
+	[SwaggerSchema("Start date filter")]
+	public DateTime DateFrom { get; set; }
+
+	[SwaggerSchema("End date filter")]
+	public DateTime DateTo { get; set; }
 }
+

@@ -17,7 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Rusty.Template.Application.Repositories;
 using Rusty.Template.Contracts.Dtos.User;
-using Rusty.Template.Domain.Exceptions;
+using Rusty.Template.Domain.Exceptions.Domain;
 using Rusty.Template.Infrastructure.Database;
 using Rusty.Template.Infrastructure.Mapping;
 using Rusty.Template.Infrastructure.Repositories.Specific;
@@ -222,7 +222,9 @@ internal static class DependencyInjection
 
 			options.OperationFilter<OperationIdFilter>();
 			options.OperationFilter<ValidationOperationFilter>();
-			// options.OperationFilter<AuthorizeRolesOperationFilter>();
+			options.OperationFilter<InternalServerErrorResponseFilter>();
+			options.OperationFilter<AuthorizeOperationFilter>();
+			
 			options.SupportNonNullableReferenceTypes(); // Sets Nullable flags appropriately.              
 			options.UseAllOfForInheritance(); // Allows $ref objects to be nullable
 		});

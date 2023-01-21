@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Rusty.Template.Application.Repositories;
 using Rusty.Template.Contracts.Dtos.User;
-using Rusty.Template.Contracts.Exceptions.Entity;
 using Rusty.Template.Contracts.Requests;
 using Rusty.Template.Contracts.Responses;
 using Rusty.Template.Domain;
+using Rusty.Template.Domain.Exceptions.Entity;
 using Rusty.Template.Infrastructure.Attributes;
 using Swashbuckle.AspNetCore.Annotations;
 

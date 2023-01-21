@@ -4,7 +4,7 @@ using Serilog.Events;
 
 #endregion
 
-namespace Rusty.Template.Contracts.Exceptions;
+namespace Rusty.Template.Domain.Exceptions;
 
 public class InsufficientPrivilegeException : ApiException
 {

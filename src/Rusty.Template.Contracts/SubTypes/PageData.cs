@@ -1,18 +1,18 @@
 #region
 
-using FluentValidation;
+using Swashbuckle.AspNetCore.Annotations;
 
 #endregion
 
 namespace Rusty.Template.Contracts.SubTypes;
 
-public sealed record PageData(int Offset = 0, int Limit = 0);
-
-public sealed class PageDataValidator : AbstractValidator<PageData>
+[SwaggerSchema("Page data subtype")]
+public sealed class PageData
 {
-	public PageDataValidator()
-	{
-		RuleFor(d => d.Offset).GreaterThanOrEqualTo(0);
-		RuleFor(d => d.Limit).GreaterThanOrEqualTo(0);
-	}
+	[SwaggerSchema("Item offset")]
+	public int Offset { get; set; }
+
+	[SwaggerSchema("Item limit")]
+	public int Limit { get; set; }
 }
+

@@ -55,9 +55,10 @@ app.UseSwaggerUI(options =>
 app.UseRouting();
 app.UseCors("All");
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.MapControllers();
 await app.RunAsync();

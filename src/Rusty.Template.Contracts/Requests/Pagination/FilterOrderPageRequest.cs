@@ -5,13 +5,14 @@ using Swashbuckle.AspNetCore.Annotations;
 
 #endregion
 
-// ReSharper disable All
+namespace Rusty.Template.Contracts.Requests.Pagination;
 
-namespace Rusty.Template.Contracts.Requests;
-
-[SwaggerSchema("Request with order by and pagination")]
-public sealed class OrderedPagedRequest
+[SwaggerSchema("Request with filter order by and pagination")]
+public sealed class FilterOrderPageRequest
 {
+	[SwaggerSchema("Filter data class")]
+	public FilterData? FilterData { get; set; }
+
 	[SwaggerSchema("Page data class")]
 	public PageData? PageData { get; set; }
 

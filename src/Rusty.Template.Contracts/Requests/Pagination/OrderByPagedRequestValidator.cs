@@ -11,7 +11,10 @@ public sealed class OrderByPagedRequestValidator : AbstractValidator<OrderedPage
 {
 	public OrderByPagedRequestValidator()
 	{
-		RuleFor(w => w.PageData).SetValidator(new PageDataValidator()!).When(item => item.PageData is not null);
-		RuleFor(w => w.OrderByData).SetValidator(new OrderByDataValidator()!);
+		RuleFor(w => w.PageData)
+			.SetValidator(new PageDataValidator()!)
+			.When(item => item.PageData is not null);
+		RuleFor(w => w.OrderByData)
+			.SetValidator(new OrderByDataValidator());
 	}
 }
