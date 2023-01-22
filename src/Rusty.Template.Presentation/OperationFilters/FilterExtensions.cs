@@ -38,10 +38,15 @@ public static class FilterExtensions
 
 		if (!context.SchemaRepository.Schemas.TryGetValue(responseType.Name, out var responseSchema))
 		{
-			context.SchemaGenerator.GenerateSchema(responseType, context.SchemaRepository);
-			responseSchema = context.SchemaRepository.Schemas[responseType.Name];
+			responseSchema = context.SchemaGenerator.GenerateSchema(responseType, context.SchemaRepository);
+			// responseSchema = context.SchemaRepository.Schemas[responseType.Name];
 		}
 
+		responseSchema.Reference = new OpenApiReference
+		{
+			Type = ReferenceType.Schema,
+			Id = responseType.Name
+		};
 		var response = new OpenApiResponse
 		{
 			Description = description

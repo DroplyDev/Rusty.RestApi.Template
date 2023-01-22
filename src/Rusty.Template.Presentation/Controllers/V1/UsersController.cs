@@ -17,7 +17,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace Rusty.Template.Presentation.Controllers.V1;
 
 [ApiVersion("1.0", Deprecated = false)]
-// [AuthorizeRoles("Admin")]
+[AuthorizeRoles("Admin")]
 public class UsersController : BaseApiController
 {
 	private readonly IUserRepo _userRepo;

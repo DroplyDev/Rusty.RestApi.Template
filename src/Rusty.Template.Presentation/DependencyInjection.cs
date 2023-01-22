@@ -17,6 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Rusty.Template.Application.Repositories;
 using Rusty.Template.Contracts.Dtos.User;
+using Rusty.Template.Contracts.Requests.Authentication;
 using Rusty.Template.Domain.Exceptions.Domain;
 using Rusty.Template.Infrastructure.Database;
 using Rusty.Template.Infrastructure.Mapping;
@@ -25,6 +26,7 @@ using Rusty.Template.Presentation.OperationFilters;
 using Rusty.Template.Presentation.Options;
 using Rusty.Template.Presentation.SchemaFilters;
 using Serilog;
+using Swashbuckle.AspNetCore.Filters;
 
 #endregion
 
@@ -208,23 +210,23 @@ internal static class DependencyInjection
 				.Where(File.Exists).ToArray();
 			Array.ForEach(xmlDocs, d => { options.IncludeXmlComments(d); });
 
-
+			options.ExampleFilters();
 			options.EnableAnnotations(true, true);
 			// options.OperationFilter<OrderingFilter>();
-
 			options.OrderActionsBy(apiDesc =>
 				$"{apiDesc.ActionDescriptor.RouteValues["controller"]}_{apiDesc.HttpMethod}");
-			// options.OrderActionsBy(apiDesc =>
-			// $"{apiDesc.ActionDescriptor.RouteValues["controller"]}_{apiDesc.HttpMethod}_{apiDesc.RelativePath}");
 
 			options.UseInlineDefinitionsForEnums();
+			
 			options.SchemaFilter<RequireNonNullablePropertiesSchemaFilter>();
+			options.SchemaFilter<AutoRestSchemaFilter>();
+			options.SchemaFilter<DictionaryTKeyEnumTValueSchemaFilter>();
 
+			options.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
 			options.OperationFilter<OperationIdFilter>();
 			options.OperationFilter<ValidationOperationFilter>();
-			options.OperationFilter<InternalServerErrorResponseFilter>();
-			options.OperationFilter<AuthorizeOperationFilter>();
-			
+			// options.OperationFilter<AuthorizeOperationFilter>();
+			options.OperationFilter<SecurityRequirementsOperationFilter>();
 			options.SupportNonNullableReferenceTypes(); // Sets Nullable flags appropriately.              
 			options.UseAllOfForInheritance(); // Allows $ref objects to be nullable
 		});
@@ -232,7 +234,7 @@ internal static class DependencyInjection
 		{
 			options.SetNotNullableIfMinLengthGreaterThenZero = true;
 		});
-
+		services.AddSwaggerExamplesFromAssemblyOf<LoginRequestExample>();
 		services.AddRouting(options => options.LowercaseUrls = true);
 	}
 

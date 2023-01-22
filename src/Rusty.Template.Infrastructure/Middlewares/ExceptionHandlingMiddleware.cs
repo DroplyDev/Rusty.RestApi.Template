@@ -33,11 +33,7 @@ public sealed class ExceptionHandlingMiddleware
 		}
 		catch (ApiException ex)
 		{
-			// _logger.ForContext<ApiException>().Write(ex.GetLevel(), ex.Description, ex);
-			// _logger.ForContext<ApiException>().Write(ex.GetLevel(), ex, ex.Description);
-			// _logger.ForContext("Properties", ex.Data, destructureObjects: true)
-			// 	   .Write(ex.GetLevel(), "Error details {@Properties}", ex);
-			LogException(ex);
+			_logger.Write(ex.GetLevel(), ex, ex.Description);
 			await HandleExceptionAsync(context, ex);
 		}
 		catch (Exception ex)
@@ -61,10 +57,5 @@ public sealed class ExceptionHandlingMiddleware
 		context.Response.ContentType = ContentType;
 		return context.Response.WriteAsJsonAsync(new ApiExceptionResponse(exception.Message,
 			context.Response.StatusCode));
-	}
-
-	private void LogException(ApiException ex)
-	{
-		_logger.Write(ex.GetLevel(), ex, ex.Description);
 	}
 }

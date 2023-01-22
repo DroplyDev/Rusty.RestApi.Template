@@ -4,11 +4,6 @@
 // </auto-generated>
 //----------------------
 
-using Rusty.Template.Contracts.Dtos.User;
-using Rusty.Template.Contracts.Requests;
-using Rusty.Template.Contracts.Requests.Authentication;
-using Rusty.Template.Contracts.Responses.User;
-
 #pragma warning disable 108 // Disable "CS0108 '{derivedDto}.ToJson()' hides inherited member '{dtoBase}.ToJson()'. Use the new keyword if hiding was intended."
 #pragma warning disable 114 // Disable "CS0114 '{derivedDto}.RaisePropertyChanged(String)' hides inherited member 'dtoBase.RaisePropertyChanged(String)'. To make the current member override that implementation, add the override keyword. Otherwise add the new keyword."
 #pragma warning disable 472 // Disable "CS0472 The result of the expression is always 'false' since a value of type 'Int32' is never equal to 'null' of type 'Int32?'
@@ -50,9 +45,15 @@ namespace Rusty.Template.Tests.Integration
         partial void ProcessResponse(System.Net.Http.HttpClient client, System.Net.Http.HttpResponseMessage response);
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Success</returns>
+        /// <summary>
+        /// Login
+        /// </summary>
+        /// <remarks>
+        /// Logins to retrieve jwt token
+        /// </remarks>
+        /// <returns>Token retrieved successfully</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task LoginAsync(LoginRequest body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task<UserDto> LoginAsync(LoginRequest body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append("api/v1/authentication/login");
@@ -68,6 +69,7 @@ namespace Rusty.Template.Tests.Integration
                     content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -90,74 +92,34 @@ namespace Rusty.Template.Tests.Integration
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
-                        if (status_ == 200)
+                        if (status_ == 500)
                         {
-                            return;
+                            var objectResponse_ = await ReadObjectResponseAsync<ApiExceptionResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new SwaggerException<ApiExceptionResponse>("Internal server error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
-                        {
-                            var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
-                        }
-                    }
-                    finally
-                    {
-                        if (disposeResponse_)
-                            response_.Dispose();
-                    }
-                }
-            }
-            finally
-            {
-                if (disposeClient_)
-                    client_.Dispose();
-            }
-        }
-
-        /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-        /// <returns>Success</returns>
-        /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task RefreshTokenAsync(RefreshTokenRequest body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
-        {
-            var urlBuilder_ = new System.Text.StringBuilder();
-            urlBuilder_.Append("api/v1/authentication/refresh-token");
-
-            var client_ = _httpClient;
-            var disposeClient_ = false;
-            try
-            {
-                using (var request_ = new System.Net.Http.HttpRequestMessage())
-                {
-                    var json_ = System.Text.Json.JsonSerializer.Serialize(body, _settings.Value);
-                    var content_ = new System.Net.Http.StringContent(json_);
-                    content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
-                    request_.Content = content_;
-                    request_.Method = new System.Net.Http.HttpMethod("POST");
-
-                    PrepareRequest(client_, request_, urlBuilder_);
-
-                    var url_ = urlBuilder_.ToString();
-                    request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-
-                    PrepareRequest(client_, request_, url_);
-
-                    var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-                    var disposeResponse_ = true;
-                    try
-                    {
-                        var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
-                        if (response_.Content != null && response_.Content.Headers != null)
-                        {
-                            foreach (var item_ in response_.Content.Headers)
-                                headers_[item_.Key] = item_.Value;
-                        }
-
-                        ProcessResponse(client_, response_);
-
-                        var status_ = (int)response_.StatusCode;
                         if (status_ == 200)
                         {
-                            return;
+                            var objectResponse_ = await ReadObjectResponseAsync<UserDto>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            return objectResponse_.Object;
+                        }
+                        else
+                        if (status_ == 400)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<ApiExceptionResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new SwaggerException<ApiExceptionResponse>("Model validation exception", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         {
@@ -181,14 +143,14 @@ namespace Rusty.Template.Tests.Integration
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// Delete user
+        /// Delete user (Auth roles: Admin)
         /// </summary>
         /// <remarks>
         /// Deletes existing user
         /// </remarks>
         /// <returns>User deleted successfully</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task DeleteUserAsync(object id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task DeleteUserAsync(string id, object body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (id == null)
                 throw new System.ArgumentNullException("id");
@@ -203,6 +165,10 @@ namespace Rusty.Template.Tests.Integration
             {
                 using (var request_ = new System.Net.Http.HttpRequestMessage())
                 {
+                    var json_ = System.Text.Json.JsonSerializer.Serialize(body, _settings.Value);
+                    var content_ = new System.Net.Http.StringContent(json_);
+                    content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
+                    request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("DELETE");
 
                     PrepareRequest(client_, request_, urlBuilder_);
@@ -226,6 +192,16 @@ namespace Rusty.Template.Tests.Integration
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<ApiExceptionResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new SwaggerException<ApiExceptionResponse>("Internal server error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
                         if (status_ == 204)
                         {
                             return;
@@ -234,13 +210,13 @@ namespace Rusty.Template.Tests.Integration
                         if (status_ == 401)
                         {
                             string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("You need to authorize with jwt token before accessing secure endpoints", status_, responseText_, headers_, null);
+                            throw new SwaggerException("Unauthorized", status_, responseText_, headers_, null);
                         }
                         else
                         if (status_ == 403)
                         {
                             string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("You do not have access to this endpoint", status_, responseText_, headers_, null);
+                            throw new SwaggerException("Forbidden", status_, responseText_, headers_, null);
                         }
                         else
                         {
@@ -264,14 +240,14 @@ namespace Rusty.Template.Tests.Integration
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// Get user by id
+        /// Get user by id (Auth roles: Admin)
         /// </summary>
         /// <remarks>
         /// Returns paged list
         /// </remarks>
         /// <returns>User retrieved successfully</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<UserDto> GetUserByIdAsync(object id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task<UserDto> GetUserByIdAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (id == null)
                 throw new System.ArgumentNullException("id");
@@ -310,6 +286,16 @@ namespace Rusty.Template.Tests.Integration
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<ApiExceptionResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new SwaggerException<ApiExceptionResponse>("Internal server error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
                         if (status_ == 200)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<UserDto>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -323,13 +309,13 @@ namespace Rusty.Template.Tests.Integration
                         if (status_ == 401)
                         {
                             string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("You need to authorize with jwt token before accessing secure endpoints", status_, responseText_, headers_, null);
+                            throw new SwaggerException("Unauthorized", status_, responseText_, headers_, null);
                         }
                         else
                         if (status_ == 403)
                         {
                             string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("You do not have access to this endpoint", status_, responseText_, headers_, null);
+                            throw new SwaggerException("Forbidden", status_, responseText_, headers_, null);
                         }
                         else
                         {
@@ -353,14 +339,14 @@ namespace Rusty.Template.Tests.Integration
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// Update user
+        /// Update user (Auth roles: Admin)
         /// </summary>
         /// <remarks>
         /// Updates existing user
         /// </remarks>
         /// <returns>User updated successfully</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task UpdateUserAsync(object id, UserUpdateDto body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task UpdateUserAsync(int id, UserUpdateDto body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (id == null)
                 throw new System.ArgumentNullException("id");
@@ -402,6 +388,16 @@ namespace Rusty.Template.Tests.Integration
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<ApiExceptionResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new SwaggerException<ApiExceptionResponse>("Internal server error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
                         if (status_ == 204)
                         {
                             return;
@@ -409,20 +405,24 @@ namespace Rusty.Template.Tests.Integration
                         else
                         if (status_ == 400)
                         {
-                            string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("You need to authorize with jwt token before accessing secure endpoints", status_, responseText_, headers_, null);
+                            var objectResponse_ = await ReadObjectResponseAsync<ApiExceptionResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new SwaggerException<ApiExceptionResponse>("Model validation exception", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
                         }
                         else
                         if (status_ == 401)
                         {
                             string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("You need to authorize with jwt token before accessing secure endpoints", status_, responseText_, headers_, null);
+                            throw new SwaggerException("Unauthorized", status_, responseText_, headers_, null);
                         }
                         else
                         if (status_ == 403)
                         {
                             string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("You do not have access to this endpoint", status_, responseText_, headers_, null);
+                            throw new SwaggerException("Forbidden", status_, responseText_, headers_, null);
                         }
                         else
                         {
@@ -446,7 +446,7 @@ namespace Rusty.Template.Tests.Integration
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// Get all users
+        /// Get all users (Auth roles: Admin)
         /// </summary>
         /// <remarks>
         /// Returns trader list
@@ -488,6 +488,16 @@ namespace Rusty.Template.Tests.Integration
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<ApiExceptionResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new SwaggerException<ApiExceptionResponse>("Internal server error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
                         if (status_ == 200)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<System.Collections.Generic.ICollection<UserDto>>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -501,13 +511,13 @@ namespace Rusty.Template.Tests.Integration
                         if (status_ == 401)
                         {
                             string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("You need to authorize with jwt token before accessing secure endpoints", status_, responseText_, headers_, null);
+                            throw new SwaggerException("Unauthorized", status_, responseText_, headers_, null);
                         }
                         else
                         if (status_ == 403)
                         {
                             string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("You do not have access to this endpoint", status_, responseText_, headers_, null);
+                            throw new SwaggerException("Forbidden", status_, responseText_, headers_, null);
                         }
                         else
                         {
@@ -531,7 +541,7 @@ namespace Rusty.Template.Tests.Integration
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// Create new user
+        /// Create new user (Auth roles: Admin)
         /// </summary>
         /// <remarks>
         /// Creates new user
@@ -576,21 +586,41 @@ namespace Rusty.Template.Tests.Integration
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<ApiExceptionResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new SwaggerException<ApiExceptionResponse>("Internal server error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
                         if (status_ == 201)
                         {
                             return;
                         }
                         else
+                        if (status_ == 400)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<ApiExceptionResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new SwaggerException<ApiExceptionResponse>("Model validation exception", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
                         if (status_ == 401)
                         {
                             string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("You need to authorize with jwt token before accessing secure endpoints", status_, responseText_, headers_, null);
+                            throw new SwaggerException("Unauthorized", status_, responseText_, headers_, null);
                         }
                         else
                         if (status_ == 403)
                         {
                             string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("You do not have access to this endpoint", status_, responseText_, headers_, null);
+                            throw new SwaggerException("Forbidden", status_, responseText_, headers_, null);
                         }
                         else
                         {
@@ -614,7 +644,7 @@ namespace Rusty.Template.Tests.Integration
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// Get user by username
+        /// Get user by username (Auth roles: Admin)
         /// </summary>
         /// <remarks>
         /// Returns user
@@ -660,6 +690,16 @@ namespace Rusty.Template.Tests.Integration
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<ApiExceptionResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new SwaggerException<ApiExceptionResponse>("Internal server error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
                         if (status_ == 200)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<UserDto>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -673,13 +713,13 @@ namespace Rusty.Template.Tests.Integration
                         if (status_ == 401)
                         {
                             string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("You need to authorize with jwt token before accessing secure endpoints", status_, responseText_, headers_, null);
+                            throw new SwaggerException("Unauthorized", status_, responseText_, headers_, null);
                         }
                         else
                         if (status_ == 403)
                         {
                             string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("You do not have access to this endpoint", status_, responseText_, headers_, null);
+                            throw new SwaggerException("Forbidden", status_, responseText_, headers_, null);
                         }
                         else
                         {
@@ -703,14 +743,14 @@ namespace Rusty.Template.Tests.Integration
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// Get user to update by id
+        /// Get user to update by id (Auth roles: Admin)
         /// </summary>
         /// <remarks>
         /// Returns user dto for update
         /// </remarks>
         /// <returns>User retrieved successfully</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<UserUpdateDto> GetUserToUpdateByIdAsync(object id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task<UserUpdateDto> GetUserToUpdateByIdAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (id == null)
                 throw new System.ArgumentNullException("id");
@@ -749,6 +789,16 @@ namespace Rusty.Template.Tests.Integration
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<ApiExceptionResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new SwaggerException<ApiExceptionResponse>("Internal server error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
                         if (status_ == 200)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<UserUpdateDto>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -762,13 +812,13 @@ namespace Rusty.Template.Tests.Integration
                         if (status_ == 401)
                         {
                             string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("You need to authorize with jwt token before accessing secure endpoints", status_, responseText_, headers_, null);
+                            throw new SwaggerException("Unauthorized", status_, responseText_, headers_, null);
                         }
                         else
                         if (status_ == 403)
                         {
                             string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("You do not have access to this endpoint", status_, responseText_, headers_, null);
+                            throw new SwaggerException("Forbidden", status_, responseText_, headers_, null);
                         }
                         else
                         {
@@ -792,7 +842,7 @@ namespace Rusty.Template.Tests.Integration
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// Get user to update by username
+        /// Get user to update by username (Auth roles: Admin)
         /// </summary>
         /// <remarks>
         /// Returns user dto for update
@@ -838,6 +888,16 @@ namespace Rusty.Template.Tests.Integration
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<ApiExceptionResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new SwaggerException<ApiExceptionResponse>("Internal server error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
                         if (status_ == 200)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<UserUpdateDto>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -851,13 +911,13 @@ namespace Rusty.Template.Tests.Integration
                         if (status_ == 401)
                         {
                             string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("You need to authorize with jwt token before accessing secure endpoints", status_, responseText_, headers_, null);
+                            throw new SwaggerException("Unauthorized", status_, responseText_, headers_, null);
                         }
                         else
                         if (status_ == 403)
                         {
                             string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("You do not have access to this endpoint", status_, responseText_, headers_, null);
+                            throw new SwaggerException("Forbidden", status_, responseText_, headers_, null);
                         }
                         else
                         {
@@ -881,7 +941,7 @@ namespace Rusty.Template.Tests.Integration
 
         /// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
         /// <summary>
-        /// Get paged users
+        /// Get paged users (Auth roles: Admin)
         /// </summary>
         /// <remarks>
         /// Returns paged list
@@ -927,6 +987,16 @@ namespace Rusty.Template.Tests.Integration
                         ProcessResponse(client_, response_);
 
                         var status_ = (int)response_.StatusCode;
+                        if (status_ == 500)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<ApiExceptionResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new SwaggerException<ApiExceptionResponse>("Internal server error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
                         if (status_ == 200)
                         {
                             var objectResponse_ = await ReadObjectResponseAsync<UserDtoPagedResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
@@ -937,16 +1007,26 @@ namespace Rusty.Template.Tests.Integration
                             return objectResponse_.Object;
                         }
                         else
+                        if (status_ == 400)
+                        {
+                            var objectResponse_ = await ReadObjectResponseAsync<ApiExceptionResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            throw new SwaggerException<ApiExceptionResponse>("Model validation exception", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+                        }
+                        else
                         if (status_ == 401)
                         {
                             string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("You need to authorize with jwt token before accessing secure endpoints", status_, responseText_, headers_, null);
+                            throw new SwaggerException("Unauthorized", status_, responseText_, headers_, null);
                         }
                         else
                         if (status_ == 403)
                         {
                             string responseText_ = ( response_.Content == null ) ? string.Empty : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-                            throw new SwaggerException("You do not have access to this endpoint", status_, responseText_, headers_, null);
+                            throw new SwaggerException("Forbidden", status_, responseText_, headers_, null);
                         }
                         else
                         {

@@ -9,9 +9,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Rusty.Template.Application.Repositories;
+using Rusty.Template.Contracts.Dtos.User;
 using Rusty.Template.Contracts.Requests.Authentication;
 using Rusty.Template.Contracts.Responses;
 using Rusty.Template.Presentation.Options;
+using Swashbuckle.AspNetCore.Annotations;
 
 #endregion
 
@@ -29,6 +31,15 @@ public class AuthenticationController : BaseApiController
 		_authOptions = authOptions.Value;
 	}
 
+	[SwaggerOperation(
+		Summary = "Login",
+		Description = "Logins to retrieve jwt token"
+	)]
+	[SwaggerResponse(
+		StatusCodes.Status200OK,
+		"Token retrieved successfully",
+		typeof(UserDto)
+	)]
 	[HttpPost("login")]
 	public async Task<IActionResult> Login(LoginRequest request, CancellationToken cancellationToken)
 	{
