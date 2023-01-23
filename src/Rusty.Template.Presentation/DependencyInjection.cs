@@ -40,15 +40,6 @@ internal static class DependencyInjection
 			lc.ReadFrom.Configuration(ctx.Configuration));
 	}
 
-
-	public static void AddConfigurations(this ConfigurationManager configuration)
-	{
-		configuration.AddJsonFile("appsettings.json", false, true);
-		configuration.AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json",
-			false, true);
-		configuration.AddEnvironmentVariables();
-	}
-
 	public static void AddConfigurations(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.AddOptions();

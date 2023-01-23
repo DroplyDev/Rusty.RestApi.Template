@@ -9,7 +9,6 @@ using Serilog;
 #endregion
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Configuration.AddConfigurations();
 
 // Add logging
 builder.Host.AddSerilog();
