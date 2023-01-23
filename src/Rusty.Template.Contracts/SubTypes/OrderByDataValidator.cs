@@ -6,7 +6,7 @@ using FluentValidation;
 
 namespace Rusty.Template.Contracts.SubTypes;
 
-public class OrderByDataValidator : AbstractValidator<OrderByData>
+public sealed class OrderByDataValidator : AbstractValidator<OrderByData>
 {
 	public OrderByDataValidator()
 	{

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Rusty.Template.Infrastructure.Attributes;
 
-public class HttpPutIdCompareAttribute : ActionFilterAttribute
+public sealed class HttpPutIdCompareAttribute : ActionFilterAttribute
 {
 	private readonly string _dtoPropertyName;
 	private readonly string _queryPropertyName;

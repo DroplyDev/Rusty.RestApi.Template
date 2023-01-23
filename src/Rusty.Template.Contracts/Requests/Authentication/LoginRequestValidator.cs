@@ -6,7 +6,7 @@ using FluentValidation;
 
 namespace Rusty.Template.Contracts.Requests.Authentication;
 
-public class LoginRequestValidator : AbstractValidator<LoginRequest>
+public sealed class LoginRequestValidator : AbstractValidator<LoginRequest>
 {
 	public LoginRequestValidator()
 	{

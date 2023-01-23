@@ -1,6 +1,6 @@
 namespace Rusty.Template.Presentation.Options;
 
-public class AuthOptions
+public sealed record AuthOptions
 {
 	public string Issuer { get; init; } = null!;
 	public bool ValidateIssuer { get; init; }

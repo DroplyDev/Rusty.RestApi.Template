@@ -6,7 +6,7 @@ using FluentValidation;
 
 namespace Rusty.Template.Contracts.Dtos.User;
 
-public class UserUpdateDtoValidator : AbstractValidator<UserUpdateDto>
+public sealed class UserUpdateDtoValidator : AbstractValidator<UserUpdateDto>
 {
 	public UserUpdateDtoValidator()
 	{

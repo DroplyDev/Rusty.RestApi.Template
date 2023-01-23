@@ -6,7 +6,7 @@ using Swashbuckle.AspNetCore.Filters;
 
 namespace Rusty.Template.Contracts.Requests.Authentication;
 
-public class LoginRequestExample : IExamplesProvider<LoginRequest>
+public sealed class LoginRequestExample : IExamplesProvider<LoginRequest>
 {
 	public LoginRequest GetExamples()
 	{

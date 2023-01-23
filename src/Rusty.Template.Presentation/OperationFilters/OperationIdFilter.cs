@@ -7,7 +7,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Rusty.Template.Presentation.OperationFilters;
 
-public class OperationIdFilter : IOperationFilter
+public sealed class OperationIdFilter : IOperationFilter
 {
 	public void Apply(OpenApiOperation operation, OperationFilterContext context)
 	{

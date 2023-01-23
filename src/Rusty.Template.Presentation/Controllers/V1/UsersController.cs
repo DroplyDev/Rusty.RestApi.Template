@@ -18,7 +18,7 @@ namespace Rusty.Template.Presentation.Controllers.V1;
 
 [ApiVersion("1.0", Deprecated = false)]
 [AuthorizeRoles("Admin")]
-public class UsersController : BaseApiController
+public sealed class UsersController : BaseApiController
 {
 	private readonly IUserRepo _userRepo;
 
@@ -39,6 +39,7 @@ public class UsersController : BaseApiController
 	[HttpGet]
 	public async Task<IActionResult> GetAllUsersAsync(CancellationToken cancellationToken)
 	{
+		
 		return Ok(await _userRepo.GetAll().ProjectToType<UserDto>().ToListAsync(cancellationToken));
 	}
 

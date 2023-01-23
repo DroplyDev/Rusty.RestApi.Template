@@ -8,7 +8,7 @@ using Rusty.Template.Infrastructure.Database;
 
 namespace Rusty.Template.Infrastructure.Repositories.Specific;
 
-public class GroupRepo : AppDbRepo<Group>, IGroupRepo
+public sealed class GroupRepo : AppDbRepo<Group>, IGroupRepo
 {
 	public GroupRepo(AppDbContext context) : base(context)
 	{

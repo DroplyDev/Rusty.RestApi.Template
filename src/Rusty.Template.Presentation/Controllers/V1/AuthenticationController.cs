@@ -20,7 +20,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace Rusty.Template.Presentation.Controllers.V1;
 
 [ApiVersion("1.0", Deprecated = false)]
-public class AuthenticationController : BaseApiController
+public sealed class AuthenticationController : BaseApiController
 {
 	private readonly AuthOptions _authOptions;
 	private readonly IUserRepo _userRepo;

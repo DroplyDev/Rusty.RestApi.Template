@@ -7,7 +7,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Rusty.Template.Presentation.SchemaFilters;
 
-public class DictionaryTKeyEnumTValueSchemaFilter : ISchemaFilter
+internal sealed class DictionaryTKeyEnumTValueSchemaFilter : ISchemaFilter
 {
 	public void Apply(OpenApiSchema schema, SchemaFilterContext context)
 	{

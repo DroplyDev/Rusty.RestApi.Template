@@ -8,7 +8,7 @@ using Rusty.Template.Infrastructure.Database;
 
 namespace Rusty.Template.Infrastructure.Repositories.Specific;
 
-public class UserRepo : AppDbRepo<User>, IUserRepo
+public sealed class UserRepo : AppDbRepo<User>, IUserRepo
 {
 	public UserRepo(AppDbContext context) : base(context)
 	{

@@ -14,33 +14,8 @@ public static class FilterExtensions
 												string mediaType = "application/json")
 	{
 		var responseType = typeof(TContent);
-		// var responseProperties = responseType.GetProperties();
-		// var responseSchema = new OpenApiSchema
-		// {
-		// 	Reference = new OpenApiReference()
-		// 	{
-		// 		Id = responseType.Name,
-		// 		Type = ReferenceType.Schema
-		// 	},
-		// 	Type = "object",
-		// 	Properties = new Dictionary<string, OpenApiSchema>()
-		// };
-		// foreach (var property in responseProperties)
-		// {
-		// 	responseSchema.Properties.Add(property.Name, new OpenApiSchema
-		// 		{
-		// 			Type =SimpleTypeParser(property.PropertyType.Name)
-		// 		}
-		// 	);
-		// }
-		//
-		// context.SchemaRepository.Schemas.TryAdd(responseType.Name, responseSchema);
-
 		if (!context.SchemaRepository.Schemas.TryGetValue(responseType.Name, out var responseSchema))
-		{
 			responseSchema = context.SchemaGenerator.GenerateSchema(responseType, context.SchemaRepository);
-			// responseSchema = context.SchemaRepository.Schemas[responseType.Name];
-		}
 
 		responseSchema.Reference = new OpenApiReference
 		{
@@ -62,29 +37,5 @@ public static class FilterExtensions
 			{
 				Description = description
 			});
-	}
-
-	private static string SimpleTypeParser(string type)
-	{
-		switch (type.ToLower())
-		{
-			case "int16":
-			case "uint16":
-			case "int32":
-			case "uint32":
-			case "int64":
-			case "uint64":
-				return "integer";
-			case "single":
-			case "float":
-			case "double":
-				return "number";
-			case "char":
-				return "string";
-			case "boolean":
-				return "boolean";
-		}
-
-		return "object";
 	}
 }

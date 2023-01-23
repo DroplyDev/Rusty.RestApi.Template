@@ -240,10 +240,8 @@ internal static class DependencyInjection
 			var contextOptions = options.UseSqlServer(efConStr)
 				.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 			if (env.IsDevelopment())
-			{
-			}
+				contextOptions.EnableSensitiveDataLogging().EnableDetailedErrors();
 
-			contextOptions.EnableSensitiveDataLogging().EnableDetailedErrors();
 		});
 	}
 

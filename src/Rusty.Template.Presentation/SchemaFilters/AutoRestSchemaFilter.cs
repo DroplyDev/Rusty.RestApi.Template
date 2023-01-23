@@ -8,7 +8,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Rusty.Template.Presentation.SchemaFilters;
 
-public class AutoRestSchemaFilter : ISchemaFilter
+public sealed class AutoRestSchemaFilter : ISchemaFilter
 {
 	public void Apply(OpenApiSchema schema, SchemaFilterContext context)
 	{

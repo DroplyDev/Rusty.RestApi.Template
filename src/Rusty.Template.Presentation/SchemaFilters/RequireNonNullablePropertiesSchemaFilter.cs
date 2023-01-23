@@ -7,7 +7,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Rusty.Template.Presentation.SchemaFilters;
 
-public class RequireNonNullablePropertiesSchemaFilter : ISchemaFilter
+public sealed class RequireNonNullablePropertiesSchemaFilter : ISchemaFilter
 {
 	public void Apply(OpenApiSchema model, SchemaFilterContext context)
 	{

@@ -8,7 +8,7 @@ using Rusty.Template.Infrastructure.Database;
 
 namespace Rusty.Template.Infrastructure.Repositories.Specific;
 
-public class RoleRepo : AppDbRepo<Role>, IRoleRepo
+public sealed class RoleRepo : AppDbRepo<Role>, IRoleRepo
 {
 	public RoleRepo(AppDbContext context) : base(context)
 	{
