@@ -23,7 +23,7 @@ public abstract class BaseTests : IClassFixture<WebApiFactory>
 	protected async Task InitUserDataAsync()
 	{
 		//Set the randomizer seed if you wish to generate repeatable data sets.
-		Randomizer.Seed = new Random(8675309);
+		Randomizer.Seed = new Random();
 		var testData = new Faker<User>()
 			.RuleFor(o => o.Email, f => f.Person.Email)
 			.RuleFor(o => o.UserName, f => f.Person.UserName)

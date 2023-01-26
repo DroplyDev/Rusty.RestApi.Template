@@ -12,6 +12,8 @@ public class Group
     /// </summary>
     public string Name { get; set; } = null!;
 
+	public DateTime CreateDate { get; set; }
+
     /// <summary>
     ///     One to many navigation for User table
     /// </summary>

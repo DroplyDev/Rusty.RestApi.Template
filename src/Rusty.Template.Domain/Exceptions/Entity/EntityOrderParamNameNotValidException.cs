@@ -16,7 +16,7 @@ public class EntityOrderParamNameNotValidException<TEntity> : BaseEntityExceptio
 
 
 	public EntityOrderParamNameNotValidException(string field) : base(
-		$@"Order by procedure failed. Field: {field} was not found in in response dto", 400, LogEventLevel.Warning)
+		$@"You can not sort by {field}. It does not exist in response dto", 400, LogEventLevel.Warning)
 	{
 		Field = field;
 	}

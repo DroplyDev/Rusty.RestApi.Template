@@ -52,4 +52,10 @@ public static class PaginationExtensions
 	{
 		return query.Skip(skipItems).Take(takeItems);
 	}
+
+	public static IQueryable<TEntity> Paginate<TEntity>(
+		this IQueryable<TEntity> query, PageData? pageData)
+	{
+		return pageData is null ? query : query.Skip(pageData.Offset).Take(pageData.Limit);
+	}
 }

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Rusty.Template.Application.Repositories;
 using Rusty.Template.Contracts.Dtos.User;
-using Rusty.Template.Contracts.Requests;
+using Rusty.Template.Contracts.Requests.Pagination;
 using Rusty.Template.Contracts.Responses;
 using Rusty.Template.Domain;
 using Rusty.Template.Domain.Exceptions.Entity;
@@ -17,7 +17,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace Rusty.Template.Presentation.Controllers.V1;
 
 [ApiVersion("1.0", Deprecated = false)]
-[AuthorizeRoles("Admin")]
+// [AuthorizeRoles("Admin")]
 public sealed class UsersController : BaseApiController
 {
 	private readonly IUserRepo _userRepo;
@@ -39,7 +39,6 @@ public sealed class UsersController : BaseApiController
 	[HttpGet]
 	public async Task<IActionResult> GetAllUsersAsync(CancellationToken cancellationToken)
 	{
-		
 		return Ok(await _userRepo.GetAll().ProjectToType<UserDto>().ToListAsync(cancellationToken));
 	}
 
@@ -53,7 +52,7 @@ public sealed class UsersController : BaseApiController
 		typeof(PagedResponse<UserDto>)
 	)]
 	[HttpPost("paged")]
-	public async Task<IActionResult> GetPagedUsersAsync(OrderedPagedRequest request,
+	public async Task<IActionResult> GetPagedUsersAsync(FilterOrderPageRequest request,
 														CancellationToken cancellationToken)
 	{
 		return Ok(await _userRepo.PaginateAsync<UserDto>(request, cancellationToken));
@@ -132,7 +131,8 @@ public sealed class UsersController : BaseApiController
 		Description = "Creates new user"
 	)]
 	[SwaggerResponse(
-		StatusCodes.Status201Created, "User created successfully"
+		StatusCodes.Status201Created, "User created successfully",
+		typeof(UserDto)
 	)]
 	[HttpPost]
 	public async Task<IActionResult> CreateUserAsync(UserCreateDto dto)

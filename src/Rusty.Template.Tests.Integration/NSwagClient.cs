@@ -53,7 +53,7 @@ namespace Rusty.Template.Tests.Integration
         /// </remarks>
         /// <returns>Token retrieved successfully</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<UserDto> LoginAsync(LoginRequest body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task<SwaggerResponse<UserDto>> LoginAsync(LoginRequest body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append("api/v1/authentication/login");
@@ -109,7 +109,7 @@ namespace Rusty.Template.Tests.Integration
                             {
                                 throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            return objectResponse_.Object;
+                            return new SwaggerResponse<UserDto>(status_, headers_, objectResponse_.Object);
                         }
                         else
                         if (status_ == 400)
@@ -150,7 +150,7 @@ namespace Rusty.Template.Tests.Integration
         /// </remarks>
         /// <returns>User deleted successfully</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task DeleteUserAsync(string id, object body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task<SwaggerResponse> DeleteUserAsync(string id, object body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (id == null)
                 throw new System.ArgumentNullException("id");
@@ -204,7 +204,7 @@ namespace Rusty.Template.Tests.Integration
                         else
                         if (status_ == 204)
                         {
-                            return;
+                            return new SwaggerResponse(status_, headers_);
                         }
                         else
                         if (status_ == 401)
@@ -247,7 +247,7 @@ namespace Rusty.Template.Tests.Integration
         /// </remarks>
         /// <returns>User retrieved successfully</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<UserDto> GetUserByIdAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task<SwaggerResponse<UserDto>> GetUserByIdAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (id == null)
                 throw new System.ArgumentNullException("id");
@@ -303,7 +303,7 @@ namespace Rusty.Template.Tests.Integration
                             {
                                 throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            return objectResponse_.Object;
+                            return new SwaggerResponse<UserDto>(status_, headers_, objectResponse_.Object);
                         }
                         else
                         if (status_ == 401)
@@ -346,7 +346,7 @@ namespace Rusty.Template.Tests.Integration
         /// </remarks>
         /// <returns>User updated successfully</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task UpdateUserAsync(int id, UserUpdateDto body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task<SwaggerResponse> UpdateUserAsync(int id, UserUpdateDto body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (id == null)
                 throw new System.ArgumentNullException("id");
@@ -400,7 +400,7 @@ namespace Rusty.Template.Tests.Integration
                         else
                         if (status_ == 204)
                         {
-                            return;
+                            return new SwaggerResponse(status_, headers_);
                         }
                         else
                         if (status_ == 400)
@@ -453,7 +453,7 @@ namespace Rusty.Template.Tests.Integration
         /// </remarks>
         /// <returns>Users retrieved successfully</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<System.Collections.Generic.ICollection<UserDto>> GetAllUsersAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task<SwaggerResponse<System.Collections.Generic.ICollection<UserDto>>> GetAllUsersAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append("api/v1/users");
@@ -505,7 +505,7 @@ namespace Rusty.Template.Tests.Integration
                             {
                                 throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            return objectResponse_.Object;
+                            return new SwaggerResponse<System.Collections.Generic.ICollection<UserDto>>(status_, headers_, objectResponse_.Object);
                         }
                         else
                         if (status_ == 401)
@@ -548,7 +548,7 @@ namespace Rusty.Template.Tests.Integration
         /// </remarks>
         /// <returns>User created successfully</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task CreateUserAsync(UserCreateDto body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task<SwaggerResponse<UserDto>> CreateUserAsync(UserCreateDto body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append("api/v1/users");
@@ -564,6 +564,7 @@ namespace Rusty.Template.Tests.Integration
                     content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
                     request_.Content = content_;
                     request_.Method = new System.Net.Http.HttpMethod("POST");
+                    request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
 
                     PrepareRequest(client_, request_, urlBuilder_);
 
@@ -598,7 +599,12 @@ namespace Rusty.Template.Tests.Integration
                         else
                         if (status_ == 201)
                         {
-                            return;
+                            var objectResponse_ = await ReadObjectResponseAsync<UserDto>(response_, headers_, cancellationToken).ConfigureAwait(false);
+                            if (objectResponse_.Object == null)
+                            {
+                                throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+                            }
+                            return new SwaggerResponse<UserDto>(status_, headers_, objectResponse_.Object);
                         }
                         else
                         if (status_ == 400)
@@ -651,7 +657,7 @@ namespace Rusty.Template.Tests.Integration
         /// </remarks>
         /// <returns>User retrieved successfully</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<UserDto> GetUserByUsernameAsync(string username, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task<SwaggerResponse<UserDto>> GetUserByUsernameAsync(string username, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (username == null)
                 throw new System.ArgumentNullException("username");
@@ -707,7 +713,7 @@ namespace Rusty.Template.Tests.Integration
                             {
                                 throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            return objectResponse_.Object;
+                            return new SwaggerResponse<UserDto>(status_, headers_, objectResponse_.Object);
                         }
                         else
                         if (status_ == 401)
@@ -750,7 +756,7 @@ namespace Rusty.Template.Tests.Integration
         /// </remarks>
         /// <returns>User retrieved successfully</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<UserUpdateDto> GetUserToUpdateByIdAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task<SwaggerResponse<UserUpdateDto>> GetUserToUpdateByIdAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (id == null)
                 throw new System.ArgumentNullException("id");
@@ -806,7 +812,7 @@ namespace Rusty.Template.Tests.Integration
                             {
                                 throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            return objectResponse_.Object;
+                            return new SwaggerResponse<UserUpdateDto>(status_, headers_, objectResponse_.Object);
                         }
                         else
                         if (status_ == 401)
@@ -849,7 +855,7 @@ namespace Rusty.Template.Tests.Integration
         /// </remarks>
         /// <returns>User retrieved successfully</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<UserUpdateDto> GetUserToUpdateByNameAsync(string username, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task<SwaggerResponse<UserUpdateDto>> GetUserToUpdateByNameAsync(string username, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             if (username == null)
                 throw new System.ArgumentNullException("username");
@@ -905,7 +911,7 @@ namespace Rusty.Template.Tests.Integration
                             {
                                 throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            return objectResponse_.Object;
+                            return new SwaggerResponse<UserUpdateDto>(status_, headers_, objectResponse_.Object);
                         }
                         else
                         if (status_ == 401)
@@ -948,7 +954,7 @@ namespace Rusty.Template.Tests.Integration
         /// </remarks>
         /// <returns>Users retrieved successfully</returns>
         /// <exception cref="SwaggerException">A server side error occurred.</exception>
-        public virtual async System.Threading.Tasks.Task<UserDtoPagedResponse> GetPagedUsersAsync(OrderedPagedRequest body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+        public virtual async System.Threading.Tasks.Task<SwaggerResponse<UserDtoPagedResponse>> GetPagedUsersAsync(OrderedPagedRequest body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
         {
             var urlBuilder_ = new System.Text.StringBuilder();
             urlBuilder_.Append("api/v1/users/paged");
@@ -1004,7 +1010,7 @@ namespace Rusty.Template.Tests.Integration
                             {
                                 throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
                             }
-                            return objectResponse_.Object;
+                            return new SwaggerResponse<UserDtoPagedResponse>(status_, headers_, objectResponse_.Object);
                         }
                         else
                         if (status_ == 400)
@@ -1150,6 +1156,32 @@ namespace Rusty.Template.Tests.Integration
 
     
 
+
+    [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class SwaggerResponse
+    {
+        public int StatusCode { get; private set; }
+
+        public System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> Headers { get; private set; }
+
+        public SwaggerResponse(int statusCode, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers)
+        {
+            StatusCode = statusCode;
+            Headers = headers;
+        }
+    }
+
+    [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]
+    public partial class SwaggerResponse<TResult> : SwaggerResponse
+    {
+        public TResult Result { get; private set; }
+
+        public SwaggerResponse(int statusCode, System.Collections.Generic.IReadOnlyDictionary<string, System.Collections.Generic.IEnumerable<string>> headers, TResult result)
+            : base(statusCode, headers)
+        {
+            Result = result;
+        }
+    }
 
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.18.2.0 (NJsonSchema v10.8.0.0 (Newtonsoft.Json v13.0.0.0))")]

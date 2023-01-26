@@ -31,6 +31,9 @@ public partial class AppDbContext : DbContext
 			entity.HasIndex(e => e.Name, "Groups_Name_uindex").IsUnique();
 
 			entity.Property(e => e.Id).HasComment("Primary key id");
+			entity.Property(e => e.CreateDate)
+				.HasDefaultValueSql("(getutcdate())")
+				.HasColumnType("datetime");
 			entity.Property(e => e.Name)
 				.HasMaxLength(32)
 				.IsUnicode(false)
@@ -76,6 +79,9 @@ public partial class AppDbContext : DbContext
 			entity.HasIndex(e => e.UserName, "Users_Username_uindex").IsUnique();
 
 			entity.Property(e => e.Id).HasComment("Primary key id");
+			entity.Property(e => e.CreateDate)
+				.HasDefaultValueSql("(getutcdate())")
+				.HasColumnType("datetime");
 			entity.Property(e => e.Email)
 				.HasMaxLength(255)
 				.HasComment("User email");
@@ -85,6 +91,7 @@ public partial class AppDbContext : DbContext
 				.HasMaxLength(32)
 				.IsUnicode(false)
 				.HasComment("User strong password");
+			entity.Property(e => e.UpdateDate).HasColumnType("datetime");
 			entity.Property(e => e.UserName)
 				.HasMaxLength(32)
 				.IsUnicode(false)

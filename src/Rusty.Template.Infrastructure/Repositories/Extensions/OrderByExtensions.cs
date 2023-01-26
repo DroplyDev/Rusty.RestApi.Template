@@ -16,8 +16,7 @@ public static class OrderByExtensions
 		var entityType = typeof(TEntity);
 		//Create x=>x.PropName
 		var propertyInfo = entityType.GetProperty(propertyName)
-						   ?? throw new EntityOrderParamNameNotValidException<TEntity>(
-							   $@"You can not sort by {propertyName}. It does not exist in response dto");
+						   ?? throw new EntityOrderParamNameNotValidException<TEntity>(propertyName);
 
 		var arg = Expression.Parameter(entityType, "x");
 		var property = Expression.Property(arg, propertyName);
@@ -55,10 +54,30 @@ public static class OrderByExtensions
 		return query.OrderByWithDirection(orderByData.OrderBy, orderByData.OrderDirection);
 	}
 
+	public static IQueryable<TEntity> OrderByWithDirectionNullable<TEntity>(
+		this IQueryable<TEntity> query, OrderByData? orderByData) where TEntity : class
+	{
+		return orderByData is null
+			? query
+			: query.OrderByWithDirection(orderByData.OrderBy, orderByData.OrderDirection);
+	}
 
 	public static IOrderedQueryable<TEntity> OrderByWithDirection<TEntity>(
 		this IQueryable<TEntity> query, Expression<Func<TEntity, object>> keySelector, OrderDirection orderDirection)
 	{
 		return orderDirection == OrderDirection.Asc ? query.OrderBy(keySelector) : query.OrderByDescending(keySelector);
+	}
+
+	public static IOrderedQueryable<TEntity> OrderBy<TEntity>(
+		this IQueryable<TEntity> query, string orderBy) where TEntity : class
+	{
+		return query.OrderByWithDirection(orderBy, OrderDirection.Asc);
+	}
+
+
+	public static IOrderedQueryable<TEntity> OrderByDescending<TEntity>(
+		this IQueryable<TEntity> query, string orderBy) where TEntity : class
+	{
+		return query.OrderByWithDirection(orderBy, OrderDirection.Desc);
 	}
 }

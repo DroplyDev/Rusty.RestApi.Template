@@ -39,9 +39,6 @@ public partial class AppDbContext
 		return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
 	}
 
-	// ReSharper disable once CognitiveComplexity
-
-
 	private void UpdateDefaultActionStatuses()
 	{
 		foreach (var entry in ChangeTracker.Entries())
@@ -49,15 +46,11 @@ public partial class AppDbContext
 			var entryPropertyNames = entry.CurrentValues.Properties.Select(item => item.Name).ToList();
 			switch (entry.State)
 			{
-				case EntityState.Added:
-					if (entryPropertyNames.Contains("IsDeleted"))
-						entry.CurrentValues["IsDeleted"] = false;
-					if (entryPropertyNames.Contains("CreateDate"))
-						entry.CurrentValues["CreateDate"] = DateTime.Now;
+				case EntityState.Added when entryPropertyNames.Contains("CreateDate"):
+					entry.CurrentValues["CreateDate"] = DateTime.Now;
 					break;
-				case EntityState.Modified:
-					if (entryPropertyNames.Contains("UpdateDate"))
-						entry.CurrentValues["UpdateDate"] = DateTime.Now;
+				case EntityState.Modified when entryPropertyNames.Contains("UpdateDate"):
+					entry.CurrentValues["UpdateDate"] = DateTime.Now;
 					break;
 				case EntityState.Deleted:
 					if (entryPropertyNames.Contains("IsDeleted"))

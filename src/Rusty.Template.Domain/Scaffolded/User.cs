@@ -27,6 +27,10 @@ public class User
     /// </summary>
     public int? GroupId { get; set; }
 
+	public DateTime CreateDate { get; set; }
+
+	public DateTime? UpdateDate { get; set; }
+
     /// <summary>
     ///     Prop that shows if user is deleted
     /// </summary>

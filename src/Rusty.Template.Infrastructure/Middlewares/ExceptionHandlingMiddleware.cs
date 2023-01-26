@@ -47,7 +47,7 @@ public sealed class ExceptionHandlingMiddleware
 	{
 		context.Response.StatusCode = exception.StatusCode;
 		context.Response.ContentType = ContentType;
-		return context.Response.WriteAsJsonAsync(new ApiExceptionResponse(exception.Message,
+		return context.Response.WriteAsJsonAsync(new ApiExceptionResponse(exception.Description,
 			context.Response.StatusCode));
 	}
 

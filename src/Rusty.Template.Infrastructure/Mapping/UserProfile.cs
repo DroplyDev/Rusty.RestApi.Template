@@ -12,6 +12,6 @@ public sealed class UserProfile : IRegister
 {
 	public void Register(TypeAdapterConfig config)
 	{
-		config.NewConfig<User, UserDto>().TwoWays();
+		config.NewConfig<User, UserDto>().Map(dest => dest.Username, src => src.UserName).TwoWays();
 	}
 }

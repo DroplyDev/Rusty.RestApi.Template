@@ -1,6 +1,5 @@
 #region
 
-using System.Collections;
 using Serilog.Events;
 
 #endregion
@@ -33,17 +32,5 @@ public class ApiException : Exception
 	public LogEventLevel GetLevel()
 	{
 		return _logLevel;
-	}
-	public virtual IDictionary GetLogData()
-	{
-		var data = Data;
-		data.Remove("Identifier");
-		data.Remove("TargetSite");
-		data.Remove("HelpLink");
-		data.Remove("HResult");
-		data.Remove("StackTrace");
-		data.Remove("Source");
-
-		return data;
 	}
 }

@@ -208,7 +208,7 @@ internal static class DependencyInjection
 				$"{apiDesc.ActionDescriptor.RouteValues["controller"]}_{apiDesc.HttpMethod}");
 
 			options.UseInlineDefinitionsForEnums();
-			
+
 			options.SchemaFilter<RequireNonNullablePropertiesSchemaFilter>();
 			options.SchemaFilter<AutoRestSchemaFilter>();
 			options.SchemaFilter<DictionaryTKeyEnumTValueSchemaFilter>();
@@ -241,7 +241,6 @@ internal static class DependencyInjection
 				.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 			if (env.IsDevelopment())
 				contextOptions.EnableSensitiveDataLogging().EnableDetailedErrors();
-
 		});
 	}
 

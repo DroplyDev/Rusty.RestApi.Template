@@ -10,11 +10,11 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace Rusty.Template.Contracts.Requests;
 
 [SwaggerSchema("Request with order by and pagination")]
-public sealed class OrderedPagedRequest
+public class OrderedPagedRequest
 {
 	[SwaggerSchema("Page data class")]
-	public PageData? PageData { get; set; }
+	public PageData? PageData { get; init; }
 
 	[SwaggerSchema("Order by data class")]
-	public OrderByData OrderByData { get; set; } = null!;
+	public OrderByData? OrderByData { get; init; }
 }

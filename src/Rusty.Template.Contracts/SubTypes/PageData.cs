@@ -15,4 +15,3 @@ public sealed class PageData
 	[SwaggerSchema("Item limit")]
 	public int Limit { get; set; }
 }
-

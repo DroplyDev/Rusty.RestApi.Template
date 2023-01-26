@@ -1,5 +1,6 @@
 #region
 
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore.Query;
 using Rusty.Template.Contracts.Requests;
 using Rusty.Template.Contracts.Responses;
@@ -20,6 +21,11 @@ public partial interface IBaseRepo<TEntity> where TEntity : class
 														CancellationToken cancellationToken,
 														Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>
 															? includes = null) where TResult : class;
+
+	Task<PagedResponse<TResult>> PaginateAsync<TResult>(
+		OrderedPagedRequest request, Expression<Func<TEntity, bool>> expression,
+		CancellationToken cancellationToken,
+		Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null) where TResult : class;
 
 	#endregion
 }

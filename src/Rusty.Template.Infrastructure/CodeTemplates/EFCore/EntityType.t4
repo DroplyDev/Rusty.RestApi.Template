@@ -97,19 +97,39 @@ public partial class <#= EntityType.Name #>
         }
 
         usings.AddRange(code.GetRequiredUsings(property.ClrType));
-
         var needsNullable = Options.UseNullableReferenceTypes && property.IsNullable && !property.ClrType.IsValueType;
         var needsInitializer = Options.UseNullableReferenceTypes && !property.IsNullable && !property.ClrType.IsValueType;
+
 #>
     public <#= code.Reference(property.ClrType) #><#= needsNullable ? "?" : "" #> <#= property.Name #> { get; set; }<#= needsInitializer ? " = null!;" : "" #>
 <#
-        firstProperty = false;
+            firstProperty = false;
+        
     }
 
     foreach (var navigation in EntityType.GetNavigations())
     {
         WriteLine("");
-
+        var targetType = navigation.TargetEntityType.Name;
+        var isOneToOne = navigation.ForeignKey.IsUnique;
+        if (navigation.IsCollection)
+        {
+#>
+    /// <summary>
+    ///     One to many navigation for <#= targetType #> table
+    /// </summary>
+<#
+        }
+        else
+        {
+       
+#>
+    /// <summary>
+    ///     <#= isOneToOne ? "One to one" : "Many to one" #> navigation for <#= targetType #> table
+    /// </summary>
+<#
+        }
+        
         if (Options.UseDataAnnotations)
         {
             foreach (var dataAnnotation in navigation.GetDataAnnotations(annotationCodeGenerator))
@@ -120,26 +140,19 @@ public partial class <#= EntityType.Name #>
             }
         }
 
-        var targetType = navigation.TargetEntityType.Name;
+       
         if (navigation.IsCollection)
         {
 #>
-    /// <summary>
-    ///     One to many navigation for <#= targetType #> table
-    /// </summary>
     public virtual ICollection<<#= targetType #>> <#= navigation.Name #> { get; } = new HashSet<<#= targetType #>>();
 <#
         }
         else
         {
-            var isOneToOne = navigation.ForeignKey.IsUnique;
             var needsNullable = Options.UseNullableReferenceTypes && !(navigation.ForeignKey.IsRequired && navigation.IsOnDependent);
             var needsInitializer = Options.UseNullableReferenceTypes && navigation.ForeignKey.IsRequired && navigation.IsOnDependent;
             
 #>
-    /// <summary>
-    ///     <#= isOneToOne ? "One to one" : "Many to one" #> navigation for <#= targetType #> table
-    /// </summary>
     public virtual <#= targetType #><#= needsNullable ? "?" : "" #> <#= navigation.Name #> { get; set; }<#= needsInitializer ? " = null!;" : "" #>
 <#
         }
@@ -148,6 +161,11 @@ public partial class <#= EntityType.Name #>
     foreach (var skipNavigation in EntityType.GetSkipNavigations())
     {
         WriteLine("");
+#>
+    /// <summary>
+    ///     Many to many navigation for <#= skipNavigation.TargetEntityType.Name #> table
+    /// </summary>
+<#
 
         if (Options.UseDataAnnotations)
         {
@@ -159,9 +177,6 @@ public partial class <#= EntityType.Name #>
             }
         }
 #>
-    /// <summary>
-    ///     Many to many navigation for <#= skipNavigation.TargetEntityType.Name #> table
-    /// </summary>
     public virtual ICollection<<#= skipNavigation.TargetEntityType.Name #>> <#= skipNavigation.Name #> { get; } = new HashSet<<#= skipNavigation.TargetEntityType.Name #>>();
 <#
     }

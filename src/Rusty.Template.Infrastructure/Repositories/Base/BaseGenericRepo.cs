@@ -175,8 +175,6 @@ public abstract partial class BaseGenericRepo<TContext, TEntity> : IBaseRepo<TEn
 	protected IQueryable<TEntity> IncludeIfNotNull(
 		Func<IQueryable<TEntity>, IQueryable<TEntity>>? includes = null)
 	{
-		if (includes is null)
-			return DbSet;
-		return includes(DbSet);
+		return includes is null ? DbSet : includes(DbSet);
 	}
 }

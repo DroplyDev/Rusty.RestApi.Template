@@ -15,4 +15,3 @@ public sealed class FilterData
 	[SwaggerSchema("End date filter")]
 	public DateTime DateTo { get; set; }
 }
-

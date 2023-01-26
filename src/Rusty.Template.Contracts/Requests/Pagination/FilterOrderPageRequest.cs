@@ -8,14 +8,8 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace Rusty.Template.Contracts.Requests.Pagination;
 
 [SwaggerSchema("Request with filter order by and pagination")]
-public sealed class FilterOrderPageRequest
+public sealed class FilterOrderPageRequest : OrderedPagedRequest
 {
 	[SwaggerSchema("Filter data class")]
-	public FilterData? FilterData { get; set; }
-
-	[SwaggerSchema("Page data class")]
-	public PageData? PageData { get; set; }
-
-	[SwaggerSchema("Order by data class")]
-	public OrderByData OrderByData { get; set; } = null!;
+	public FilterData? FilterData { get; init; }
 }
