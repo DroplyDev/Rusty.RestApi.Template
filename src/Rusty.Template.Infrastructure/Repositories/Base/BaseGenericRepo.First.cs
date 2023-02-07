@@ -17,7 +17,7 @@ public partial class BaseGenericRepo<TContext, TEntity> where TEntity : class wh
 	}
 
 	public virtual async Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> expression,
-															 CancellationToken cancellationToken = default,
+															CancellationToken cancellationToken = default,
 															Func<IQueryable<TEntity>,
 																IIncludableQueryable<TEntity, object>>? includes = null)
 	{
@@ -32,7 +32,7 @@ public partial class BaseGenericRepo<TContext, TEntity> where TEntity : class wh
 	}
 
 	public virtual async Task<TEntity> FirstAsync(Expression<Func<TEntity, bool>> expression,
-												   CancellationToken cancellationToken = default,
+												  CancellationToken cancellationToken = default,
 												  Func<IQueryable<TEntity>, IQueryable<TEntity>>? includes = null)
 	{
 		return await IncludeIfNotNull(includes).FirstAsync(expression, cancellationToken);

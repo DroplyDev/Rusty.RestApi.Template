@@ -2,7 +2,6 @@
 
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Rusty.Template.Application.Repositories;
 using Rusty.Template.Contracts.Dtos.User;
 using Rusty.Template.Contracts.Requests.Pagination;
@@ -38,7 +37,7 @@ public sealed class UsersController : BaseApiController
 	)]
 	[HttpPost("paged")]
 	public async Task<IActionResult> GetFilteredPagedUsersAsync(FilterOrderPageRequest request,
-														CancellationToken cancellationToken)
+																CancellationToken cancellationToken)
 	{
 		return Ok(await _userRepo.PaginateAsync<UserDto>(request, cancellationToken));
 	}
@@ -104,7 +103,8 @@ public sealed class UsersController : BaseApiController
 		typeof(UserUpdateDto)
 	)]
 	[HttpGet("update/{username}")]
-	public async Task<IActionResult> GetUserToUpdateByUsernameAsync(string username, CancellationToken cancellationToken)
+	public async Task<IActionResult> GetUserToUpdateByUsernameAsync(string username,
+																	CancellationToken cancellationToken)
 	{
 		var user = await _userRepo.GetByUsernameAsync(username, cancellationToken) ??
 				   throw new EntityNotFoundByNameException<User>(username);
@@ -123,7 +123,7 @@ public sealed class UsersController : BaseApiController
 	public async Task<IActionResult> CreateUserAsync(UserCreateDto dto)
 	{
 		var user = await _userRepo.CreateAsync(dto.Adapt<User>());
-		return CreatedAtAction("GetUserById", new { id = user.Id }, user.Adapt<UserDto>());
+		return CreatedAtAction("GetUserById", new {id = user.Id}, user.Adapt<UserDto>());
 	}
 
 	[SwaggerOperation(

@@ -53,7 +53,7 @@ public sealed class ExceptionHandlingMiddleware
 
 	private static Task HandleExceptionAsync(HttpContext context, Exception exception)
 	{
-		context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+		context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
 		context.Response.ContentType = ContentType;
 		return context.Response.WriteAsJsonAsync(new ApiExceptionResponse(exception.Message,
 			context.Response.StatusCode));

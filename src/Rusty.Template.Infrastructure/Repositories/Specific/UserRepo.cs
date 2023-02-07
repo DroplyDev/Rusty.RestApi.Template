@@ -12,19 +12,21 @@ namespace Rusty.Template.Infrastructure.Repositories.Specific;
 
 public sealed class UserRepo : AppDbRepo<User>, IUserRepo
 {
-    public UserRepo(AppDbContext context) : base(context)
-    {
-    }
+	public UserRepo(AppDbContext context) : base(context)
+	{
+	}
 
 
-    public async Task<User?> GetByUsernameAsync(string username, CancellationToken cancellationToken = default)
-    {
-        return await FirstOrDefaultAsync(item => item.UserName == username, cancellationToken);
-    }
-    public async Task<User?> GetByUsernameAsync(string username, Func<IQueryable<User>,
-            IIncludableQueryable<User, object>>?
-        includes = null, CancellationToken cancellationToken = default)
-    {
-        return await IncludeIfNotNull(includes).FirstOrDefaultAsync(item => item.UserName == username, cancellationToken);
-    }
+	public async Task<User?> GetByUsernameAsync(string username, CancellationToken cancellationToken = default)
+	{
+		return await FirstOrDefaultAsync(item => item.UserName == username, cancellationToken);
+	}
+
+	public async Task<User?> GetByUsernameAsync(string username, Func<IQueryable<User>,
+														IIncludableQueryable<User, object>>?
+													includes = null, CancellationToken cancellationToken = default)
+	{
+		return await IncludeIfNotNull(includes)
+			.FirstOrDefaultAsync(item => item.UserName == username, cancellationToken);
+	}
 }

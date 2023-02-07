@@ -15,7 +15,7 @@ public sealed class GroupRepo : AppDbRepo<Group>, IGroupRepo
 	}
 
 
-	public async Task<Group?> GetByNameAsync(string name,  CancellationToken cancellationToken = default)
+	public async Task<Group?> GetByNameAsync(string name, CancellationToken cancellationToken = default)
 	{
 		return await FirstOrDefaultAsync(item => item.Name == name, cancellationToken);
 	}

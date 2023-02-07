@@ -25,9 +25,9 @@ public abstract partial class BaseGenericRepo<TContext, TEntity> : IBaseRepo<TEn
 	}
 
 
-	public async Task<TEntity?> GetByIdAsync(object id,  CancellationToken cancellationToken = default)
+	public async Task<TEntity?> GetByIdAsync(object id, CancellationToken cancellationToken = default)
 	{
-		return await DbSet.FindAsync(new[] { id }, cancellationToken);
+		return await DbSet.FindAsync(new[] {id}, cancellationToken);
 	}
 
 
@@ -134,33 +134,33 @@ public abstract partial class BaseGenericRepo<TContext, TEntity> : IBaseRepo<TEn
 	}
 
 
-	public virtual async Task<bool> ExistsAsync(object id,  CancellationToken cancellationToken = default)
+	public virtual async Task<bool> ExistsAsync(object id, CancellationToken cancellationToken = default)
 	{
 		return await GetByIdAsync(id, cancellationToken) is not null;
 	}
 
 
-	public virtual async Task<bool> ExistsAsync(TEntity entity,  CancellationToken cancellationToken = default)
+	public virtual async Task<bool> ExistsAsync(TEntity entity, CancellationToken cancellationToken = default)
 	{
-		return await DbSet.FindAsync(new object[] { entity }, cancellationToken) is not null;
+		return await DbSet.FindAsync(new object[] {entity}, cancellationToken) is not null;
 	}
 
 
 	public virtual async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> expression,
-												 CancellationToken cancellationToken = default)
+												CancellationToken cancellationToken = default)
 	{
 		return await DbSet.AnyAsync(expression, cancellationToken);
 	}
 
 
-	public async Task<bool> IsEmptyAsync( CancellationToken cancellationToken = default)
+	public async Task<bool> IsEmptyAsync(CancellationToken cancellationToken = default)
 	{
 		return !await DbSet.AnyAsync(cancellationToken);
 	}
 
 
 	public async Task<bool> IsEmptyAsync(Expression<Func<TEntity, bool>> expression,
-										  CancellationToken cancellationToken = default)
+										 CancellationToken cancellationToken = default)
 	{
 		return !await DbSet.AnyAsync(expression, cancellationToken);
 	}

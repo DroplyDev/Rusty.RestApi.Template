@@ -26,7 +26,7 @@ public static class FilterExtensions
 		{
 			Description = description
 		};
-		response.Content.TryAdd(mediaType, new OpenApiMediaType { Schema = responseSchema });
+		response.Content.TryAdd(mediaType, new OpenApiMediaType {Schema = responseSchema});
 		return operation.Responses.TryAdd(statusCode.ToString(), response);
 	}
 

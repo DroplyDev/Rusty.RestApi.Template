@@ -31,21 +31,21 @@ public partial class AppDbContext
 		UpdateDefaultActionStatuses();
 		return base.SaveChanges();
 	}
-	
+
 	public override int SaveChanges(bool acceptAllChangesOnSuccess)
 	{
 		UpdateDefaultActionStatuses();
 		return base.SaveChanges(acceptAllChangesOnSuccess);
 	}
 
-	public override async Task<int> SaveChangesAsync( CancellationToken cancellationToken = default)
+	public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
 	{
 		UpdateDefaultActionStatuses();
 		return await base.SaveChangesAsync(cancellationToken);
 	}
 
 	public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess,
-											    CancellationToken cancellationToken = default)
+											   CancellationToken cancellationToken = default)
 	{
 		UpdateDefaultActionStatuses();
 		return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);

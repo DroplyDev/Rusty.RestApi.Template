@@ -195,7 +195,7 @@ internal static class DependencyInjection
 			});
 			var currentAssembly = Assembly.GetExecutingAssembly();
 			var xmlDocs = currentAssembly.GetReferencedAssemblies()
-				.Union(new[] { currentAssembly.GetName() })
+				.Union(new[] {currentAssembly.GetName()})
 				.Select(a => Path.Combine(Path.GetDirectoryName(currentAssembly.Location)!,
 					$"{a.Name}.xml"))
 				.Where(File.Exists).ToArray();

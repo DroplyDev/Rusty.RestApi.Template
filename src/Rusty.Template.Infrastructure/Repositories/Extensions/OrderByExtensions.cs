@@ -42,8 +42,8 @@ public static class OrderByExtensions
 		/*Call query.OrderBy(selector), with query and selector: x=> x.PropName
 		  Note that we pass the selector as Expression to the method and we don't compile it.
 		  By doing so EF can extract "order by" columns and generate SQL for it.*/
-		var newQuery = (IOrderedQueryable<TEntity>)genericMethod
-			.Invoke(genericMethod, new object[] { query, selector })!;
+		var newQuery = (IOrderedQueryable<TEntity>) genericMethod
+			.Invoke(genericMethod, new object[] {query, selector})!;
 		return newQuery;
 	}
 

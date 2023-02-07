@@ -35,9 +35,9 @@ public sealed class HttpPutIdCompareAttribute : ActionFilterAttribute
 		var model = context.ActionArguments.Values.First(item => item!.GetType().IsClass);
 		// Use reflection to get the value of the specified property
 		var propertyInfo = model!.GetType().GetProperty(_dtoPropertyName);
-		var propertyValue = (int)propertyInfo!.GetValue(model)!;
+		var propertyValue = (int) propertyInfo!.GetValue(model)!;
 		// Get the route id and model id from the action arguments
-		var routeId = (int)context.ActionArguments[_queryPropertyName]!;
+		var routeId = (int) context.ActionArguments[_queryPropertyName]!;
 		// Ensure that the route id matches the model id
 		if (routeId != propertyValue) context.Result = new BadRequestObjectResult("Route id does not match model id");
 	}

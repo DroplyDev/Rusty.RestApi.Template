@@ -35,7 +35,7 @@ public static class DbInitializer
 
 				for (var j = 0; j < userCount - 2;)
 				{
-					var group = new Group { Name = "Group" + uGroup++ };
+					var group = new Group {Name = "Group" + uGroup++};
 					for (var k = 0; k < j + 1 && j < userCount - 2; k++) users[j++].Group = group;
 				}
 

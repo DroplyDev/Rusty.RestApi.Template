@@ -9,5 +9,5 @@ namespace Rusty.Template.Application.Repositories;
 
 public interface IGroupRepo : IBaseRepo<Group>
 {
-	Task<Group?> GetByNameAsync(string name,  CancellationToken cancellationToken = default);
+	Task<Group?> GetByNameAsync(string name, CancellationToken cancellationToken = default);
 }

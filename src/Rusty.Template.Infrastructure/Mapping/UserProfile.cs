@@ -13,8 +13,8 @@ public sealed class UserProfile : IRegister
 	public void Register(TypeAdapterConfig config)
 	{
 		config.NewConfig<User, UserDto>()
-			.Map(dest=>dest.FirstName, src=>src.UserInfo == null? string.Empty: src.UserInfo.FirstName)
-			.Map(dest=>dest.LastName, src=>src.UserInfo == null? string.Empty: src.UserInfo.LastName)
+			.Map(dest => dest.FirstName, src => src.UserInfo == null ? string.Empty : src.UserInfo.FirstName)
+			.Map(dest => dest.LastName, src => src.UserInfo == null ? string.Empty : src.UserInfo.LastName)
 			// .TwoWays()
 			;
 	}
