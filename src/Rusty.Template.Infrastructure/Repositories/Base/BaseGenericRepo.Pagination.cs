@@ -15,70 +15,66 @@ namespace Rusty.Template.Infrastructure.Repositories.Base;
 
 public partial class BaseGenericRepo<TContext, TEntity> where TEntity : class where TContext : DbContext
 {
-	public virtual ( IQueryable<TEntity> Collection, int TotalCount) Paginate(int skipItems, int takeItems,
-																			  string orderBy,
-																			  OrderDirection orderDirection,
-																			  Expression<Func<TEntity, bool>>?
-																				  expression)
-	{
-		var query = DbSet.WhereNullable(expression);
+    public virtual (IQueryable<TEntity> Collection, int TotalCount) Paginate(int skipItems, int takeItems,
+                                                                              string orderBy,
+                                                                              OrderDirection orderDirection,
+                                                                              Expression<Func<TEntity, bool>>?
+                                                                                  expression)
+    {
+        var query = DbSet.WhereNullable(expression);
 
-		query = query.OrderByWithDirection(orderBy, orderDirection);
+        query = query.OrderByWithDirection(orderBy, orderDirection);
 
-		return query.PaginateWithTotalCount(skipItems, takeItems);
-	}
-
-
-	public virtual async Task<PagedResponse<TEntity>> PaginateAsync(
-		OrderedPagedRequest request,
-		CancellationToken cancellationToken,
-		Func<IQueryable<TEntity>,
-				IIncludableQueryable<TEntity, object>>?
-			includes = null)
-	{
-		var query = IncludeIfNotNull(includes);
-		query = query.OrderByWithDirectionNullable(request.OrderByData);
-		return await query.PaginateWithTotalCountAsListAsync(request.PageData, cancellationToken);
-	}
+        return query.PaginateWithTotalCount(skipItems, takeItems);
+    }
 
 
-	public virtual async Task<PagedResponse<TResult>> PaginateAsync<TResult>(
-		OrderedPagedRequest request, CancellationToken cancellationToken,
-		Func<IQueryable<TEntity>,
-				IIncludableQueryable<TEntity,
-					object>>?
-			includes = null) where TResult : class
-	{
-		var query = IncludeIfNotNull(includes);
+    public virtual async Task<PagedResponse<TEntity>> PaginateAsync(
+        OrderedPagedRequest request,
+         CancellationToken cancellationToken = default,
+        Func<IQueryable<TEntity>,
+                IIncludableQueryable<TEntity, object>>?
+            includes = null)
+    {
+        var query = IncludeIfNotNull(includes);
+        query = query.OrderByWithDirectionNullable(request.OrderByData);
+        return await query.PaginateWithTotalCountAsListAsync(request.PageData, cancellationToken);
+    }
 
-		var totalCount = await query.CountAsync(cancellationToken);
 
-		query = query.OrderByWithDirectionNullable(request.OrderByData);
-		var result = query.ProjectToType<TResult>();
+    public virtual async Task<PagedResponse<TResult>> PaginateAsync<TResult>(
+        OrderedPagedRequest request, CancellationToken cancellationToken = default,
+        Func<IQueryable<TEntity>,
+                IIncludableQueryable<TEntity,
+                    object>>?
+            includes = null) where TResult : class
+    {
+        var query = IncludeIfNotNull(includes);
 
-		// var result = query.ProjectToType<TResult>();
-		// result = result.OrderByWithDirection(request.OrderByData);
+        var totalCount = await query.CountAsync(cancellationToken);
 
-		result = result.Paginate(request.PageData);
-		return new PagedResponse<TResult>(await result.ToListAsync(cancellationToken), totalCount);
-	}
+        query = query.OrderByWithDirectionNullable(request.OrderByData);
 
-	public virtual async Task<PagedResponse<TResult>> PaginateAsync<TResult>(
-		OrderedPagedRequest request, Expression<Func<TEntity, bool>> expression,
-		CancellationToken cancellationToken,
-		Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null) where TResult : class
-	{
-		var query = IncludeIfNotNull(includes);
-		query = query.Where(expression);
-		var totalCount = await query.CountAsync(cancellationToken);
+        query = query.Paginate(request.PageData);
 
-		query = query.OrderByWithDirectionNullable(request.OrderByData);
-		var result = query.ProjectToType<TResult>();
+        return new PagedResponse<TResult>(await query.ProjectToType<TResult>().ToListAsync(cancellationToken), totalCount);
+    }
 
-		// var result = query.ProjectToType<TResult>();
-		// result = result.OrderByWithDirection(request.OrderByData);
+    public virtual async Task<PagedResponse<TResult>> PaginateAsync<TResult>(
+        OrderedPagedRequest request, Expression<Func<TEntity, bool>> expression,
+        CancellationToken cancellationToken = default,
+        Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null) where TResult : class
+    {
+        var query = IncludeIfNotNull(includes);
 
-		result = result.Paginate(request.PageData);
-		return new PagedResponse<TResult>(await result.ToListAsync(cancellationToken), totalCount);
-	}
+        query = query.Where(expression);
+
+        var totalCount = await query.CountAsync(cancellationToken);
+
+        query = query.OrderByWithDirectionNullable(request.OrderByData);
+
+        query = query.Paginate(request.PageData);
+
+        return new PagedResponse<TResult>(await query.ProjectToType<TResult>().ToListAsync(cancellationToken), totalCount);
+    }
 }

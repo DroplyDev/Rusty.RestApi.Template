@@ -9,5 +9,5 @@ namespace Rusty.Template.Application.Repositories;
 
 public interface IRoleRepo : IBaseRepo<Role>
 {
-	Task<Role?> GetByNameAsync(string name, CancellationToken cancellationToken);
+	Task<Role?> GetByNameAsync(string name,  CancellationToken cancellationToken = default);
 }

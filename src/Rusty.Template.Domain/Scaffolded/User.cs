@@ -1,6 +1,8 @@
-﻿namespace Rusty.Template.Domain;
+﻿using System;
 
-public class User
+namespace Rusty.Template.Domain;
+
+public partial class User
 {
     /// <summary>
     ///     Primary key id
@@ -22,14 +24,16 @@ public class User
     /// </summary>
     public string Email { get; set; } = null!;
 
+    public string? RefreshToken { get; set; }
+
     /// <summary>
     ///     Group id foreign key
     /// </summary>
     public int? GroupId { get; set; }
 
-	public DateTime CreateDate { get; set; }
+    public DateTime CreateDate { get; set; }
 
-	public DateTime? UpdateDate { get; set; }
+    public DateTime? UpdateDate { get; set; }
 
     /// <summary>
     ///     Prop that shows if user is deleted

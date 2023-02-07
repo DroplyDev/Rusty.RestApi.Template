@@ -1,6 +1,7 @@
-﻿namespace Rusty.Template.Domain;
+﻿
+namespace Rusty.Template.Domain;
 
-public class UserInfo
+public partial class UserInfo
 {
     /// <summary>
     ///     User first name

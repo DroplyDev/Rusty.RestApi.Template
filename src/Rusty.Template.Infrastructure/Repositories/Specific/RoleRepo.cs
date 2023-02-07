@@ -15,7 +15,7 @@ public sealed class RoleRepo : AppDbRepo<Role>, IRoleRepo
 	}
 
 
-	public async Task<Role?> GetByNameAsync(string name, CancellationToken cancellationToken)
+	public async Task<Role?> GetByNameAsync(string name,  CancellationToken cancellationToken = default)
 	{
 		return await FirstOrDefaultAsync(item => item.Name == name, cancellationToken);
 	}

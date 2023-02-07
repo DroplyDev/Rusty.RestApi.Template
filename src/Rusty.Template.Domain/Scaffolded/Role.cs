@@ -1,6 +1,7 @@
-﻿namespace Rusty.Template.Domain;
+﻿
+namespace Rusty.Template.Domain;
 
-public class Role
+public partial class Role
 {
     /// <summary>
     ///     Primary key id

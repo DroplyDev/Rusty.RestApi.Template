@@ -28,21 +28,6 @@ public sealed class UsersController : BaseApiController
 	}
 
 	[SwaggerOperation(
-		Summary = "Get all users",
-		Description = "Returns trader list"
-	)]
-	[SwaggerResponse(
-		StatusCodes.Status200OK,
-		"Users retrieved successfully",
-		typeof(List<UserDto>)
-	)]
-	[HttpGet]
-	public async Task<IActionResult> GetAllUsersAsync(CancellationToken cancellationToken)
-	{
-		return Ok(await _userRepo.GetAll().ProjectToType<UserDto>().ToListAsync(cancellationToken));
-	}
-
-	[SwaggerOperation(
 		Summary = "Get paged users",
 		Description = "Returns paged list"
 	)]
@@ -52,7 +37,7 @@ public sealed class UsersController : BaseApiController
 		typeof(PagedResponse<UserDto>)
 	)]
 	[HttpPost("paged")]
-	public async Task<IActionResult> GetPagedUsersAsync(FilterOrderPageRequest request,
+	public async Task<IActionResult> GetFilteredPagedUsersAsync(FilterOrderPageRequest request,
 														CancellationToken cancellationToken)
 	{
 		return Ok(await _userRepo.PaginateAsync<UserDto>(request, cancellationToken));
@@ -119,7 +104,7 @@ public sealed class UsersController : BaseApiController
 		typeof(UserUpdateDto)
 	)]
 	[HttpGet("update/{username}")]
-	public async Task<IActionResult> GetUserToUpdateByNameAsync(string username, CancellationToken cancellationToken)
+	public async Task<IActionResult> GetUserToUpdateByUsernameAsync(string username, CancellationToken cancellationToken)
 	{
 		var user = await _userRepo.GetByUsernameAsync(username, cancellationToken) ??
 				   throw new EntityNotFoundByNameException<User>(username);
@@ -164,7 +149,7 @@ public sealed class UsersController : BaseApiController
 		StatusCodes.Status204NoContent, "User deleted successfully"
 	)]
 	[HttpDelete("{id:int}")]
-	public async Task<IActionResult> DeleteUserAsync(object id)
+	public async Task<IActionResult> DeleteUserAsync(int id)
 	{
 		await _userRepo.DeleteAsync(id);
 		return NoContent();

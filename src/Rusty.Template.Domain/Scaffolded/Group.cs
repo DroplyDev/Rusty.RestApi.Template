@@ -1,6 +1,8 @@
-﻿namespace Rusty.Template.Domain;
+﻿using System;
 
-public class Group
+namespace Rusty.Template.Domain;
+
+public partial class Group
 {
     /// <summary>
     ///     Primary key id
@@ -12,7 +14,7 @@ public class Group
     /// </summary>
     public string Name { get; set; } = null!;
 
-	public DateTime CreateDate { get; set; }
+    public DateTime CreateDate { get; set; }
 
     /// <summary>
     ///     One to many navigation for User table

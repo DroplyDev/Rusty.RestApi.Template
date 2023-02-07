@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Folder Include="Services"/>
+        <Folder Include="Services" />
     </ItemGroup>
 
     <ItemGroup>
@@ -17,20 +17,21 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Mapster" Version="7.3.0"/>
-        <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0"/>
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.2"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.2"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.2"/>
+        <PackageReference Include="Mapster" Version="7.3.0" />
+        <PackageReference Include="Mapster.EFCore" Version="5.1.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.2" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.2" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.2" />
 
-        <PackageReference Include="Serilog.AspNetCore" Version="6.1.0"/>
+        <PackageReference Include="Serilog.AspNetCore" Version="6.1.0" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Rusty.Template.Application\Rusty.Template.Application.csproj"/>
-        <ProjectReference Include="..\Rusty.Template.Contracts\Rusty.Template.Contracts.csproj"/>
-        <ProjectReference Include="..\Rusty.Template.Domain\Rusty.Template.Domain.csproj"/>
+        <ProjectReference Include="..\Rusty.Template.Application\Rusty.Template.Application.csproj" />
+        <ProjectReference Include="..\Rusty.Template.Contracts\Rusty.Template.Contracts.csproj" />
+        <ProjectReference Include="..\Rusty.Template.Domain\Rusty.Template.Domain.csproj" />
     </ItemGroup>
 
 </Project>

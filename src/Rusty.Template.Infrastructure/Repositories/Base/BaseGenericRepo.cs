@@ -25,7 +25,7 @@ public abstract partial class BaseGenericRepo<TContext, TEntity> : IBaseRepo<TEn
 	}
 
 
-	public async Task<TEntity?> GetByIdAsync(object id, CancellationToken cancellationToken)
+	public async Task<TEntity?> GetByIdAsync(object id,  CancellationToken cancellationToken = default)
 	{
 		return await DbSet.FindAsync(new[] { id }, cancellationToken);
 	}
@@ -134,33 +134,33 @@ public abstract partial class BaseGenericRepo<TContext, TEntity> : IBaseRepo<TEn
 	}
 
 
-	public virtual async Task<bool> ExistsAsync(object id, CancellationToken cancellationToken)
+	public virtual async Task<bool> ExistsAsync(object id,  CancellationToken cancellationToken = default)
 	{
 		return await GetByIdAsync(id, cancellationToken) is not null;
 	}
 
 
-	public virtual async Task<bool> ExistsAsync(TEntity entity, CancellationToken cancellationToken)
+	public virtual async Task<bool> ExistsAsync(TEntity entity,  CancellationToken cancellationToken = default)
 	{
 		return await DbSet.FindAsync(new object[] { entity }, cancellationToken) is not null;
 	}
 
 
 	public virtual async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> expression,
-												CancellationToken cancellationToken)
+												 CancellationToken cancellationToken = default)
 	{
 		return await DbSet.AnyAsync(expression, cancellationToken);
 	}
 
 
-	public async Task<bool> IsEmptyAsync(CancellationToken cancellationToken)
+	public async Task<bool> IsEmptyAsync( CancellationToken cancellationToken = default)
 	{
 		return !await DbSet.AnyAsync(cancellationToken);
 	}
 
 
 	public async Task<bool> IsEmptyAsync(Expression<Func<TEntity, bool>> expression,
-										 CancellationToken cancellationToken)
+										  CancellationToken cancellationToken = default)
 	{
 		return !await DbSet.AnyAsync(expression, cancellationToken);
 	}

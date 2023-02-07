@@ -67,7 +67,7 @@ public partial interface IBaseRepo<TEntity> where TEntity : class
 
 	Task<bool> IsEmptyAsync(CancellationToken cancellationToken);
 
-	Task<bool> IsEmptyAsync(Expression<Func<TEntity, bool>> expression, CancellationToken cancellationToken);
+	Task<bool> IsEmptyAsync(Expression<Func<TEntity, bool>> expression,  CancellationToken cancellationToken = default);
 
 	#endregion
 
@@ -76,14 +76,14 @@ public partial interface IBaseRepo<TEntity> where TEntity : class
 	TEntity? FirstOrDefault(Expression<Func<TEntity, bool>> expression,
 							Func<IQueryable<TEntity>, IQueryable<TEntity>>? includes = null);
 
-	Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> expression, CancellationToken cancellationToken,
+	Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> expression,  CancellationToken cancellationToken = default,
 									   Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes =
 										   null);
 
 	TEntity First(Expression<Func<TEntity, bool>> expression,
 				  Func<IQueryable<TEntity>, IQueryable<TEntity>>? includes = null);
 
-	Task<TEntity> FirstAsync(Expression<Func<TEntity, bool>> expression, CancellationToken cancellationToken,
+	Task<TEntity> FirstAsync(Expression<Func<TEntity, bool>> expression,  CancellationToken cancellationToken = default,
 							 Func<IQueryable<TEntity>, IQueryable<TEntity>>? includes = null);
 
 	#endregion

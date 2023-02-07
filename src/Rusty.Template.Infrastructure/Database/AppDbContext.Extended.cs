@@ -31,9 +31,21 @@ public partial class AppDbContext
 		UpdateDefaultActionStatuses();
 		return base.SaveChanges();
 	}
+	
+	public override int SaveChanges(bool acceptAllChangesOnSuccess)
+	{
+		UpdateDefaultActionStatuses();
+		return base.SaveChanges(acceptAllChangesOnSuccess);
+	}
+
+	public override async Task<int> SaveChangesAsync( CancellationToken cancellationToken = default)
+	{
+		UpdateDefaultActionStatuses();
+		return await base.SaveChangesAsync(cancellationToken);
+	}
 
 	public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess,
-											   CancellationToken cancellationToken = default)
+											    CancellationToken cancellationToken = default)
 	{
 		UpdateDefaultActionStatuses();
 		return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
@@ -46,9 +58,9 @@ public partial class AppDbContext
 			var entryPropertyNames = entry.CurrentValues.Properties.Select(item => item.Name).ToList();
 			switch (entry.State)
 			{
-				case EntityState.Added when entryPropertyNames.Contains("CreateDate"):
-					entry.CurrentValues["CreateDate"] = DateTime.Now;
-					break;
+				// case EntityState.Added when entryPropertyNames.Contains("CreateDate"):
+				// 	entry.CurrentValues["CreateDate"] = DateTime.Now;
+				// 	break;
 				case EntityState.Modified when entryPropertyNames.Contains("UpdateDate"):
 					entry.CurrentValues["UpdateDate"] = DateTime.Now;
 					break;

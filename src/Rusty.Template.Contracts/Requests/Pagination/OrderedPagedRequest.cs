@@ -16,5 +16,5 @@ public class OrderedPagedRequest
 	public PageData? PageData { get; init; }
 
 	[SwaggerSchema("Order by data class")]
-	public OrderByData? OrderByData { get; init; }
+	public OrderByData OrderByData { get; init; } = null!;
 }
