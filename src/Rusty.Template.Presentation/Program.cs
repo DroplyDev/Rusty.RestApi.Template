@@ -1,5 +1,6 @@
-#region
+﻿#region
 
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Rusty.Template.Infrastructure.Database;
 using Rusty.Template.Infrastructure.Middlewares;
@@ -21,7 +22,8 @@ services.AddAuth(configuration);
 services.AddConfigurations(configuration);
 services.AddLogging();
 services.AddFluentValidation();
-services.AddControllers();
+services.AddControllers().AddJsonOptions(options =>
+	options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
 services.AddEndpointsApiExplorer();
 services.AddRepositories();
 services.AddServices();

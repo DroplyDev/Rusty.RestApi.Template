@@ -1,4 +1,4 @@
-#region
+﻿#region
 
 using System.Reflection;
 using System.Text;
@@ -208,15 +208,13 @@ internal static class DependencyInjection
 				$"{apiDesc.ActionDescriptor.RouteValues["controller"]}_{apiDesc.HttpMethod}");
 
 			options.UseInlineDefinitionsForEnums();
-
-			options.SchemaFilter<RequireNonNullablePropertiesSchemaFilter>();
-			options.SchemaFilter<AutoRestSchemaFilter>();
-			options.SchemaFilter<DictionaryTKeyEnumTValueSchemaFilter>();
+			//options.SchemaFilter<RequireNonNullablePropertiesSchemaFilter>();
+			//options.SchemaFilter<AutoRestSchemaFilter>();
+			//options.SchemaFilter<DictionaryTKeyEnumTValueSchemaFilter>();
 
 			options.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
 			options.OperationFilter<OperationIdFilter>();
 			options.OperationFilter<ValidationOperationFilter>();
-			// options.OperationFilter<AuthorizeOperationFilter>();
 			options.OperationFilter<SecurityRequirementsOperationFilter>();
 			options.SupportNonNullableReferenceTypes(); // Sets Nullable flags appropriately.              
 			options.UseAllOfForInheritance(); // Allows $ref objects to be nullable
