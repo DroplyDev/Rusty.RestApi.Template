@@ -1,7 +1,8 @@
-#region
+﻿#region
 
 using Mapster;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Rusty.Template.Application.Repositories;
 using Rusty.Template.Contracts.Dtos.User;
 using Rusty.Template.Contracts.Requests.Pagination;
@@ -51,6 +52,12 @@ public sealed class UsersController : BaseApiController
 		"User retrieved successfully",
 		typeof(UserDto)
 	)]
+	[SwaggerResponse(
+		StatusCodes.Status404NotFound,
+		"User with id was not found",
+		typeof(ApiExceptionResponse)
+	)]
+
 	[HttpGet("{id:int}")]
 	public async Task<IActionResult> GetUserByIdAsync(int id, CancellationToken cancellationToken)
 	{
@@ -67,6 +74,11 @@ public sealed class UsersController : BaseApiController
 		StatusCodes.Status200OK,
 		"User retrieved successfully",
 		typeof(UserDto)
+	)]
+	[SwaggerResponse(
+		StatusCodes.Status404NotFound,
+		"User with name was not found",
+		typeof(ApiExceptionResponse)
 	)]
 	[HttpGet("{username}")]
 	public async Task<IActionResult> GetUserByUsernameAsync(string username, CancellationToken cancellationToken)
@@ -85,6 +97,11 @@ public sealed class UsersController : BaseApiController
 		"User retrieved successfully",
 		typeof(UserUpdateDto)
 	)]
+	[SwaggerResponse(
+		StatusCodes.Status404NotFound,
+		"User with id was not found",
+		typeof(ApiExceptionResponse)
+	)]
 	[HttpGet("update/{id:int}")]
 	public async Task<IActionResult> GetUserToUpdateByIdAsync(int id, CancellationToken cancellationToken)
 	{
@@ -101,6 +118,11 @@ public sealed class UsersController : BaseApiController
 		StatusCodes.Status200OK,
 		"User retrieved successfully",
 		typeof(UserUpdateDto)
+	)]
+	[SwaggerResponse(
+		StatusCodes.Status404NotFound,
+		"User with name was not found",
+		typeof(ApiExceptionResponse)
 	)]
 	[HttpGet("update/{username}")]
 	public async Task<IActionResult> GetUserToUpdateByUsernameAsync(string username,
@@ -123,7 +145,7 @@ public sealed class UsersController : BaseApiController
 	public async Task<IActionResult> CreateUserAsync(UserCreateDto dto)
 	{
 		var user = await _userRepo.CreateAsync(dto.Adapt<User>());
-		return CreatedAtAction("GetUserById", new {id = user.Id}, user.Adapt<UserDto>());
+		return CreatedAtAction("GetUserById", new { id = user.Id }, user.Adapt<UserDto>());
 	}
 
 	[SwaggerOperation(
@@ -137,7 +159,9 @@ public sealed class UsersController : BaseApiController
 	[HttpPutIdCompare]
 	public async Task<IActionResult> UpdateUserAsync(int id, UserUpdateDto dto)
 	{
-		await _userRepo.UpdateAsync(dto.Adapt<User>());
+		var user = await _userRepo.FirstOrDefaultAsync(u => u.Id == id, default, includes => includes.AsTracking()) ?? throw new EntityNotFoundByIdException<User>(id);
+		dto.Adapt(user);
+		await _userRepo.SaveChangesAsync();
 		return NoContent();
 	}
 
@@ -147,6 +171,11 @@ public sealed class UsersController : BaseApiController
 	)]
 	[SwaggerResponse(
 		StatusCodes.Status204NoContent, "User deleted successfully"
+	)]
+	[SwaggerResponse(
+		StatusCodes.Status404NotFound,
+		"User with id was not found",
+		typeof(ApiExceptionResponse)
 	)]
 	[HttpDelete("{id:int}")]
 	public async Task<IActionResult> DeleteUserAsync(int id)

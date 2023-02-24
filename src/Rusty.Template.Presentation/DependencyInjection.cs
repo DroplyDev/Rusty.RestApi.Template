@@ -16,14 +16,16 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Rusty.Template.Application.Repositories;
+using Rusty.Template.Application.Services;
 using Rusty.Template.Contracts.Dtos.User;
 using Rusty.Template.Contracts.Requests.Authentication;
 using Rusty.Template.Domain.Exceptions.Domain;
 using Rusty.Template.Infrastructure.Database;
 using Rusty.Template.Infrastructure.Mapping;
+using Rusty.Template.Infrastructure.Options;
 using Rusty.Template.Infrastructure.Repositories.Specific;
+using Rusty.Template.Infrastructure.Services;
 using Rusty.Template.Presentation.OperationFilters;
-using Rusty.Template.Presentation.Options;
 using Rusty.Template.Presentation.SchemaFilters;
 using Serilog;
 using Swashbuckle.AspNetCore.Filters;
@@ -34,19 +36,23 @@ namespace Rusty.Template.Presentation;
 
 internal static class DependencyInjection
 {
-	public static void AddSerilog(this ConfigureHostBuilder host)
+	public static ConfigureHostBuilder AddSerilog(this ConfigureHostBuilder host)
 	{
 		host.UseSerilog((ctx, lc) =>
 			lc.ReadFrom.Configuration(ctx.Configuration));
+
+		return host;
 	}
 
-	public static void AddConfigurations(this IServiceCollection services, IConfiguration configuration)
+	public static IServiceCollection AddConfigurations(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.AddOptions();
 		services.Configure<AuthOptions>(configuration.GetSection("AuthOptions"));
+
+		return services;
 	}
 
-	public static void AddApiVersioningSupport(this IServiceCollection services, IConfiguration configuration)
+	public static IServiceCollection AddApiVersioningSupport(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.AddApiVersioning(options =>
 		{
@@ -61,20 +67,24 @@ internal static class DependencyInjection
 			options.GroupNameFormat = "'v'VV";
 			options.SubstituteApiVersionInUrl = true;
 		});
+
+		return services;
 	}
 
 
-	public static void AddFluentValidation(this IServiceCollection services)
+	public static IServiceCollection AddFluentValidation(this IServiceCollection services)
 	{
 		ValidatorOptions.Global.DefaultClassLevelCascadeMode = CascadeMode.Continue;
 		ValidatorOptions.Global.DefaultRuleLevelCascadeMode = CascadeMode.Continue;
 		services.AddFluentValidationAutoValidation(opt =>
 			opt.DisableDataAnnotationsValidation = true);
 		services.AddValidatorsFromAssemblyContaining<UserCreateDtoValidator>();
+
+		return services;
 	}
 
 
-	public static void AddAuth(this IServiceCollection services, IConfiguration configuration)
+	public static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration)
 	{
 		var authOptions = configuration.GetSection("AuthOptions").Get<AuthOptions>() ??
 						  throw new NullReferenceException();
@@ -95,10 +105,7 @@ internal static class DependencyInjection
 			})
 			.AddJwtBearer(options =>
 			{
-				options.RequireHttpsMetadata = false;
-
-				// options.Authority = "https://example.com";
-				// options.Audience = "api";
+				options.SaveToken = true;
 				options.TokenValidationParameters = new TokenValidationParameters
 				{
 					ValidateIssuer = authOptions.ValidateIssuer,
@@ -106,8 +113,8 @@ internal static class DependencyInjection
 					ValidateAudience = authOptions.ValidateAudience,
 					ValidAudience = authOptions.Audience,
 					ValidateLifetime = authOptions.ValidateAccessTokenLifetime,
-					IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(authOptions.Key)),
-					ValidateIssuerSigningKey = authOptions.ValidateKey
+					IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(authOptions.Secret)),
+					ValidateIssuerSigningKey = authOptions.ValidateSecret
 				};
 				options.Events = new JwtBearerEvents
 				{
@@ -141,10 +148,12 @@ internal static class DependencyInjection
 				.RequireAuthenticatedUser()
 				.Build();
 		});
+
+		return services;
 	}
 
 
-	public static void AddSwagger(this IServiceCollection services, IConfiguration configuration)
+	public static IServiceCollection AddSwagger(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.AddSwaggerGen(options =>
 		{
@@ -195,7 +204,7 @@ internal static class DependencyInjection
 			});
 			var currentAssembly = Assembly.GetExecutingAssembly();
 			var xmlDocs = currentAssembly.GetReferencedAssemblies()
-				.Union(new[] {currentAssembly.GetName()})
+				.Union(new[] { currentAssembly.GetName() })
 				.Select(a => Path.Combine(Path.GetDirectoryName(currentAssembly.Location)!,
 					$"{a.Name}.xml"))
 				.Where(File.Exists).ToArray();
@@ -203,14 +212,11 @@ internal static class DependencyInjection
 
 			options.ExampleFilters();
 			options.EnableAnnotations(true, true);
-			// options.OperationFilter<OrderingFilter>();
 			options.OrderActionsBy(apiDesc =>
 				$"{apiDesc.ActionDescriptor.RouteValues["controller"]}_{apiDesc.HttpMethod}");
 
 			options.UseInlineDefinitionsForEnums();
-			//options.SchemaFilter<RequireNonNullablePropertiesSchemaFilter>();
-			//options.SchemaFilter<AutoRestSchemaFilter>();
-			//options.SchemaFilter<DictionaryTKeyEnumTValueSchemaFilter>();
+			options.SchemaFilter<RequireNonNullablePropertiesSchemaFilter>();
 
 			options.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
 			options.OperationFilter<OperationIdFilter>();
@@ -225,11 +231,13 @@ internal static class DependencyInjection
 		});
 		services.AddSwaggerExamplesFromAssemblyOf<LoginRequestExample>();
 		services.AddRouting(options => options.LowercaseUrls = true);
+
+		return services;
 	}
 
 
-	public static void AddDatabases(this IServiceCollection services, IConfiguration configuration,
-									IWebHostEnvironment env)
+	public static IServiceCollection AddDatabases(this IServiceCollection services, IConfiguration configuration,
+												  IWebHostEnvironment env)
 	{
 		services.AddDbContext<AppDbContext>(options =>
 		{
@@ -240,27 +248,35 @@ internal static class DependencyInjection
 			if (env.IsDevelopment())
 				contextOptions.EnableSensitiveDataLogging().EnableDetailedErrors();
 		});
+
+		return services;
 	}
 
 
-	public static void AddRepositories(this IServiceCollection services)
+	public static IServiceCollection AddRepositories(this IServiceCollection services)
 	{
 		services.AddScoped<IUserRepo, UserRepo>();
 		services.AddScoped<IGroupRepo, GroupRepo>();
 		services.AddScoped<IRoleRepo, RoleRepo>();
+
+		return services;
 	}
 
 
-	public static void AddServices(this IServiceCollection services)
+	public static IServiceCollection AddServices(this IServiceCollection services)
 	{
+		services.AddScoped<IAuthenticationService, AuthenticationService>();
+		return services;
 	}
 
 
-	public static void AddMapster(this IServiceCollection services)
+	public static IServiceCollection AddMapster(this IServiceCollection services)
 	{
 		var config = TypeAdapterConfig.GlobalSettings;
 		config.Scan(typeof(UserProfile).Assembly);
 		services.AddSingleton(config);
 		services.AddScoped<IMapper, ServiceMapper>();
+
+		return services;
 	}
 }

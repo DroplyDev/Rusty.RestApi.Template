@@ -1,9 +1,12 @@
 ﻿#region
 
 using Bogus;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Rusty.Template.Domain;
 using Rusty.Template.Infrastructure.Database;
+using System.Net.Http.Headers;
+using System.Net.Http;
 
 #endregion
 
@@ -11,24 +14,22 @@ namespace Rusty.Template.Tests.Integration;
 
 public abstract class BaseTests : IClassFixture<WebApiFactory>
 {
-	private readonly AppDbContext _appDbContext;
+	protected readonly WebApiFactory ApiFactory;
 	protected readonly NSwagClient Client;
 
 	protected BaseTests(WebApiFactory apiFactory)
 	{
+		ApiFactory = apiFactory;
 		Client = new NSwagClient(apiFactory.CreateClient());
-		_appDbContext = apiFactory.Services.GetRequiredService<AppDbContext>();
 	}
-
-	protected async Task InitUserDataAsync()
+	public async Task AuthenticateAsync(string username, string password)
 	{
-		//Set the randomizer seed if you wish to generate repeatable data sets.
-		Randomizer.Seed = new Random();
-		var testData = new Faker<User>()
-			.RuleFor(o => o.Email, f => f.Person.Email)
-			.RuleFor(o => o.UserName, f => f.Person.UserName)
-			.RuleFor(o => o.Password, f => f.PickRandom<string>())
-			.Generate(500);
-		await _appDbContext.Users.AddRangeAsync(testData);
+		var response = await Client.LoginAsync(new LoginRequest
+		{
+			Username = username,
+			Password = password
+		});
+		response.StatusCode.Should().Be(200);
+		_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(JwtBearerDefaults.AuthenticationScheme, response.Result.JwtToken);
 	}
 }

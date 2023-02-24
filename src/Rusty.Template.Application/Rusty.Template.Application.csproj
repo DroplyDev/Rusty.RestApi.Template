@@ -7,16 +7,17 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Folder Include="Services"/>
+        <Folder Include="Services" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Rusty.Template.Contracts\Rusty.Template.Contracts.csproj"/>
-        <ProjectReference Include="..\Rusty.Template.Domain\Rusty.Template.Domain.csproj"/>
+        <ProjectReference Include="..\Rusty.Template.Contracts\Rusty.Template.Contracts.csproj" />
+        <ProjectReference Include="..\Rusty.Template.Domain\Rusty.Template.Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.2"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.2" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.2" />
     </ItemGroup>
 
 </Project>

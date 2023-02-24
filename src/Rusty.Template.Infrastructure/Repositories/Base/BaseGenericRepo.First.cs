@@ -1,4 +1,4 @@
-#region
+﻿#region
 
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +19,7 @@ public partial class BaseGenericRepo<TContext, TEntity> where TEntity : class wh
 	public virtual async Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> expression,
 															CancellationToken cancellationToken = default,
 															Func<IQueryable<TEntity>,
-																IIncludableQueryable<TEntity, object>>? includes = null)
+																IQueryable<TEntity>>? includes = null)
 	{
 		return await IncludeIfNotNull(includes).FirstOrDefaultAsync(expression, cancellationToken);
 	}

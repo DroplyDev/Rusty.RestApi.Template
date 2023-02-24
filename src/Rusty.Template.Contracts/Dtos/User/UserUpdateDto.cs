@@ -1,4 +1,4 @@
-#region
+﻿#region
 
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -14,4 +14,6 @@ public sealed class UserUpdateDto
 
 	[SwaggerSchema("The user email")]
 	public string Email { get; set; } = null!;
+	[SwaggerSchema("The user email")]
+	public string? GroupId { get; set; }
 }

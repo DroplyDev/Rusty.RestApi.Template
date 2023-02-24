@@ -1,4 +1,4 @@
-#region
+﻿#region
 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
@@ -17,14 +17,7 @@ public sealed class UserRepo : AppDbRepo<User>, IUserRepo
 	}
 
 
-	public async Task<User?> GetByUsernameAsync(string username, CancellationToken cancellationToken = default)
-	{
-		return await FirstOrDefaultAsync(item => item.UserName == username, cancellationToken);
-	}
-
-	public async Task<User?> GetByUsernameAsync(string username, Func<IQueryable<User>,
-														IIncludableQueryable<User, object>>?
-													includes = null, CancellationToken cancellationToken = default)
+	public async Task<User?> GetByUsernameAsync(string username, CancellationToken cancellationToken = default, Func<IQueryable<User>, IQueryable<User>>? includes = null)
 	{
 		return await IncludeIfNotNull(includes)
 			.FirstOrDefaultAsync(item => item.UserName == username, cancellationToken);

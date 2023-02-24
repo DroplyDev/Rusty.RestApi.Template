@@ -1,16 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rusty.Template.Presentation", "Rusty.Template.Presentation\Rusty.Template.Presentation.csproj", "{72B12392-AB4B-46A0-A6CA-0AB4EE52FF45}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rusty.Template.Presentation", "Rusty.Template.Presentation\Rusty.Template.Presentation.csproj", "{72B12392-AB4B-46A0-A6CA-0AB4EE52FF45}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rusty.Template.Domain", "Rusty.Template.Domain\Rusty.Template.Domain.csproj", "{41EEA303-9B7E-494F-BA75-8FD6FAA63AE9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rusty.Template.Domain", "Rusty.Template.Domain\Rusty.Template.Domain.csproj", "{41EEA303-9B7E-494F-BA75-8FD6FAA63AE9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rusty.Template.Infrastructure", "Rusty.Template.Infrastructure\Rusty.Template.Infrastructure.csproj", "{DC42654D-11C0-4125-9371-B15066D00D97}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rusty.Template.Infrastructure", "Rusty.Template.Infrastructure\Rusty.Template.Infrastructure.csproj", "{DC42654D-11C0-4125-9371-B15066D00D97}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rusty.Template.Contracts", "Rusty.Template.Contracts\Rusty.Template.Contracts.csproj", "{2FA1C5E8-160F-4030-9055-3CD809C0C1A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rusty.Template.Contracts", "Rusty.Template.Contracts\Rusty.Template.Contracts.csproj", "{2FA1C5E8-160F-4030-9055-3CD809C0C1A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rusty.Template.Application", "Rusty.Template.Application\Rusty.Template.Application.csproj", "{08A112FD-7BD4-47C7-99D6-35B7167A72F2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rusty.Template.Application", "Rusty.Template.Application\Rusty.Template.Application.csproj", "{08A112FD-7BD4-47C7-99D6-35B7167A72F2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rusty.Template.Tests.Integration", "Rusty.Template.Tests.Integration\Rusty.Template.Tests.Integration.csproj", "{BAEE4C43-6E36-4139-87F8-3263DAFC9895}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Rusty.Template.Tests.Integration", "Rusty.Template.Tests.Integration\Rusty.Template.Tests.Integration.csproj", "{BAEE4C43-6E36-4139-87F8-3263DAFC9895}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Rusty.Template.Tests.Acceptance", "Rusty.Template.Tests.Acceptance\Rusty.Template.Tests.Acceptance.csproj", "{9393D70C-F3C9-4AE3-9F6E-68BE562E1AA5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,5 +47,15 @@ Global
 		{BAEE4C43-6E36-4139-87F8-3263DAFC9895}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BAEE4C43-6E36-4139-87F8-3263DAFC9895}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BAEE4C43-6E36-4139-87F8-3263DAFC9895}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9393D70C-F3C9-4AE3-9F6E-68BE562E1AA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9393D70C-F3C9-4AE3-9F6E-68BE562E1AA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9393D70C-F3C9-4AE3-9F6E-68BE562E1AA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9393D70C-F3C9-4AE3-9F6E-68BE562E1AA5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E8F55558-DD2A-4DEE-AA4B-31881D88AE90}
 	EndGlobalSection
 EndGlobal

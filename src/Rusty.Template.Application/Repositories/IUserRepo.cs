@@ -1,4 +1,4 @@
-#region
+﻿#region
 
 using Microsoft.EntityFrameworkCore.Query;
 using Rusty.Template.Application.Repositories.BaseRepo;
@@ -10,9 +10,5 @@ namespace Rusty.Template.Application.Repositories;
 
 public interface IUserRepo : IBaseRepo<User>
 {
-	Task<User?> GetByUsernameAsync(string username, CancellationToken cancellationToken = default);
-
-	Task<User?> GetByUsernameAsync(string username, Func<IQueryable<User>,
-										   IIncludableQueryable<User, object>>?
-									   includes = null, CancellationToken cancellationToken = default);
+	Task<User?> GetByUsernameAsync(string username, CancellationToken cancellationToken = default, Func<IQueryable<User>, IQueryable<User>>? includes = null);
 }

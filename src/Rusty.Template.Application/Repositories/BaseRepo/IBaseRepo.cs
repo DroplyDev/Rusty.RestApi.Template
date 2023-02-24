@@ -1,4 +1,4 @@
-#region
+﻿#region
 
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore.Query;
@@ -10,7 +10,7 @@ namespace Rusty.Template.Application.Repositories.BaseRepo;
 
 public partial interface IBaseRepo<TEntity> where TEntity : class
 {
-	( IQueryable<TEntity> Collection, int TotalCount) Paginate(int skipItems, int takeItems, string orderBy,
+	(IQueryable<TEntity> Collection, int TotalCount) Paginate(int skipItems, int takeItems, string orderBy,
 															   OrderDirection orderDirection,
 															   Expression<Func<TEntity, bool>>? expression);
 
@@ -18,7 +18,7 @@ public partial interface IBaseRepo<TEntity> where TEntity : class
 
 	#region GetById
 
-	Task<TEntity?> GetByIdAsync(object id, CancellationToken cancellationToken);
+	Task<TEntity?> GetByIdAsync(object id, CancellationToken cancellationToken = default);
 	TEntity? GetById(object id);
 
 	#endregion
@@ -33,6 +33,7 @@ public partial interface IBaseRepo<TEntity> where TEntity : class
 
 	#region Update
 
+	Task ExecuteUpdateAsync(Expression<Func<SetPropertyCalls<TEntity>, SetPropertyCalls<TEntity>>> entities);
 	Task UpdateAsync(TEntity entity);
 	void UpdateNoSave(TEntity entity);
 	Task UpdateRangeAsync(IEnumerable<TEntity> entities);
@@ -43,7 +44,6 @@ public partial interface IBaseRepo<TEntity> where TEntity : class
 	#endregion
 
 	#region Delete
-
 	Task DeleteAsync(TEntity entity);
 	Task DeleteAsync(object id);
 	void DeleteNoSave(TEntity entity);
@@ -78,7 +78,7 @@ public partial interface IBaseRepo<TEntity> where TEntity : class
 
 	Task<TEntity?> FirstOrDefaultAsync(Expression<Func<TEntity, bool>> expression,
 									   CancellationToken cancellationToken = default,
-									   Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes =
+									   Func<IQueryable<TEntity>, IQueryable<TEntity>>? includes =
 										   null);
 
 	TEntity First(Expression<Func<TEntity, bool>> expression,

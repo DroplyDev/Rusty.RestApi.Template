@@ -1,4 +1,4 @@
-#region
+﻿#region
 
 using System.Linq.Expressions;
 using Mapster;
@@ -33,7 +33,7 @@ public partial class BaseGenericRepo<TContext, TEntity> where TEntity : class wh
 		OrderedPagedRequest request,
 		CancellationToken cancellationToken = default,
 		Func<IQueryable<TEntity>,
-				IIncludableQueryable<TEntity, object>>?
+				IQueryable<TEntity>>?
 			includes = null)
 	{
 		var query = IncludeIfNotNull(includes);
@@ -44,9 +44,7 @@ public partial class BaseGenericRepo<TContext, TEntity> where TEntity : class wh
 
 	public virtual async Task<PagedResponse<TResult>> PaginateAsync<TResult>(
 		OrderedPagedRequest request, CancellationToken cancellationToken = default,
-		Func<IQueryable<TEntity>,
-				IIncludableQueryable<TEntity,
-					object>>?
+		Func<IQueryable<TEntity>, IQueryable<TEntity>>?
 			includes = null) where TResult : class
 	{
 		var query = IncludeIfNotNull(includes);
@@ -64,7 +62,7 @@ public partial class BaseGenericRepo<TContext, TEntity> where TEntity : class wh
 	public virtual async Task<PagedResponse<TResult>> PaginateAsync<TResult>(
 		OrderedPagedRequest request, Expression<Func<TEntity, bool>> expression,
 		CancellationToken cancellationToken = default,
-		Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>>? includes = null) where TResult : class
+		Func<IQueryable<TEntity>, IQueryable<TEntity>>? includes = null) where TResult : class
 	{
 		var query = IncludeIfNotNull(includes);
 

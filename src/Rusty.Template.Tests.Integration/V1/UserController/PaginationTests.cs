@@ -1,4 +1,6 @@
-﻿namespace Rusty.Template.Tests.Integration.V1.UserController;
+﻿using Rusty.Template.Contracts.Requests.Pagination;
+
+namespace Rusty.Template.Tests.Integration.V1.UserController;
 
 public class PaginationTests : BaseTests
 {
@@ -10,8 +12,9 @@ public class PaginationTests : BaseTests
 	[TestPriority(2)]
 	public async Task PagedAsync_Returns_Ok_When_Ok()
 	{
+
 		//Arrange
-		var request = new OrderedPagedRequest
+		var request = new FilterOrderPageRequest
 		{
 			OrderByData = new OrderByData
 			{
@@ -25,9 +28,10 @@ public class PaginationTests : BaseTests
 			}
 		};
 		//Act
-		var response = await Client.GetPagedUsersAsync(request);
+		var response = await Client.GetFilteredPagedUsersAsync(request);
 		//Assert
-		// response.Data.Should().NotBeEmpty();
-		// response.TotalCount.Should().Be(100);
+		response.StatusCode.Should().Be(200);
+		response.Result.TotalCount.Should().Be(100);
 	}
+
 }

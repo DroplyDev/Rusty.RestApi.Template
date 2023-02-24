@@ -38,9 +38,12 @@ app.UseSerilogRequestLogging(configure =>
 		"HTTP {RequestMethod} {RequestPath} responded {StatusCode} in {Elapsed:0.0000}ms";
 });
 //Prepare db
-// if (app.Environment.IsStaging())
-await app.Services.CreateDatabaseFromContextIfNotExistsAsync();
-await app.Services.InitializeDatabaseDataAsync();
+if (app.Environment.IsStaging())
+{
+	await app.Services.CreateDatabaseFromContextIfNotExistsAsync();
+	await app.Services.InitializeDatabaseDataAsync();
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment()) app.UseDeveloperExceptionPage();
 

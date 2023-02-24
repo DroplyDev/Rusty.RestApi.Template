@@ -1,7 +1,8 @@
-#region
+﻿#region
 
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using Rusty.Template.Application.Repositories.BaseRepo;
 using Rusty.Template.Domain.Exceptions.Entity;
 
@@ -27,9 +28,8 @@ public abstract partial class BaseGenericRepo<TContext, TEntity> : IBaseRepo<TEn
 
 	public async Task<TEntity?> GetByIdAsync(object id, CancellationToken cancellationToken = default)
 	{
-		return await DbSet.FindAsync(new[] {id}, cancellationToken);
+		return await DbSet.FindAsync(new[] { id }, cancellationToken);
 	}
-
 
 	public TEntity? GetById(object id)
 	{
@@ -59,6 +59,10 @@ public abstract partial class BaseGenericRepo<TContext, TEntity> : IBaseRepo<TEn
 		await DbSet.AddAsync(entity);
 	}
 
+	public async Task ExecuteUpdateAsync(Expression<Func<SetPropertyCalls<TEntity>, SetPropertyCalls<TEntity>>> entities)
+	{
+		await DbSet.ExecuteUpdateAsync(entities);
+	}
 
 	public async Task UpdateAsync(TEntity entity)
 	{
@@ -91,12 +95,10 @@ public abstract partial class BaseGenericRepo<TContext, TEntity> : IBaseRepo<TEn
 		DbSet.Attach(entity);
 	}
 
-
 	public virtual void AttachRange(IEnumerable<TEntity> entities)
 	{
 		DbSet.AttachRange(entities);
 	}
-
 
 	public async Task DeleteAsync(TEntity entity)
 	{
@@ -142,7 +144,7 @@ public abstract partial class BaseGenericRepo<TContext, TEntity> : IBaseRepo<TEn
 
 	public virtual async Task<bool> ExistsAsync(TEntity entity, CancellationToken cancellationToken = default)
 	{
-		return await DbSet.FindAsync(new object[] {entity}, cancellationToken) is not null;
+		return await DbSet.FindAsync(new object[] { entity }, cancellationToken) is not null;
 	}
 
 
