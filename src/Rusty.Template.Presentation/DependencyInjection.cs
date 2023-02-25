@@ -37,14 +37,8 @@ using Unchase.Swashbuckle.AspNetCore.Extensions.Options;
 
 namespace Rusty.Template.Presentation;
 
-/// <summary>
-/// Dependency Injection
-/// </summary>
 internal static class DependencyInjection
 {
-	/// <summary>Adds the serilog.</summary>
-	/// <param name="host">The host.</param>
-	/// <returns></returns>
 	internal static ConfigureHostBuilder AddSerilog(this ConfigureHostBuilder host)
 	{
 		host.UseSerilog((ctx, lc) =>
@@ -52,11 +46,6 @@ internal static class DependencyInjection
 
 		return host;
 	}
-
-	/// <summary>Adds the configurations.</summary>
-	/// <param name="services">The services.</param>
-	/// <param name="configuration">The configuration.</param>
-	/// <returns></returns>
 	internal static IServiceCollection AddConfigurations(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.AddOptions();
@@ -64,11 +53,6 @@ internal static class DependencyInjection
 
 		return services;
 	}
-
-	/// <summary>Adds the API versioning support.</summary>
-	/// <param name="services">The services.</param>
-	/// <param name="configuration">The configuration.</param>
-	/// <returns></returns>
 	internal static IServiceCollection AddApiVersioningSupport(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.AddApiVersioning(options =>
@@ -87,11 +71,6 @@ internal static class DependencyInjection
 
 		return services;
 	}
-
-
-	/// <summary>Adds the fluent validation.</summary>
-	/// <param name="services">The services.</param>
-	/// <returns></returns>
 	internal static IServiceCollection AddFluentValidation(this IServiceCollection services)
 	{
 		ValidatorOptions.Global.DefaultClassLevelCascadeMode = CascadeMode.Continue;
@@ -102,13 +81,6 @@ internal static class DependencyInjection
 
 		return services;
 	}
-
-
-	/// <summary>Adds the authentication.</summary>
-	/// <param name="services">The services.</param>
-	/// <param name="configuration">The configuration.</param>
-	/// <returns></returns>
-	/// <exception cref="System.NullReferenceException"></exception>
 	internal static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration)
 	{
 		var authOptions = configuration.GetSection("AuthOptions").Get<AuthOptions>() ??
@@ -176,12 +148,6 @@ internal static class DependencyInjection
 
 		return services;
 	}
-
-
-	/// <summary>Adds the swagger.</summary>
-	/// <param name="services">The services.</param>
-	/// <param name="configuration">The configuration.</param>
-	/// <returns></returns>
 	internal static IServiceCollection AddSwagger(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.AddSwaggerGen(options =>
@@ -270,11 +236,10 @@ internal static class DependencyInjection
 				// should use "options.IncludeXmlComments(xmlFilePath);" before
 				Array.ForEach(xmlDocs, d => { o.IncludeXmlCommentsFrom(d); });
 			});
-			// enable openApi Annotations
+			// Enable openApi Annotations
 			options.EnableAnnotations(true, true);
 			options.DocumentFilter<TagOrderByNameDocumentFilter>();
 			options.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
-			//options.UseInlineDefinitionsForEnums();
 			options.SchemaFilter<RequireNonNullablePropertiesSchemaFilter>();
 			options.OperationFilter<OperationIdFilter>();
 			options.OperationFilter<ValidationOperationFilter>();
@@ -290,13 +255,6 @@ internal static class DependencyInjection
 
 		return services;
 	}
-
-
-	/// <summary>Adds the databases.</summary>
-	/// <param name="services">The services.</param>
-	/// <param name="configuration">The configuration.</param>
-	/// <param name="env">The env.</param>
-	/// <returns></returns>
 	internal static IServiceCollection AddDatabases(this IServiceCollection services, IConfiguration configuration,
 													IWebHostEnvironment env)
 	{
@@ -312,11 +270,6 @@ internal static class DependencyInjection
 
 		return services;
 	}
-
-
-	/// <summary>Adds the repositories.</summary>
-	/// <param name="services">The services.</param>
-	/// <returns></returns>
 	internal static IServiceCollection AddRepositories(this IServiceCollection services)
 	{
 		services.AddScoped<IUserRepo, UserRepo>();
@@ -325,21 +278,11 @@ internal static class DependencyInjection
 
 		return services;
 	}
-
-
-	/// <summary>Adds the services.</summary>
-	/// <param name="services">The services.</param>
-	/// <returns></returns>
 	internal static IServiceCollection AddServices(this IServiceCollection services)
 	{
 		services.AddScoped<IAuthenticationService, AuthenticationService>();
 		return services;
 	}
-
-
-	/// <summary>Adds the mapster.</summary>
-	/// <param name="services">The services.</param>
-	/// <returns></returns>
 	internal static IServiceCollection AddMapster(this IServiceCollection services)
 	{
 		var config = TypeAdapterConfig.GlobalSettings;
