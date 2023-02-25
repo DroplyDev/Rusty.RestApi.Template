@@ -23,6 +23,7 @@ using Swashbuckle.AspNetCore.Annotations;
 namespace Rusty.Template.Presentation.Controllers.V1;
 
 [ApiVersion("1.0", Deprecated = false)]
+[SwaggerTag("Controller for auth")]
 public sealed class AuthenticationController : BaseApiController
 {
 	private readonly IUserRepo _userRepo;
@@ -33,18 +34,14 @@ public sealed class AuthenticationController : BaseApiController
 		_userRepo = userRepo;
 		_authenticationService = authenticationService;
 	}
-
-	[SwaggerOperation(
-		Summary = "Login",
+	[SwaggerOperation(Summary = "Login",
 		Description = "Logins to retrieve jwt token"
 	)]
-	[SwaggerResponse(
-		StatusCodes.Status200OK,
+	[SwaggerResponse(StatusCodes.Status200OK,
 		"Token retrieved successfully",
 		typeof(TokenResponse)
 	)]
-	[SwaggerResponse(
-		StatusCodes.Status401Unauthorized,
+	[SwaggerResponse(StatusCodes.Status401Unauthorized,
 		"Login or password is incorrect",
 		typeof(string)
 	)]
@@ -61,18 +58,18 @@ public sealed class AuthenticationController : BaseApiController
 
 		return Ok(new TokenResponse(tokenString, user.RefreshToken.Token));
 	}
-	[SwaggerResponse(
-		StatusCodes.Status200OK,
+	[SwaggerOperation(Summary = "Refresh-token",
+		Description = "Returns new jwt token and refresh token by existing refresh token if token expired "
+	)]
+	[SwaggerResponse(StatusCodes.Status200OK,
 		"Token retrieved successfully",
 		typeof(TokenResponse)
 	)]
-	[SwaggerResponse(
-		StatusCodes.Status202Accepted,
+	[SwaggerResponse(StatusCodes.Status202Accepted,
 		"Access token has not expired yet",
 		typeof(string)
 	)]
-	[SwaggerResponse(
-		StatusCodes.Status401Unauthorized,
+	[SwaggerResponse(StatusCodes.Status401Unauthorized,
 		"Refresh token is expired",
 		typeof(string)
 	)]

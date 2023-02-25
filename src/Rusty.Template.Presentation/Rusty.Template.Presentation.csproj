@@ -9,6 +9,8 @@
         <AppSettingsFile>appsettings.json</AppSettingsFile>
         <AppSettingsDevelopmentFile>appsettings.Development.json</AppSettingsDevelopmentFile>
         <AppSettingsProductionFile>appsettings.Production.json</AppSettingsProductionFile>
+        <GenerateDocumentationFile>True</GenerateDocumentationFile>
+        <NoWarn>1591</NoWarn>
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
@@ -32,7 +34,9 @@
         <PackageReference Include="Serilog.Sinks.Seq" Version="5.2.2" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
         <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
+        <!--<PackageReference Include="Swashbuckle.AspNetCore.Examples" Version="2.9.0" />-->
         <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.6" />
+        <PackageReference Include="Unchase.Swashbuckle.AspNetCore.Extensions" Version="2.7.1" />
     </ItemGroup>
     <ItemGroup>
         <Content Update="appsettings.Production.json" CopyToOutputDirectory="Never" CopyToPublishDirectory="Always" />

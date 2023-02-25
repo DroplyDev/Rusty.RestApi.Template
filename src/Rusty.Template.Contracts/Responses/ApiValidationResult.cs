@@ -6,6 +6,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Rusty.Template.Contracts.Responses;
 
+/// <summary>
+/// ApiValidationResult
+/// </summary>
 public sealed class ApiValidationResult : ValidationResult
 {
 	/// <summary>

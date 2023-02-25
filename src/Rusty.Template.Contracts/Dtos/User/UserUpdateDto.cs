@@ -6,14 +6,18 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace Rusty.Template.Contracts.Dtos.User;
 
-[SwaggerSchema("The dto for user edit")]
+/// <summary>
+/// The dto for user edit
+/// </summary>
 public sealed class UserUpdateDto
 {
-	[SwaggerSchema("The user id. Must be the same as in request")]
+	/// <summary>The user id. Must be the same as in request.</summary>
+	/// <example>1</example>
 	public int Id { get; set; }
-
-	[SwaggerSchema("The user email")]
+	/// <summary>The user email.</summary>
+	/// <example>Test@example.com</example>
 	public string Email { get; set; } = null!;
-	[SwaggerSchema("The user email")]
+	/// <summary>The user group id.</summary>
+	/// <example>1</example>
 	public string? GroupId { get; set; }
 }

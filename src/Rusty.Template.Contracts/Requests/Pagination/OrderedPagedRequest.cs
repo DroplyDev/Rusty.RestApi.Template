@@ -1,4 +1,4 @@
-#region
+﻿#region
 
 using Rusty.Template.Contracts.SubTypes;
 using Swashbuckle.AspNetCore.Annotations;
@@ -9,12 +9,14 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace Rusty.Template.Contracts.Requests;
 
-[SwaggerSchema("Request with order by and pagination")]
+/// <summary>
+/// Request with order by and pagination
+/// </summary>
 public class OrderedPagedRequest
 {
-	[SwaggerSchema("Page data class")]
+	/// <summary>Page data class.</summary>
 	public PageData? PageData { get; init; }
 
-	[SwaggerSchema("Order by data class")]
+	/// <summary>Order by data class.</summary>
 	public OrderByData OrderByData { get; init; } = null!;
 }

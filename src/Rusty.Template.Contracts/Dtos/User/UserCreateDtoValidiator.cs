@@ -6,8 +6,12 @@ using FluentValidation;
 
 namespace Rusty.Template.Contracts.Dtos.User;
 
+/// <summary>
+/// UserCreateDtoValidator
+/// </summary>
 public sealed class UserCreateDtoValidator : AbstractValidator<UserCreateDto>
 {
+	/// <summary>Initializes a new instance of the <see cref="UserCreateDtoValidator"/> class.</summary>
 	public UserCreateDtoValidator()
 	{
 		RuleFor(item => item.UserName)

@@ -1,14 +1,22 @@
-#region
+﻿#region
 
 using Swashbuckle.AspNetCore.Annotations;
+using System.ComponentModel;
+using System.Runtime.Serialization;
+
 
 #endregion
 
 namespace Rusty.Template.Contracts.SubTypes;
 
-[SwaggerSchema("Order Direction")]
+
+/// <summary>
+/// Order Direction enum
+/// </summary>
 public enum OrderDirection
 {
-	Asc = 1,
-	Desc = 2
+	/// <summary>The ascending direction</summary>
+	Asc,
+	/// <summary>The descending direction</summary>
+	Desc
 }

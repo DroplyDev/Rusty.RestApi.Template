@@ -1,4 +1,4 @@
-#region
+﻿#region
 
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -6,12 +6,14 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace Rusty.Template.Contracts.SubTypes;
 
-[SwaggerSchema("Page data subtype")]
+/// <summary>Page data subtype</summary>
 public sealed class PageData
 {
-	[SwaggerSchema("Item offset")]
+	/// <summary>Item offset.</summary>
+	/// <example>0</example>
 	public int Offset { get; set; }
 
-	[SwaggerSchema("Item limit")]
+	/// <summary>Item limit.</summary>
+	/// <example>50</example>
 	public int Limit { get; set; }
 }

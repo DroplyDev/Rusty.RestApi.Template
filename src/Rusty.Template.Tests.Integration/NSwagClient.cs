@@ -152,6 +152,12 @@ namespace Rusty.Template.Tests.Integration
 		}
 
 		/// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+		/// <summary>
+		/// Refresh-token
+		/// </summary>
+		/// <remarks>
+		/// Returns new jwt token and refresh token by existing refresh token if token expired
+		/// </remarks>
 		/// <returns>Token retrieved successfully</returns>
 		/// <exception cref="SwaggerException">A server side error occurred.</exception>
 		public virtual async System.Threading.Tasks.Task<SwaggerResponse<TokenResponse>> RefreshTokenAsync(RefreshTokenRequest body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
@@ -264,21 +270,17 @@ namespace Rusty.Template.Tests.Integration
 
 		/// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
 		/// <summary>
-		/// Delete user
+		/// Get paged users
 		/// </summary>
 		/// <remarks>
-		/// Deletes existing user
+		/// Returns paged list
 		/// </remarks>
-		/// <returns>User deleted successfully</returns>
+		/// <returns>Users retrieved successfully</returns>
 		/// <exception cref="SwaggerException">A server side error occurred.</exception>
-		public virtual async System.Threading.Tasks.Task<SwaggerResponse> DeleteUserAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+		public virtual async System.Threading.Tasks.Task<SwaggerResponse<UserDtoPagedResponse>> GetFilteredPagedUsersAsync(FilterOrderPageRequest body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
 		{
-			if (id == null)
-				throw new System.ArgumentNullException("id");
-
 			var urlBuilder_ = new System.Text.StringBuilder();
-			urlBuilder_.Append("api/v1/users/{id}");
-			urlBuilder_.Replace("{id}", System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
+			urlBuilder_.Append("api/v1/users/paged");
 
 			var client_ = _httpClient;
 			var disposeClient_ = false;
@@ -286,7 +288,12 @@ namespace Rusty.Template.Tests.Integration
 			{
 				using (var request_ = new System.Net.Http.HttpRequestMessage())
 				{
-					request_.Method = new System.Net.Http.HttpMethod("DELETE");
+					var json_ = System.Text.Json.JsonSerializer.Serialize(body, _settings.Value);
+					var content_ = new System.Net.Http.StringContent(json_);
+					content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
+					request_.Content = content_;
+					request_.Method = new System.Net.Http.HttpMethod("POST");
+					request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
 
 					PrepareRequest(client_, request_, urlBuilder_);
 
@@ -319,19 +326,24 @@ namespace Rusty.Template.Tests.Integration
 							throw new SwaggerException<ApiExceptionResponse>("Internal server error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
 						}
 						else
-						if (status_ == 204)
+						if (status_ == 200)
 						{
-							return new SwaggerResponse(status_, headers_);
-						}
-						else
-						if (status_ == 404)
-						{
-							var objectResponse_ = await ReadObjectResponseAsync<ApiExceptionResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+							var objectResponse_ = await ReadObjectResponseAsync<UserDtoPagedResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
 							if (objectResponse_.Object == null)
 							{
 								throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
 							}
-							throw new SwaggerException<ApiExceptionResponse>("User with id was not found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+							return new SwaggerResponse<UserDtoPagedResponse>(status_, headers_, objectResponse_.Object);
+						}
+						else
+						if (status_ == 400)
+						{
+							var objectResponse_ = await ReadObjectResponseAsync<ApiValidationResult>(response_, headers_, cancellationToken).ConfigureAwait(false);
+							if (objectResponse_.Object == null)
+							{
+								throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+							}
+							throw new SwaggerException<ApiValidationResult>("Model validation exception", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
 						}
 						else
 						{
@@ -524,6 +536,97 @@ namespace Rusty.Template.Tests.Integration
 								throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
 							}
 							throw new SwaggerException<ApiValidationResult>("Model validation exception", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+						}
+						else
+						{
+							var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
+							throw new SwaggerException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
+						}
+					}
+					finally
+					{
+						if (disposeResponse_)
+							response_.Dispose();
+					}
+				}
+			}
+			finally
+			{
+				if (disposeClient_)
+					client_.Dispose();
+			}
+		}
+
+		/// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
+		/// <summary>
+		/// Delete user
+		/// </summary>
+		/// <remarks>
+		/// Deletes existing user
+		/// </remarks>
+		/// <returns>User deleted successfully</returns>
+		/// <exception cref="SwaggerException">A server side error occurred.</exception>
+		public virtual async System.Threading.Tasks.Task<SwaggerResponse> DeleteUserAsync(int id, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
+		{
+			if (id == null)
+				throw new System.ArgumentNullException("id");
+
+			var urlBuilder_ = new System.Text.StringBuilder();
+			urlBuilder_.Append("api/v1/users/{id}");
+			urlBuilder_.Replace("{id}", System.Uri.EscapeDataString(ConvertToString(id, System.Globalization.CultureInfo.InvariantCulture)));
+
+			var client_ = _httpClient;
+			var disposeClient_ = false;
+			try
+			{
+				using (var request_ = new System.Net.Http.HttpRequestMessage())
+				{
+					request_.Method = new System.Net.Http.HttpMethod("DELETE");
+
+					PrepareRequest(client_, request_, urlBuilder_);
+
+					var url_ = urlBuilder_.ToString();
+					request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
+
+					PrepareRequest(client_, request_, url_);
+
+					var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+					var disposeResponse_ = true;
+					try
+					{
+						var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
+						if (response_.Content != null && response_.Content.Headers != null)
+						{
+							foreach (var item_ in response_.Content.Headers)
+								headers_[item_.Key] = item_.Value;
+						}
+
+						ProcessResponse(client_, response_);
+
+						var status_ = (int)response_.StatusCode;
+						if (status_ == 500)
+						{
+							var objectResponse_ = await ReadObjectResponseAsync<ApiExceptionResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+							if (objectResponse_.Object == null)
+							{
+								throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+							}
+							throw new SwaggerException<ApiExceptionResponse>("Internal server error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
+						}
+						else
+						if (status_ == 204)
+						{
+							return new SwaggerResponse(status_, headers_);
+						}
+						else
+						if (status_ == 404)
+						{
+							var objectResponse_ = await ReadObjectResponseAsync<ApiExceptionResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
+							if (objectResponse_.Object == null)
+							{
+								throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
+							}
+							throw new SwaggerException<ApiExceptionResponse>("User with id was not found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
 						}
 						else
 						{
@@ -815,103 +918,6 @@ namespace Rusty.Template.Tests.Integration
 								throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
 							}
 							throw new SwaggerException<ApiExceptionResponse>("User with name was not found", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-						}
-						else
-						{
-							var responseData_ = response_.Content == null ? null : await response_.Content.ReadAsStringAsync().ConfigureAwait(false);
-							throw new SwaggerException("The HTTP status code of the response was not expected (" + status_ + ").", status_, responseData_, headers_, null);
-						}
-					}
-					finally
-					{
-						if (disposeResponse_)
-							response_.Dispose();
-					}
-				}
-			}
-			finally
-			{
-				if (disposeClient_)
-					client_.Dispose();
-			}
-		}
-
-		/// <param name="cancellationToken">A cancellation token that can be used by other objects or threads to receive notice of cancellation.</param>
-		/// <summary>
-		/// Get paged users
-		/// </summary>
-		/// <remarks>
-		/// Returns paged list
-		/// </remarks>
-		/// <returns>Users retrieved successfully</returns>
-		/// <exception cref="SwaggerException">A server side error occurred.</exception>
-		public virtual async System.Threading.Tasks.Task<SwaggerResponse<UserDtoPagedResponse>> GetFilteredPagedUsersAsync(FilterOrderPageRequest body = null, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken))
-		{
-			var urlBuilder_ = new System.Text.StringBuilder();
-			urlBuilder_.Append("api/v1/users/paged");
-
-			var client_ = _httpClient;
-			var disposeClient_ = false;
-			try
-			{
-				using (var request_ = new System.Net.Http.HttpRequestMessage())
-				{
-					var json_ = System.Text.Json.JsonSerializer.Serialize(body, _settings.Value);
-					var content_ = new System.Net.Http.StringContent(json_);
-					content_.Headers.ContentType = System.Net.Http.Headers.MediaTypeHeaderValue.Parse("application/json");
-					request_.Content = content_;
-					request_.Method = new System.Net.Http.HttpMethod("POST");
-					request_.Headers.Accept.Add(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse("application/json"));
-
-					PrepareRequest(client_, request_, urlBuilder_);
-
-					var url_ = urlBuilder_.ToString();
-					request_.RequestUri = new System.Uri(url_, System.UriKind.RelativeOrAbsolute);
-
-					PrepareRequest(client_, request_, url_);
-
-					var response_ = await client_.SendAsync(request_, System.Net.Http.HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
-					var disposeResponse_ = true;
-					try
-					{
-						var headers_ = System.Linq.Enumerable.ToDictionary(response_.Headers, h_ => h_.Key, h_ => h_.Value);
-						if (response_.Content != null && response_.Content.Headers != null)
-						{
-							foreach (var item_ in response_.Content.Headers)
-								headers_[item_.Key] = item_.Value;
-						}
-
-						ProcessResponse(client_, response_);
-
-						var status_ = (int)response_.StatusCode;
-						if (status_ == 500)
-						{
-							var objectResponse_ = await ReadObjectResponseAsync<ApiExceptionResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-							if (objectResponse_.Object == null)
-							{
-								throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-							}
-							throw new SwaggerException<ApiExceptionResponse>("Internal server error", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
-						}
-						else
-						if (status_ == 200)
-						{
-							var objectResponse_ = await ReadObjectResponseAsync<UserDtoPagedResponse>(response_, headers_, cancellationToken).ConfigureAwait(false);
-							if (objectResponse_.Object == null)
-							{
-								throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-							}
-							return new SwaggerResponse<UserDtoPagedResponse>(status_, headers_, objectResponse_.Object);
-						}
-						else
-						if (status_ == 400)
-						{
-							var objectResponse_ = await ReadObjectResponseAsync<ApiValidationResult>(response_, headers_, cancellationToken).ConfigureAwait(false);
-							if (objectResponse_.Object == null)
-							{
-								throw new SwaggerException("Response was null which was not expected.", status_, objectResponse_.Text, headers_, null);
-							}
-							throw new SwaggerException<ApiValidationResult>("Model validation exception", status_, objectResponse_.Text, headers_, objectResponse_.Object, null);
 						}
 						else
 						{

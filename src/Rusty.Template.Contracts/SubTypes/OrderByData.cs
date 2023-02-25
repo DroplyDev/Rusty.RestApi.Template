@@ -1,4 +1,4 @@
-#region
+﻿#region
 
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -6,12 +6,16 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace Rusty.Template.Contracts.SubTypes;
 
-[SwaggerSchema("Order data subtype")]
+/// <summary>
+/// Order data subtype
+/// </summary>
 public sealed class OrderByData
 {
-	[SwaggerSchema("Order property name")]
+	/// <summary>Order property name.</summary>
+	/// <example>FieldName</example>
+
 	public string OrderBy { get; set; } = null!;
 
-	[SwaggerSchema("Order direction enum")]
+	/// <summary>Order direction enum.</summary>
 	public OrderDirection OrderDirection { get; set; }
 }

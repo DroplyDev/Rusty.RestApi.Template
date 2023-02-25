@@ -1,4 +1,4 @@
-#region
+﻿#region
 
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -6,6 +6,19 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace Rusty.Template.Contracts.Dtos.Group;
 
-[SwaggerSchema("The dto for user retrieval ")]
-public sealed record GroupDto([SwaggerSchema("The group id")] int Id,
-							  [SwaggerSchema("The group name")] string Name);
+/// <summary>
+///   The dto for user retrieval
+/// </summary>
+public sealed record GroupDto
+{
+	/// <summary>
+	/// Group's unique id.
+	/// </summary>
+	/// <example>1</example>
+	public int Id { get; init; }
+	/// <summary>
+	/// Group's name.
+	/// </summary>
+	/// <example>TestGroupName</example>
+	public string Name { get; init; } = null!;
+}

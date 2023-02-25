@@ -1,4 +1,4 @@
-#region
+﻿#region
 
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -6,19 +6,24 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace Rusty.Template.Contracts.Dtos.User;
 
-[SwaggerSchema("The dto for user creation")]
+/// <summary>
+/// The dto for user creation.
+/// </summary>
 public sealed class UserCreateDto
 {
-	[SwaggerSchema("The user name. Has validation")]
+	/// <summary>The user name</summary>
+	/// <example>ExampleUser</example>
 	public string UserName { get; set; } = null!;
 
-	[SwaggerSchema("The user password. Has validation")]
-
+	/// <summary>The user password. Has validation.</summary>
+	/// <example>Qwerty123$</example>
 	public string Password { get; set; } = null!;
 
-	[SwaggerSchema("The user email")]
+	/// <summary>The user email.</summary>
+	/// <example>Test@example.com</example>
 	public string Email { get; set; } = null!;
 
-	[SwaggerSchema("The user group id")]
+	/// <summary>The user group id.</summary>
+	/// <example>1</example>
 	public int? GroupId { get; set; } = null!;
 }

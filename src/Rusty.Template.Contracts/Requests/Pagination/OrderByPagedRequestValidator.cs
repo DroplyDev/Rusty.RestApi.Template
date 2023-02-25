@@ -7,8 +7,12 @@ using Rusty.Template.Contracts.SubTypes;
 
 namespace Rusty.Template.Contracts.Requests.Pagination;
 
+/// <summary>
+/// OrderByPagedRequestValidator
+/// </summary>
 public sealed class OrderByPagedRequestValidator : AbstractValidator<OrderedPagedRequest>
 {
+	/// <summary>Initializes a new instance of the <see cref="OrderByPagedRequestValidator"/> class.</summary>
 	public OrderByPagedRequestValidator()
 	{
 		RuleFor(w => w.PageData)

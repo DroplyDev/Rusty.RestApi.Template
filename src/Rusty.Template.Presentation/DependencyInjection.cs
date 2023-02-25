@@ -29,14 +29,23 @@ using Rusty.Template.Presentation.OperationFilters;
 using Rusty.Template.Presentation.SchemaFilters;
 using Serilog;
 using Swashbuckle.AspNetCore.Filters;
+using Unchase.Swashbuckle.AspNetCore.Extensions.Extensions;
+using Unchase.Swashbuckle.AspNetCore.Extensions.Filters;
+using Unchase.Swashbuckle.AspNetCore.Extensions.Options;
 
 #endregion
 
 namespace Rusty.Template.Presentation;
 
+/// <summary>
+/// Dependency Injection
+/// </summary>
 internal static class DependencyInjection
 {
-	public static ConfigureHostBuilder AddSerilog(this ConfigureHostBuilder host)
+	/// <summary>Adds the serilog.</summary>
+	/// <param name="host">The host.</param>
+	/// <returns></returns>
+	internal static ConfigureHostBuilder AddSerilog(this ConfigureHostBuilder host)
 	{
 		host.UseSerilog((ctx, lc) =>
 			lc.ReadFrom.Configuration(ctx.Configuration));
@@ -44,7 +53,11 @@ internal static class DependencyInjection
 		return host;
 	}
 
-	public static IServiceCollection AddConfigurations(this IServiceCollection services, IConfiguration configuration)
+	/// <summary>Adds the configurations.</summary>
+	/// <param name="services">The services.</param>
+	/// <param name="configuration">The configuration.</param>
+	/// <returns></returns>
+	internal static IServiceCollection AddConfigurations(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.AddOptions();
 		services.Configure<AuthOptions>(configuration.GetSection("AuthOptions"));
@@ -52,7 +65,11 @@ internal static class DependencyInjection
 		return services;
 	}
 
-	public static IServiceCollection AddApiVersioningSupport(this IServiceCollection services, IConfiguration configuration)
+	/// <summary>Adds the API versioning support.</summary>
+	/// <param name="services">The services.</param>
+	/// <param name="configuration">The configuration.</param>
+	/// <returns></returns>
+	internal static IServiceCollection AddApiVersioningSupport(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.AddApiVersioning(options =>
 		{
@@ -72,7 +89,10 @@ internal static class DependencyInjection
 	}
 
 
-	public static IServiceCollection AddFluentValidation(this IServiceCollection services)
+	/// <summary>Adds the fluent validation.</summary>
+	/// <param name="services">The services.</param>
+	/// <returns></returns>
+	internal static IServiceCollection AddFluentValidation(this IServiceCollection services)
 	{
 		ValidatorOptions.Global.DefaultClassLevelCascadeMode = CascadeMode.Continue;
 		ValidatorOptions.Global.DefaultRuleLevelCascadeMode = CascadeMode.Continue;
@@ -84,7 +104,12 @@ internal static class DependencyInjection
 	}
 
 
-	public static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration)
+	/// <summary>Adds the authentication.</summary>
+	/// <param name="services">The services.</param>
+	/// <param name="configuration">The configuration.</param>
+	/// <returns></returns>
+	/// <exception cref="System.NullReferenceException"></exception>
+	internal static IServiceCollection AddAuth(this IServiceCollection services, IConfiguration configuration)
 	{
 		var authOptions = configuration.GetSection("AuthOptions").Get<AuthOptions>() ??
 						  throw new NullReferenceException();
@@ -153,7 +178,11 @@ internal static class DependencyInjection
 	}
 
 
-	public static IServiceCollection AddSwagger(this IServiceCollection services, IConfiguration configuration)
+	/// <summary>Adds the swagger.</summary>
+	/// <param name="services">The services.</param>
+	/// <param name="configuration">The configuration.</param>
+	/// <returns></returns>
+	internal static IServiceCollection AddSwagger(this IServiceCollection services, IConfiguration configuration)
 	{
 		services.AddSwaggerGen(options =>
 		{
@@ -208,17 +237,45 @@ internal static class DependencyInjection
 				.Select(a => Path.Combine(Path.GetDirectoryName(currentAssembly.Location)!,
 					$"{a.Name}.xml"))
 				.Where(File.Exists).ToArray();
-			Array.ForEach(xmlDocs, d => { options.IncludeXmlComments(d); });
+			Array.ForEach(xmlDocs, d => { options.IncludeXmlCommentsWithRemarks(d); });
+			options.AddEnumsWithValuesFixFilters(o =>
+			{
+				// add schema filter to fix enums (add 'x-enumNames' for NSwag or its alias from XEnumNamesAlias) in schema
+				o.ApplySchemaFilter = true;
+				// alias for replacing 'x-enumNames' in swagger document
+				o.XEnumNamesAlias = "x-enum-varnames";
 
-			options.ExampleFilters();
+				// alias for replacing 'x-enumDescriptions' in swagger document
+				o.XEnumDescriptionsAlias = "x-enum-descriptions";
+
+				// add parameter filter to fix enums (add 'x-enumNames' for NSwag or its alias from XEnumNamesAlias) in schema parameters
+				o.ApplyParameterFilter = true;
+
+				// add document filter to fix enums displaying in swagger document
+				o.ApplyDocumentFilter = true;
+
+				// add descriptions from DescriptionAttribute or xml-comments to fix enums (add 'x-enumDescriptions' or its alias from XEnumDescriptionsAlias for schema extensions) for applied filters
+				o.IncludeDescriptions = true;
+
+				// add remarks for descriptions from xml-comments
+				o.IncludeXEnumRemarks = true;
+
+				// get descriptions from DescriptionAttribute then from xml-comments
+				o.DescriptionSource = DescriptionSources.DescriptionAttributesThenXmlComments;
+
+				// new line for enum values descriptions
+				o.NewLine = "\n";
+
+				// get descriptions from xml-file comments on the specified path
+				// should use "options.IncludeXmlComments(xmlFilePath);" before
+				Array.ForEach(xmlDocs, d => { o.IncludeXmlCommentsFrom(d); });
+			});
+			// enable openApi Annotations
 			options.EnableAnnotations(true, true);
-			options.OrderActionsBy(apiDesc =>
-				$"{apiDesc.ActionDescriptor.RouteValues["controller"]}_{apiDesc.HttpMethod}");
-
-			options.UseInlineDefinitionsForEnums();
-			options.SchemaFilter<RequireNonNullablePropertiesSchemaFilter>();
-
+			options.DocumentFilter<TagOrderByNameDocumentFilter>();
 			options.OperationFilter<AppendAuthorizeToSummaryOperationFilter>();
+			//options.UseInlineDefinitionsForEnums();
+			options.SchemaFilter<RequireNonNullablePropertiesSchemaFilter>();
 			options.OperationFilter<OperationIdFilter>();
 			options.OperationFilter<ValidationOperationFilter>();
 			options.OperationFilter<SecurityRequirementsOperationFilter>();
@@ -229,15 +286,19 @@ internal static class DependencyInjection
 		{
 			options.SetNotNullableIfMinLengthGreaterThenZero = true;
 		});
-		services.AddSwaggerExamplesFromAssemblyOf<LoginRequestExample>();
 		services.AddRouting(options => options.LowercaseUrls = true);
 
 		return services;
 	}
 
 
-	public static IServiceCollection AddDatabases(this IServiceCollection services, IConfiguration configuration,
-												  IWebHostEnvironment env)
+	/// <summary>Adds the databases.</summary>
+	/// <param name="services">The services.</param>
+	/// <param name="configuration">The configuration.</param>
+	/// <param name="env">The env.</param>
+	/// <returns></returns>
+	internal static IServiceCollection AddDatabases(this IServiceCollection services, IConfiguration configuration,
+													IWebHostEnvironment env)
 	{
 		services.AddDbContext<AppDbContext>(options =>
 		{
@@ -253,7 +314,10 @@ internal static class DependencyInjection
 	}
 
 
-	public static IServiceCollection AddRepositories(this IServiceCollection services)
+	/// <summary>Adds the repositories.</summary>
+	/// <param name="services">The services.</param>
+	/// <returns></returns>
+	internal static IServiceCollection AddRepositories(this IServiceCollection services)
 	{
 		services.AddScoped<IUserRepo, UserRepo>();
 		services.AddScoped<IGroupRepo, GroupRepo>();
@@ -263,14 +327,20 @@ internal static class DependencyInjection
 	}
 
 
-	public static IServiceCollection AddServices(this IServiceCollection services)
+	/// <summary>Adds the services.</summary>
+	/// <param name="services">The services.</param>
+	/// <returns></returns>
+	internal static IServiceCollection AddServices(this IServiceCollection services)
 	{
 		services.AddScoped<IAuthenticationService, AuthenticationService>();
 		return services;
 	}
 
 
-	public static IServiceCollection AddMapster(this IServiceCollection services)
+	/// <summary>Adds the mapster.</summary>
+	/// <param name="services">The services.</param>
+	/// <returns></returns>
+	internal static IServiceCollection AddMapster(this IServiceCollection services)
 	{
 		var config = TypeAdapterConfig.GlobalSettings;
 		config.Scan(typeof(UserProfile).Assembly);

@@ -22,14 +22,4 @@ public abstract class BaseTests : IClassFixture<WebApiFactory>
 		ApiFactory = apiFactory;
 		Client = new NSwagClient(apiFactory.CreateClient());
 	}
-	public async Task AuthenticateAsync(string username, string password)
-	{
-		var response = await Client.LoginAsync(new LoginRequest
-		{
-			Username = username,
-			Password = password
-		});
-		response.StatusCode.Should().Be(200);
-		_httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(JwtBearerDefaults.AuthenticationScheme, response.Result.JwtToken);
-	}
 }

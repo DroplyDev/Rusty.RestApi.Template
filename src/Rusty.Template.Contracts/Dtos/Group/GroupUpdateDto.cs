@@ -1,4 +1,4 @@
-#region
+﻿#region
 
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -6,9 +6,12 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace Rusty.Template.Contracts.Dtos.Group;
 
-[SwaggerSchema("The dto for group update")]
+/// <summary>
+/// The dto for group update.
+/// </summary>
 public sealed class GroupUpdateDto
 {
-	[SwaggerSchema("The group name")]
+	/// <summary>The group name.</summary>
+	/// <example>TestGroupName</example>
 	public string Name { get; set; } = null!;
 }
