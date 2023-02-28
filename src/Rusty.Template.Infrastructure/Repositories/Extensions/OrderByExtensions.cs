@@ -66,8 +66,6 @@ public static class OrderByExtensions
 			: query.OrderByWithDirection(orderByData.OrderBy, orderByData.OrderDirection);
 	}
 
-
-
 	public static IOrderedQueryable<TEntity> OrderBy<TEntity>(
 		this IQueryable<TEntity> query, string orderBy) where TEntity : class
 	{
