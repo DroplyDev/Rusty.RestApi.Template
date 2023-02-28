@@ -1,4 +1,4 @@
-#region
+﻿#region
 
 using System.Text;
 using Microsoft.EntityFrameworkCore;
@@ -35,8 +35,9 @@ public static class DbInitializer
 
 				for (var j = 0; j < userCount - 2;)
 				{
-					var group = new Group {Name = "Group" + uGroup++};
-					for (var k = 0; k < j + 1 && j < userCount - 2; k++) users[j++].Group = group;
+					var group = new Group { Name = "Group" + uGroup++ };
+					for (var k = 0; k < j + 1 && j < userCount - 2; k++)
+						users[j++].Group = group;
 				}
 
 				for (var j = 0; j < userCount; j++)
@@ -67,7 +68,6 @@ public static class DbInitializer
 		await context.Database.EnsureCreatedAsync();
 	}
 
-
 	private static string LoremIpsum(int minWords, int maxWords,
 									 int minSentences, int maxSentences,
 									 int numParagraphs)
@@ -91,7 +91,8 @@ public static class DbInitializer
 			{
 				for (var w = 0; w < numWords; w++)
 				{
-					if (w > 0) result.Append(" ");
+					if (w > 0)
+						result.Append(" ");
 					result.Append(words[rand.Next(words.Length)]);
 				}
 

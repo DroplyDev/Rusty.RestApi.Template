@@ -34,7 +34,6 @@
         <PackageReference Include="Serilog.Sinks.Seq" Version="5.2.2" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
         <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
-        <!--<PackageReference Include="Swashbuckle.AspNetCore.Examples" Version="2.9.0" />-->
         <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="7.0.6" />
         <PackageReference Include="Unchase.Swashbuckle.AspNetCore.Extensions" Version="2.7.1" />
     </ItemGroup>

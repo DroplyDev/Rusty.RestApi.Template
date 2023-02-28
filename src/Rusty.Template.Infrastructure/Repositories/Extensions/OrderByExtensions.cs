@@ -1,4 +1,4 @@
-#region
+﻿#region
 
 using System.Linq.Expressions;
 using Rusty.Template.Contracts.SubTypes;
@@ -42,8 +42,8 @@ public static class OrderByExtensions
 		/*Call query.OrderBy(selector), with query and selector: x=> x.PropName
 		  Note that we pass the selector as Expression to the method and we don't compile it.
 		  By doing so EF can extract "order by" columns and generate SQL for it.*/
-		var newQuery = (IOrderedQueryable<TEntity>) genericMethod
-			.Invoke(genericMethod, new object[] {query, selector})!;
+		var newQuery = (IOrderedQueryable<TEntity>)genericMethod
+			.Invoke(genericMethod, new object[] { query, selector })!;
 		return newQuery;
 	}
 
@@ -53,7 +53,11 @@ public static class OrderByExtensions
 	{
 		return query.OrderByWithDirection(orderByData.OrderBy, orderByData.OrderDirection);
 	}
-
+	public static IOrderedQueryable<TEntity> OrderByWithDirection<TEntity>(
+		this IQueryable<TEntity> query, Expression<Func<TEntity, object>> keySelector, OrderDirection orderDirection)
+	{
+		return orderDirection == OrderDirection.Asc ? query.OrderBy(keySelector) : query.OrderByDescending(keySelector);
+	}
 	public static IQueryable<TEntity> OrderByWithDirectionNullable<TEntity>(
 		this IQueryable<TEntity> query, OrderByData? orderByData) where TEntity : class
 	{
@@ -62,11 +66,7 @@ public static class OrderByExtensions
 			: query.OrderByWithDirection(orderByData.OrderBy, orderByData.OrderDirection);
 	}
 
-	public static IOrderedQueryable<TEntity> OrderByWithDirection<TEntity>(
-		this IQueryable<TEntity> query, Expression<Func<TEntity, object>> keySelector, OrderDirection orderDirection)
-	{
-		return orderDirection == OrderDirection.Asc ? query.OrderBy(keySelector) : query.OrderByDescending(keySelector);
-	}
+
 
 	public static IOrderedQueryable<TEntity> OrderBy<TEntity>(
 		this IQueryable<TEntity> query, string orderBy) where TEntity : class

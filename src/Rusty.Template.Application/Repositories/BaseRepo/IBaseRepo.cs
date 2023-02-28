@@ -55,17 +55,17 @@ public partial interface IBaseRepo<TEntity> where TEntity : class
 
 	#region Exists
 
-	Task<bool> ExistsAsync(object id, CancellationToken cancellationToken);
+	Task<bool> ExistsAsync(object id, CancellationToken cancellationToken = default);
 
-	Task<bool> ExistsAsync(TEntity entity, CancellationToken cancellationToken);
+	Task<bool> ExistsAsync(TEntity entity, CancellationToken cancellationToken = default);
 
-	Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> expression, CancellationToken cancellationToken);
+	Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> expression, CancellationToken cancellationToken = default);
 
 	#endregion
 
 	#region IsEmpty
 
-	Task<bool> IsEmptyAsync(CancellationToken cancellationToken);
+	Task<bool> IsEmptyAsync(CancellationToken cancellationToken = default);
 
 	Task<bool> IsEmptyAsync(Expression<Func<TEntity, bool>> expression, CancellationToken cancellationToken = default);
 
